@@ -1,4 +1,4 @@
-# cwschedulingapp
+# Coursework Scheduling Application
 
 ## Project setup
 ```
@@ -23,6 +23,11 @@ npm run test:e2e
 ### Lints and fixes files
 ```
 npm run lint
+```
+
+## Web service start
+```
+npm run web
 ```
 
 ### Customize configuration
