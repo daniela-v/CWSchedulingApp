@@ -5,6 +5,11 @@
 npm install
 ```
 
+## Node server start
+```
+npm run node
+```
+
 ### Compiles and hot-reloads for development
 ```
 npm run serve
@@ -23,9 +28,4 @@ npm run test:e2e
 ### Lints and fixes files
 ```
 npm run lint
-```
-
-## Web service start
-```
-npm run web
 ```
