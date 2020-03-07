@@ -1,4 +1,5 @@
 # Coursework Scheduling Application
+Project for the Web Platform Development module at GCU. 
 
 ## Project setup
 ```
