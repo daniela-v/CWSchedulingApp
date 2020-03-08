@@ -28,5 +28,5 @@ npm run lint
 
 ## Web service start
 ```
-npm run web
+npm run backend
 ```
