@@ -25,7 +25,7 @@ Include demo gifs here.
 # Get Started
 Assumes local installation of [Node.js](https://nodejs.org/)
 
-Make sure when you install nodejs to check the **"Automatically install the necessary tools"** if you use Windows cause you will need python and Build Tools. On Debian you need to install **build-essentials** while on other repositories you need **base-devel**.
+Make sure when you install nodejs to check the **"Automatically install the necessary tools"** if you use Windows because Python and Build Tools will be needed. On Debian you need to install **build-essentials** while on other repositories you need **base-devel**.
 
 ## To run the project locally after cloning the repository:
 ### Project setup
