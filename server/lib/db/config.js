@@ -8,15 +8,27 @@ const exampleModel = require("./models/example.js");
 const sql = require("knex")({
   client: "mysql",
   connection: {
-    host: "localhost",
+    host: "database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com",
     user: "cwscheduleapp",
-    password: "whateverpasswordyourdbuserhas",
+    password: "cwscheduleapp",
     database: "cwscheduleapp"
   }
 });
+/*
+ **** MySQL Workbench:
+ * host: database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com
+ * port: 3306
+ * user: root
+ * pwd: rootroot
+ *
+ **** Shell:
+ * mysql -h database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com -P 3306 -u root -p
+ */
 
 // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous table)
-usersModel.create(sql, true);
-exampleModel.create(sql, true);
+(async () => {
+  await usersModel.create(sql, true);
+  await exampleModel.create(sql, true);
+})();
 
 module.exports = sql;

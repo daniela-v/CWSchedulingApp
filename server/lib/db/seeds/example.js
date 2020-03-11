@@ -12,6 +12,7 @@ async function insert(sql, tableName) {
   // Do extra computation on the rows if necessary (see users.js where we had to crypt the passwords)
   // Insert the seed rows
   await sql.table(tableName).insert(rows);
+  console.log(`Table ${tableName} has been populated\n`);
 }
 
 module.exports = { insert };

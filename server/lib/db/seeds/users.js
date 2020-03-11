@@ -16,6 +16,7 @@ async function insert(sql, tableName) {
   await sql.table(tableName).del();
   await cryptPasswords();
   await sql.table(tableName).insert(rows);
+  console.log(`Table ${tableName} has been populated\n`);
 }
 
 module.exports = { insert };

@@ -9,8 +9,9 @@ async function create(sql, forced = false) {
       if (!forced) return;
       await sql.schema.dropTable(tableName);
     }
+    console.log(`\nCreating ${tableName} ...`);
     // Create table
-    await sql.schema.createTable(tableName, table => {
+    let qry = await sql.schema.createTable(tableName, table => {
       table.charset("utf8");
       table.collate("utf8_bin");
       table.increments("id");
@@ -19,6 +20,8 @@ async function create(sql, forced = false) {
       table.string("email", 128).notNullable();
       table.timestamps(true, true);
     });
+    console.log(`Table ${tableName} has been created`);
+    console.log(`Populating ${tableName} ...`);
     // Insert seed data if table is empty
     const rows = await sql.table(tableName).select();
     if (!rows.length) {
