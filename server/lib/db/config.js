@@ -8,7 +8,8 @@ const exampleModel = require("./models/example.js");
 const sql = require("knex")({
   client: "mysql",
   connection: {
-    host: "database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com",
+    //host: "database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com",
+    host: "localhost",
     user: "cwscheduleapp",
     password: "cwscheduleapp",
     database: "cwscheduleapp"

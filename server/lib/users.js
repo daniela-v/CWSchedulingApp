@@ -13,40 +13,37 @@ const users = {
     //   confirmEmail: "123@abc.com"
     // }
     // Using object destructuring we store the values into the variables specified
-    const { user, pwd, confirmPwd, email, confirmEmail } = data; // eslint-disable-line
+    const { username, password, confirmPassword, email, confirmEmail } = data; // eslint-disable-line
     // Validate data here: check if user exists, if the passwords match, if the email is valid
     // How to crypt using bcrypt:
     try {
-      const cryptedPwd = await bcrypt.hash(pwd, 10);
-      await sql("tableName").insert({
-        username: user,
-        password: cryptedPwd,
-        email: email
-      });
-      // everything went fine
+      const cryptedPwd = await bcrypt.hash(password, 10);
+      if (password == confirmPassword && email == confirmEmail) {
+        await sql("tbl_users").insert({
+          username: username,
+          password: cryptedPwd,
+          email: email
+        });
+        // everything went fine
+      }
     } catch (e) {
       // something failed in the try block (e holds the error)
+      console.log(e);
     }
   },
-  async authenticate(data) {
-    // Example of data variable:
-    // {
-    //   user: "username or email",
-    //   pwd: "plainPassword",
-    // }
-    // Using object destructuring we store the values into the variables specified
-    const { user, pwd } = data;
-    // Select rows from database where user matches
-    let rows = await sql("tableName")
+  async authenticate(userName, password) {
+    let rows = await sql("tbl_users")
       .select()
-      .whereRaw("username = ?", [user]); // Bind values with ?, bind column names with ?? (knex autoescapes the bound data)
-    const match = await bcrypt.compare(pwd, rows[0].password);
+      //.where({ username: userName });
+      .whereRaw("username = ?", [userName]); // Bind values with ?, bind column names with ?? (knex autoescapes the bound data)
+    const match = await bcrypt.compare(password, rows[0].password);
     if (match) {
       // doSomething
+      return true;
     } else {
       // userOrPasswordInvalid
+      return false;
     }
-    return rows;
   },
   async deauthenticate() {
     throw "Empty block";
