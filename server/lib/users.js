@@ -35,7 +35,7 @@ const users = {
       return true;
     }
     // If this line is reached that means the form validation failed
-    throw validationCheck;
+    throw Error(validationCheck);
   },
   async authenticate(session, data) {
     const { username, password } = data;
