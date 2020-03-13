@@ -1,9 +1,9 @@
 // Rows to be inserted in the database, specify the columns with their values
 const rows = [
-  { example: "abc" },
-  { example: "def" },
-  { example: "ghi" },
-  { example: "jkl" }
+  { example: 'abc' },
+  { example: 'def' },
+  { example: 'ghi' },
+  { example: 'jkl' },
 ];
 
 async function insert(sql, tableName) {

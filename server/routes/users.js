@@ -1,17 +1,18 @@
-const express = require("express");
-const router = express.Router();
+const express = require('express');
+const users = require('../lib/users.js');
 
-const users = require("../lib/users.js");
+const router = express.Router();
 
 /**
  * POST /users/register
  */
-router.post("/register", async (req, res) => {
-  let error, result;
+router.post('/register', async (req, res) => {
+  let error;
+  let result;
   try {
     result = await users.register(req.body);
   } catch (e) {
-    console.dir((error = e));
+    error = e;
   }
   res.json({ result, error });
 });
@@ -19,12 +20,13 @@ router.post("/register", async (req, res) => {
 /**
  * POST /users/authenticate
  */
-router.post("/authenticate", async (req, res) => {
-  let error, result;
+router.post('/authenticate', async (req, res) => {
+  let error;
+  let result;
   try {
     result = await users.authenticate(req.session, req.body);
   } catch (e) {
-    console.dir((error = e));
+    error = e;
   }
   res.json({ result, error });
 });
@@ -32,8 +34,9 @@ router.post("/authenticate", async (req, res) => {
 /**
  * GET /users/session
  */
-router.get("/session", async (req, res) => {
-  let error, result;
+router.get('/session', async (req, res) => {
+  let error;
+  let result;
   try {
     result = await users.session(req.session.key);
   } catch (e) {
