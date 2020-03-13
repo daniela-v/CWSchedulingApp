@@ -1,6 +1,7 @@
-const bcrypt = require("bcrypt");
-// const validate = require("validate"); // validate is a great module to validate data: https://validatejs.org/
 const sql = require("./db/config.js");
+const bcrypt = require("bcrypt");
+const validate = require("validate.js");
+const validators = require("./validators/users.validator.js");
 
 function saveSession(session, passKey) {
   session.key = passKey;
@@ -13,19 +14,27 @@ function removeSensitive(data) {
 
 const users = {
   async register(data) {
-    const { username, password, confirmPassword, email, confirmEmail } = data;
-    try {
-      const cryptedPwd = await bcrypt.hash(password, 10);
-      if (password == confirmPassword && email == confirmEmail) {
-        await sql("tbl_users").insert({
-          username: username,
-          password: cryptedPwd,
-          email: email
-        });
+    const validationCheck = validate(data, validators.register);
+    if (!validationCheck) {
+      const { username, password, email } = data;
+      let result = await sql("tbl_users")
+        .select()
+        .whereRaw("username = ?", [username]);
+
+      if (result.length) {
+        throw { username: "This username has already been taken" };
       }
-    } catch (e) {
-      console.log(e);
+
+      const cryptedPwd = await bcrypt.hash(password, 10);
+      await sql("tbl_users").insert({
+        username: username,
+        password: cryptedPwd,
+        email: email
+      });
+      return true;
     }
+    // If this line is reached that means the form validation failed
+    throw validationCheck;
   },
   async authenticate(session, data) {
     const { username, password } = data;
@@ -42,7 +51,7 @@ const users = {
       }
     }
     // If this line is reached that means the either the username or the password is invalid
-    throw { _general: "Invalid username or password" };
+    throw "Invalid username or password";
   },
   async session(key) {
     if (key) {
