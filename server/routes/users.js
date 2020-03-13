@@ -35,9 +35,9 @@ router.get("/authenticate", async (req, res) => {
 router.post("/session", async (req, res) => {
   let error, result;
   try {
-    result = await users.session(req.body);
+    result = await users.session(req.session.key);
   } catch (e) {
-    console.dir((error = e));
+    error = e;
   }
   res.json({ result, error });
 });

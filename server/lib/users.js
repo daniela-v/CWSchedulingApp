@@ -29,6 +29,18 @@ const users = {
       return false;
     }
   },
+  async session(key) {
+    if (key) {
+      let rows = await sql("tbl_users")
+        .select()
+        .whereRaw("password = ?", [key]);
+      // If the session key matches a password key from the database then authenticate the user
+      if (rows.length) {
+        return rows[0];
+      }
+    }
+    throw { _silent: "Session key could not be found or was empty" };
+  },
   async deauthenticate() {
     throw "Empty block";
   }
