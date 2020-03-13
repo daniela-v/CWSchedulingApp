@@ -11,7 +11,7 @@ async function create(sql, forced = false) {
     }
     console.log(`\nCreating ${tableName} ...`);
     // Create table
-    let qry = await sql.schema.createTable(tableName, table => {
+    await sql.schema.createTable(tableName, table => {
       table.charset("utf8");
       table.collate("utf8_bin");
       table.increments("id");
