@@ -29,14 +29,16 @@ const users = {
   },
   async authenticate(session, data) {
     const { username, password } = data;
-    let rows = await sql("tbl_users")
-      .select()
-      .whereRaw("username = ?", [username]);
-    if (rows.length) {
-      const match = await bcrypt.compare(password, rows[0].password);
-      if (match) {
-        saveSession(session, rows[0].password);
-        return removeSensitive(rows[0]);
+    if (username && password) {
+      let rows = await sql("tbl_users")
+        .select()
+        .whereRaw("username = ?", [username]);
+      if (rows.length) {
+        const match = await bcrypt.compare(password, rows[0].password);
+        if (match) {
+          saveSession(session, rows[0].password);
+          return removeSensitive(rows[0]);
+        }
       }
     }
     // If this line is reached that means the either the username or the password is invalid
