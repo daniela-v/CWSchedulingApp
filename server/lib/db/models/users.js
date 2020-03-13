@@ -1,6 +1,6 @@
 // http://knexjs.org/#Schema-Building
-const tableName = "tbl_users";
-const seeds = require("../seeds/users.js");
+const tableName = 'tbl_users';
+const seeds = require('../seeds/users.js');
 
 async function create(sql, forced = false) {
   try {
@@ -11,13 +11,13 @@ async function create(sql, forced = false) {
     }
     console.log(`\nCreating ${tableName} ...`);
     // Create table
-    await sql.schema.createTable(tableName, table => {
-      table.charset("utf8");
-      table.collate("utf8_bin");
-      table.increments("id");
-      table.string("username", 32).notNullable();
-      table.string("password", 128).notNullable();
-      table.string("email", 128).notNullable();
+    await sql.schema.createTable(tableName, (table) => {
+      table.charset('utf8');
+      table.collate('utf8_bin');
+      table.increments('id');
+      table.string('username', 32).notNullable();
+      table.string('password', 128).notNullable();
+      table.string('email', 128).notNullable();
       table.timestamps(true, true);
     });
     console.log(`Table ${tableName} has been created`);

@@ -1,14 +1,15 @@
-const sql = require("./db/config.js");
-const bcrypt = require("bcrypt");
-const validate = require("validate.js");
-const validators = require("./validators/users.validator.js");
+const bcrypt = require('bcrypt');
+const validate = require('validate.js');
+
+const sql = require('./db/config.js');
+const validators = require('./validators/users.validator.js');
 
 function saveSession(session, passKey) {
-  session.key = passKey;
+  session.key = passKey; // eslint-disable-line
 }
 
 function removeSensitive(data) {
-  delete data.password;
+  delete data.password; // eslint-disable-line
   return data;
 }
 
@@ -17,19 +18,19 @@ const users = {
     const validationCheck = validate(data, validators.register);
     if (!validationCheck) {
       const { username, password, email } = data;
-      let result = await sql("tbl_users")
+      const result = await sql('tbl_users')
         .select()
-        .whereRaw("username = ?", [username]);
+        .whereRaw('username = ?', [username]);
 
       if (result.length) {
-        throw { username: "This username has already been taken" };
+        throw Error({ username: 'This username has already been taken' });
       }
 
       const cryptedPwd = await bcrypt.hash(password, 10);
-      await sql("tbl_users").insert({
-        username: username,
+      await sql('tbl_users').insert({
+        username,
         password: cryptedPwd,
-        email: email
+        email,
       });
       return true;
     }
@@ -39,9 +40,9 @@ const users = {
   async authenticate(session, data) {
     const { username, password } = data;
     if (username && password) {
-      let rows = await sql("tbl_users")
+      const rows = await sql('tbl_users')
         .select()
-        .whereRaw("username = ?", [username]);
+        .whereRaw('username = ?', [username]);
       if (rows.length) {
         const match = await bcrypt.compare(password, rows[0].password);
         if (match) {
@@ -51,24 +52,24 @@ const users = {
       }
     }
     // If this line is reached that means the either the username or the password is invalid
-    throw "Invalid username or password";
+    throw Error('Invalid username or password');
   },
   async session(key) {
     if (key) {
-      let rows = await sql("tbl_users")
+      const rows = await sql('tbl_users')
         .select()
-        .whereRaw("password = ?", [key]);
+        .whereRaw('password = ?', [key]);
       // If the session key matches a password key from the database then authenticate the user
       if (rows.length) {
         return removeSensitive(rows[0]);
       }
     }
     // If this line is reached that means the session could not be loaded
-    throw { _silent: "Session key could not be found or was empty" };
+    throw Error({ _silent: 'Session key could not be found or was empty' });
   },
   async deauthenticate() {
-    throw "Empty block";
-  }
+    throw Error('Empty block');
+  },
 };
 
 module.exports = users;

@@ -13,5 +13,6 @@ module.exports = {
     'max-len': ["error", { "code": 300 }],
     'linebreak-style': 'off',
     'no-plusplus': 'off',
+    'new-cap': 'off',
   }
 };

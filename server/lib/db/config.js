@@ -1,19 +1,21 @@
-const usersModel = require("./models/users.js");
-const exampleModel = require("./models/example.js");
+const knex = require('knex');
+
+const usersModel = require('./models/users.js');
+const exampleModel = require('./models/example.js');
 
 /**
  * This file is used to create the connection to the database using the knex module
  * http://knexjs.org/
  */
-const sql = require("knex")({
-  client: "mysql",
+const sql = knex({
+  client: 'mysql',
   connection: {
-    //host: "database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com",
-    host: "localhost",
-    user: "cwscheduleapp",
-    password: "cwscheduleapp",
-    database: "cwscheduleapp"
-  }
+    // host: "database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com",
+    host: 'localhost',
+    user: 'cwscheduleapp',
+    password: 'cwscheduleapp',
+    database: 'cwscheduleapp',
+  },
 });
 /*
  **** MySQL Workbench:
