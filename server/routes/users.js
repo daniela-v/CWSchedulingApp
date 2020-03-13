@@ -17,12 +17,12 @@ router.post("/register", async (req, res) => {
 });
 
 /**
- * GET /users/authenticate
+ * POST /users/authenticate
  */
-router.get("/authenticate", async (req, res) => {
+router.post("/authenticate", async (req, res) => {
   let error, result;
   try {
-    result = await users.authenticate(req.query.userName, req.query.password);
+    result = await users.authenticate(req.session, req.body);
   } catch (e) {
     console.dir((error = e));
   }
@@ -30,9 +30,9 @@ router.get("/authenticate", async (req, res) => {
 });
 
 /**
- * POST /users/session
+ * GET /users/session
  */
-router.post("/session", async (req, res) => {
+router.get("/session", async (req, res) => {
   let error, result;
   try {
     result = await users.session(req.session.key);
