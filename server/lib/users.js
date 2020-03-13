@@ -15,8 +15,8 @@ function removeSensitive(data) {
 
 const users = {
   async register(data) {
-    const validationCheck = validate(data, validators.register);
-    if (!validationCheck) {
+    const error = validate(data, validators.register);
+    if (!error) {
       const { username, password, email } = data;
       const result = await sql('tbl_users')
         .select()
@@ -35,7 +35,7 @@ const users = {
       return true;
     }
     // If this line is reached that means the form validation failed
-    throw Error(validationCheck);
+    throw Error(error);
   },
   async authenticate(session, data) {
     const { username, password } = data;
