@@ -19,6 +19,7 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 @import './scss/_normalize';
 @import './scss/_colors';
+@import './scss/_icons';
 
 html, body, #app {
   min-height: 100vh;
