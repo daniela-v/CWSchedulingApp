@@ -1,7 +1,7 @@
 <template>
   <transition name="overlayfx" appear>
     <div v-if="$store.getters.getWindowsNum" class="overlay">
-      <Window v-for="(window, id) in $store.getters.getWindows" :key="id" v-bind="window"></Window>
+      <Window v-for="(window, id) in $store.getters.getWindows" :key="id" :id="id" v-bind="window"></Window>
     </div>
   </transition>
 </template>
@@ -26,6 +26,7 @@ export default {
   background: rgba(#000, .6);
   transition: opacity .2s ease;
   z-index: 100;
+  overflow-y: auto;
 }
 .overlayfx-enter, .overlayfx-leave-active { opacity: 0; }
 </style>
