@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "knex": "^0.20.11",
+    "lodash": "^4.17.15",
     "mysql": "^2.18.1",
     "validate.js": "^0.13.1",
     "vue": "^2.6.11",
