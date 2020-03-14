@@ -19,7 +19,7 @@
       </div>
     </router-link>
     <section class="navigation">
-      <Button name="login" type="header">LOGIN</Button>
+      <Button name="show-login" type="header" :click="showLoginOverlay.bind()">LOGIN</Button>
       <Button name="menu" type="header">REGISTER</Button>
     </section>
     <section class="account">
@@ -30,10 +30,16 @@
 
 <script>
 import Button from '../components/Button.component.vue';
+import Login from '../components/Login.window.vue';
 
 export default {
   components: {
     Button,
+  },
+  methods: {
+    showLoginOverlay() {
+      this.$store.commit('openWindow', { name: 'Login', component: Login });
+    },
   },
 };
 </script>
