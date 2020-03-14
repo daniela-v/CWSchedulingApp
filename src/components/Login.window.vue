@@ -10,8 +10,10 @@
         <label for="password" class="icon icon-key"></label>
         <input id="password" type="password" name="password" />
       </div>
-      <Button type="header">Log In</Button>
     </form>
+    <div class="form-control">
+      <Button type="header">Log In</Button>
+    </div>
   </div>
 </template>
 
@@ -30,6 +32,7 @@ export default {
 @import '@/scss/_mixins';
 
 .login-overlay {
+  flex: 1;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -41,10 +44,12 @@ export default {
     font-size: 40px;
   }
   form {
+    flex: 1;
     display: grid;
     grid-auto-flow: row;
     grid-row-gap: 8px;
     align-items: center;
+    align-content: center;
     justify-items: center;
     .input-wrapper {
       display: flex;
@@ -73,6 +78,11 @@ export default {
         outline: none;
       }
     }
+  }
+  .form-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
