@@ -1,5 +1,5 @@
 <template>
-  <i class="icon" :class="getIcon"></i>
+  <i v-if="name" class="icon" :class="getIcon"></i>
 </template>
 
 <script>
