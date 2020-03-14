@@ -88,6 +88,14 @@ header {
     grid-auto-flow: column;
     align-items: center;
     justify-content: left;
+    &:before {
+      content: "";
+      position: relative;
+      top: 2px; // Fix border offset
+      height: 75%;
+      padding: 0 5px;
+      border-left: 1px solid $color-beige;
+    }
   }
   .account {
     grid-area: account;
