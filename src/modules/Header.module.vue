@@ -19,12 +19,20 @@
       </div>
     </router-link>
     <section class="navigation"></section>
-    <section class="account"></section>
+    <section class="account">
+      <Button name="show-menu" icon="menu" type="menu"></Button>
+    </section>
   </header>
 </template>
 
 <script>
-export default {};
+import Button from '../components/Button.component.vue';
+
+export default {
+  components: {
+    Button,
+  },
+};
 </script>
 
 <style lang="scss">
@@ -32,7 +40,7 @@ export default {};
 
 header {
   display: grid;
-  grid-template-columns: auto 1fr 200px;
+  grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
   height: 80px;
   padding: 0 20px;
@@ -74,6 +82,9 @@ header {
   }
   .account {
     grid-area: account;
+    display: grid;
+    align-items: center;
+    justify-items: right;
   }
 }
 </style>
