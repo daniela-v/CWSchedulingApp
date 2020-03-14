@@ -45,6 +45,7 @@ header {
   display: grid;
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
+  grid-column-gap: 10px;
   height: 80px;
   padding: 0 20px;
 
