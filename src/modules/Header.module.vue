@@ -18,7 +18,10 @@
         <span class="line-2">MANAGER</span>
       </div>
     </router-link>
-    <section class="navigation"></section>
+    <section class="navigation">
+      <Button name="login" type="header">LOGIN</Button>
+      <Button name="menu" type="header">REGISTER</Button>
+    </section>
     <section class="account">
       <Button name="show-menu" icon="menu" type="menu"></Button>
     </section>
@@ -79,12 +82,17 @@ header {
   }
   .navigation {
     grid-area: navigation;
+    display: grid;
+    grid-auto-columns: auto;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: left;
   }
   .account {
     grid-area: account;
     display: grid;
     align-items: center;
-    justify-items: right;
+    justify-content: right;
   }
 }
 </style>
