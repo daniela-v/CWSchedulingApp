@@ -2,15 +2,18 @@
   <div id="app">
     <Header></Header>
     <router-view />
+    <Overlay></Overlay>
   </div>
 </template>
 
 <script>
 import Header from './modules/Header.module.vue';
+import Overlay from './modules/Overlay.module.vue';
 
 export default {
   components: {
     Header,
+    Overlay,
   },
 };
 </script>
