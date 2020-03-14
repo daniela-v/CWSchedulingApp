@@ -55,6 +55,7 @@ export default {
   border: 1px solid $color-beige;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(#000, .5);
+  min-height: 600px;
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
   .window-bg {
@@ -65,7 +66,7 @@ export default {
     right: 0;
     background: darken($color-beige, 40%);
     background: linear-gradient(to bottom, rgba(#000, .8) 50%, rgba(#000, .5)),
-                url('../assets/bg-3.jpg') left center / cover no-repeat;
+                url('../assets/bg-3.jpg') left center / 400% no-repeat;
   }
   .content {
     padding: 30px;
