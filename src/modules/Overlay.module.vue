@@ -1,31 +1,17 @@
 <template>
   <transition name="overlayfx" appear>
-    <div v-if="getOverlay.component" class="overlay">
-      <component :is="getOverlay.component" :props="getOverlay.props"></component>
+    <div v-if="$store.getters.getWindowsNum" class="overlay">
+      <Window v-for="(window, id) in $store.getters.getWindows" :key="id" :id="id" v-bind="window"></Window>
     </div>
   </transition>
 </template>
 
 <script>
+import Window from '@/modules/Window.module.vue';
+
 export default {
-  mounted() {
-    document.addEventListener('keydown', this.OnKeyPress);
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.OnKeyPress);
-  },
-  computed: {
-    getOverlay() {
-      return this.$store.getters.getOverlay;
-    },
-  },
-  methods: {
-    OnKeyPress(ev) {
-      const keyEscape = (ev.key === 'Escape' || ev.key === 'Esc');
-      if (this.getOverlay.closeable && keyEscape) {
-        this.$store.commit('hideOverlay');
-      }
-    },
+  components: {
+    Window,
   },
 };
 </script>
@@ -39,6 +25,8 @@ export default {
   right: 0;
   background: rgba(#000, .6);
   transition: opacity .2s ease;
+  z-index: 100;
+  overflow-y: auto;
 }
 .overlayfx-enter, .overlayfx-leave-active { opacity: 0; }
 </style>
