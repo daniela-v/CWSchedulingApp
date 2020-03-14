@@ -45,8 +45,9 @@ header {
   display: grid;
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
-  grid-column-gap: 10px;
-  height: 80px;
+  grid-column-gap: 20px;
+  background: linear-gradient(to bottom, rgba($color-beige, .2), transparent);
+  height: 100px;
   padding: 0 20px;
 
   .logo-wrapper {
@@ -91,9 +92,9 @@ header {
     &:before {
       content: "";
       position: relative;
-      top: 2px; // Fix border offset
-      height: 75%;
-      padding: 0 5px;
+      top: 2px; // Fix border vertical offset
+      height: 60%;
+      margin-right: 10px;
       border-left: 1px solid $color-beige;
     }
   }
