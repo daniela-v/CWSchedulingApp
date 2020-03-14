@@ -1,0 +1,6 @@
+@mixin transition($properties, $duration: 0.4s, $easing: ease, $delay: 0) {
+  transition-property: unquote($properties);
+  transition-duration: $duration;
+  transition-timing-function: $easing;
+  transition-delay: $delay;
+}
