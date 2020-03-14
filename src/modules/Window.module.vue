@@ -10,11 +10,12 @@
 import _ from 'lodash';
 
 export default {
-  props: ['window'],
+  props: ['key', 'window'],
   created() {
     window.addEventListener('mousemove', this.move);
     window.addEventListener('mouseup', this.release);
     window.addEventListener('resize', this.resize);
+    window.addEventListener('keydown', this.escape);
   },
   mounted() {
     this.$nextTick(this.alignCenter);
@@ -23,6 +24,7 @@ export default {
     window.removeEventListener('mousemove', this.move);
     window.removeEventListener('mouseup', this.release);
     window.removeEventListener('resize', this.resize);
+    window.removeEventListener('keydown', this.escape);
   },
   computed: {
     slugifiedName() {
@@ -44,6 +46,12 @@ export default {
       const x = _.clamp(left, 0, (document.documentElement.clientWidth - 1) - el.offsetWidth);
       el.style.top = `${y}px`;
       el.style.left = `${x}px`;
+    },
+    escape(event) {
+      const keyEscape = (event.key === 'Escape' || event.key === 'Esc');
+      if (this.window.dismissable && keyEscape) {
+        this.$store.commit('closeWindow', { id: this.key });
+      }
     },
   },
 };

@@ -13,25 +13,6 @@ export default {
   components: {
     Window,
   },
-  mounted() {
-    document.addEventListener('keydown', this.OnKeyPress);
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.OnKeyPress);
-  },
-  computed: {
-    getOverlay() {
-      return this.$store.getters.getOverlay;
-    },
-  },
-  methods: {
-    OnKeyPress(ev) {
-      const keyEscape = (ev.key === 'Escape' || ev.key === 'Esc');
-      if (this.getOverlay.closeable && keyEscape) {
-        this.$store.commit('hideOverlay');
-      }
-    },
-  },
 };
 </script>
 
@@ -44,6 +25,7 @@ export default {
   right: 0;
   background: rgba(#000, .6);
   transition: opacity .2s ease;
+  z-index: 100;
 }
 .overlayfx-enter, .overlayfx-leave-active { opacity: 0; }
 </style>
