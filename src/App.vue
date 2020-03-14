@@ -24,6 +24,11 @@ html, body, #app {
   min-height: 100vh;
 }
 
+a {
+  text-decoration: none !important;
+  color: $color-beige;
+}
+
 #app {
   background: darken($color-purple, 15%);
   background: radial-gradient(rgba(#000, .4), rgba(#000, .6)),
@@ -32,6 +37,6 @@ html, body, #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: $color-yellow;
+  color: $color-beige;
 }
 </style>
