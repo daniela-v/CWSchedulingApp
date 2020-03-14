@@ -51,6 +51,8 @@ export default {
 @import '@/scss/_mixins.scss';
 
 .window {
+  display: flex;
+  flex-direction: column;
   position: absolute;
   border: 1px solid $color-beige;
   border-radius: 4px;
