@@ -63,7 +63,7 @@ export default {
 
 .window {
   position: absolute;
-  border: 1px solid $border-color;
+  border: 1px solid $color-beige;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
