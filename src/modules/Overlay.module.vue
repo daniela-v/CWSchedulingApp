@@ -1,13 +1,18 @@
 <template>
   <transition name="overlayfx" appear>
-    <div v-if="getOverlay.component" class="overlay">
-      <component :is="getOverlay.component" :props="getOverlay.props"></component>
+    <div v-if="$store.getters.getWindowsNum" class="overlay">
+      <Window v-for="(window, id) in $store.getters.getWindows" :key="id" v-bind="window"></Window>
     </div>
   </transition>
 </template>
 
 <script>
+import Window from '@/modules/Window.module.vue';
+
 export default {
+  components: {
+    Window,
+  },
   mounted() {
     document.addEventListener('keydown', this.OnKeyPress);
   },
