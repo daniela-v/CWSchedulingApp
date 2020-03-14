@@ -1,6 +1,7 @@
 <template>
   <transition name="windowfx" appear>
     <div class="window" :class="[ slugifiedName ]">
+      <div class="window-bg"></div>
       <component :is="window.component" v-bind="window.props"></component>
     </div>
   </transition>
@@ -56,6 +57,16 @@ export default {
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
+  .window-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: darken($color-beige, 40%);
+    background: linear-gradient(to bottom, rgba(#000, .8) 50%, rgba(#000, .5)),
+                url('../assets/bg-3.jpg') left center / cover no-repeat;
+  }
   .content {
     padding: 30px;
     box-sizing: border-box;
