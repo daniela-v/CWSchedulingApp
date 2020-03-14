@@ -1,9 +1,25 @@
+<template>
+  <i class="icon" :class="getIcon"></i>
+</template>
+
+<script>
+export default {
+  props: ['name'],
+  computed: {
+    getIcon() {
+      return `icon-${this.name}`;
+    },
+  },
+};
+</script>
+
+<style lang="scss">
 @font-face {
   font-family: 'cwscheduleappicon';
   src:
-    url('./assets/fonts/cwscheduleappicon.ttf?6xff0y') format('truetype'),
-    url('./assets/fonts/cwscheduleappicon.woff?6xff0y') format('woff'),
-    url('./assets/fonts/cwscheduleappicon.svg?6xff0y#cwscheduleappicon') format('svg');
+    url('../assets/fonts/cwscheduleappicon.ttf?6xff0y') format('truetype'),
+    url('../assets/fonts/cwscheduleappicon.woff?6xff0y') format('woff'),
+    url('../assets/fonts/cwscheduleappicon.svg?6xff0y#cwscheduleappicon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -26,3 +42,4 @@
 .icon-menu:before {
   content: "\e900";
 }
+</style>
