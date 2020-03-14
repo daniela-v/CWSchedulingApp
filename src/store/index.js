@@ -5,22 +5,29 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    overlay: {},
+    windows: [],
   },
   mutations: {
-    async displayOverlay(state, payload) {
-      state.overlay = {
-        closeable: payload.closeable || true,
-        component: () => import('../components/' + payload.component + '.overlay.vue'), // eslint-disable-line
-      };
+    openWindow(state, { name, component, props, dismissable }) { // eslint-disable-line
+      state.windows.push({
+        window: {
+          name,
+          component,
+          props,
+          dismissable: dismissable || true,
+        },
+      });
     },
-    hideOverlay(state) {
-      state.overlay = {};
+    closeWindow(state, { id }) {
+      state.windows.splice(id, 1);
     },
   },
   getters: {
-    getOverlay(state) {
-      return state.overlay;
+    getWindows(state) {
+      return state.windows;
+    },
+    getWindowsNum(state) {
+      return state.windows.length;
     },
   },
   actions: {},
