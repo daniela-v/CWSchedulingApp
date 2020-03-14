@@ -15,6 +15,7 @@ header {
   display: grid;
   grid-template-columns: auto 1fr 200px;
   grid-template-areas: "logo navigation account";
+  height: 80px;
 
   .logo {
     grid-area: logo;
