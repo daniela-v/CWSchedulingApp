@@ -50,7 +50,6 @@ export default {
   font-size: 24px;
   font-weight: 600;
   transition: color .2s ease, background-color .2s ease;
-  .text { color: #ccc; }
   .icon { margin-left: 8px; }
   &:hover, &.active { color: lighten($color-beige, 10%); }
   &.active { background-color: rgba($color-beige, .2); }
