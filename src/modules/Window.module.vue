@@ -10,20 +10,16 @@
 import _ from 'lodash';
 
 export default {
-  props: ['key', 'window'],
+  props: ['id', 'window'],
   created() {
-    window.addEventListener('mousemove', this.move);
-    window.addEventListener('mouseup', this.release);
-    window.addEventListener('resize', this.resize);
+    window.addEventListener('resize', this.alignCenter);
     window.addEventListener('keydown', this.escape);
   },
   mounted() {
     this.$nextTick(this.alignCenter);
   },
   destroy() {
-    window.removeEventListener('mousemove', this.move);
-    window.removeEventListener('mouseup', this.release);
-    window.removeEventListener('resize', this.resize);
+    window.removeEventListener('resize', this.alignCenter);
     window.removeEventListener('keydown', this.escape);
   },
   computed: {
@@ -36,14 +32,6 @@ export default {
       const el = this.$el;
       const y = Math.max(0, (document.documentElement.clientHeight - el.offsetHeight) / 2);
       const x = Math.max(0, (document.documentElement.clientWidth - el.offsetWidth) / 2);
-      el.style.top = `${y}px`;
-      el.style.left = `${x}px`;
-    },
-    resize() {
-      const el = this.$el;
-      const { top, left } = this.$el.getBoundingClientRect();
-      const y = _.clamp(top, 0, (document.documentElement.clientHeight - 1) - el.offsetHeight);
-      const x = _.clamp(left, 0, (document.documentElement.clientWidth - 1) - el.offsetWidth);
       el.style.top = `${y}px`;
       el.style.left = `${x}px`;
     },
