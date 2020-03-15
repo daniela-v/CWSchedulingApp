@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    user: null,
     windows: [],
     tooltip: null,
   },
@@ -27,6 +28,12 @@ export default new Vuex.Store({
     },
     hideTooltip(state) {
       state.tooltip = null;
+    },
+    authenticate(state, user) {
+      state.user = user;
+    },
+    deauthenticate(state) {
+      state.user = null;
     },
   },
   getters: {
