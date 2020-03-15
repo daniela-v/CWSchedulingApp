@@ -4,7 +4,7 @@
     <form class="auth-form" @keypress="submit">
       <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper">
         <label :for="id" class="icon" :class="[ input.icon ]"></label>
-        <input :id="id" :type="input.type" :name="id" v-model="input.model" />
+        <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
       </div>
     </form>
     <div class="form-control">
@@ -29,7 +29,7 @@ export default {
           action: '/users/authenticate',
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
-            password: { icon: 'icon-key', type: 'password', placeholder: 'username' },
+            password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
           },
           control: [
             { text: 'Log In', icon: 'menu', type: 'inversed dialog', click: this.login.bind(null) },
@@ -41,9 +41,9 @@ export default {
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
-            confirmPassword: { icon: 'icon-key', type: 'password', placeholder: 'password' },
+            confirmPassword: { icon: 'icon-key', type: 'password', placeholder: 'confirm password' },
             email: { icon: 'icon-email', type: 'text', placeholder: 'email' },
-            confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'email' },
+            confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
             { text: 'Register', icon: 'menu', type: 'inversed dialog', click: this.register.bind(null) },
