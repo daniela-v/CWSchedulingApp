@@ -9,7 +9,7 @@ export default new Vuex.Store({
   },
   mutations: {
     openWindow(state, { name, component, props, dismissable }) { // eslint-disable-line
-      state.windows.push({
+      state.windows.splice(0, 1, {
         window: {
           name,
           component,

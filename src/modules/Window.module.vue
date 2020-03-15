@@ -1,10 +1,8 @@
 <template>
-  <transition name="windowfx" appear>
-    <div class="window" :class="[ slugifiedName ]">
-      <div class="window-bg"></div>
-      <component :is="window.component" v-bind="window.props"></component>
-    </div>
-  </transition>
+  <div class="window" :class="[ slugifiedName ]">
+    <div class="window-bg"></div>
+    <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
+  </div>
 </template>
 
 <script>
@@ -57,7 +55,6 @@ export default {
   border: 1px solid $color-beige;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(#000, .5);
-  min-height: 600px;
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
   .window-bg {
@@ -74,9 +71,5 @@ export default {
     padding: 30px;
     box-sizing: border-box;
   }
-}
-.windowfx-enter, .windowfx-leave-active {
-  opacity: 0;
-  transform: translateY(-50px) scale(0.2);
 }
 </style>

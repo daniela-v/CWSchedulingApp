@@ -19,8 +19,8 @@
       </div>
     </router-link>
     <section class="navigation">
-      <Button name="show-login" type="header" :click="showLoginOverlay.bind()">LOGIN</Button>
-      <Button name="menu" type="header" :click="showRegisterOverlay.bind()">REGISTER</Button>
+      <Button name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
+      <Button name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
     </section>
     <section class="account">
       <Button name="show-menu" icon="menu" type="menu"></Button>
@@ -30,19 +30,16 @@
 
 <script>
 import Button from '../components/Button.component.vue';
-import Login from '../components/Login.window.vue';
-import Register from '../components/Register.window.vue';
+
+import Auth from '../components/windows/Auth.window.vue';
 
 export default {
   components: {
     Button,
   },
   methods: {
-    showLoginOverlay() {
-      this.$store.commit('openWindow', { name: 'Login', component: Login });
-    },
-    showRegisterOverlay() {
-      this.$store.commit('openWindow', { name: 'Register', component: Register });
+    showAuthOverlay(name) {
+      this.$store.commit('openWindow', { name, component: Auth });
     },
   },
 };
