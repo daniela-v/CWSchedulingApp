@@ -2,7 +2,7 @@
   <transition name="windowfx" appear>
     <div class="window" :class="[ slugifiedName ]">
       <div class="window-bg"></div>
-      <component :is="window.component" v-bind="window.props"></component>
+      <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
     </div>
   </transition>
 </template>
@@ -57,7 +57,6 @@ export default {
   border: 1px solid $color-beige;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(#000, .5);
-  min-height: 600px;
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
   .window-bg {
