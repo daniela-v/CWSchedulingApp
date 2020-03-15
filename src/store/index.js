@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -63,6 +64,11 @@ export default new Vuex.Store({
       return state.user;
     },
   },
-  actions: {},
+  actions: {
+    async deauthenticate(context) {
+      await axios.get('/users/deauthenticate');
+      context.commit('deauthenticate');
+    },
+  },
   modules: {},
 });

@@ -51,7 +51,8 @@ export default {
       this.$store.commit('openWindow', { name, component: Auth });
     },
     deauthenticate() {
-      this.$store.commit('deauthenticate');
+      this.$store.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
+      this.$store.dispatch('deauthenticate');
     },
   },
 };
