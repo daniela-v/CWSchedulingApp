@@ -15,6 +15,9 @@
 </template>
 
 <script>
+import _ from 'lodash';
+import axios from 'axios';
+
 import Icon from '../Icon.component.vue';
 import Button from '../Button.component.vue';
 
@@ -64,12 +67,33 @@ export default {
     hasFailed(field) {
       return (field.error) ? 'failed' : null;
     },
-    submit() {
-
+    /**
+     * Cleans the active form of errors
+     */
+    clean() {
+      _.forEach(this.getForm.input, (field, key) => {
+        this.$delete(this.getForm.input[key], 'error');
+      });
+    },
+    async submit() {
+      this.clean();
+      // Reduce the input fields to { 'fieldName': 'fieldValue' } to prepare it
+      const data = _.reduce(this.getForm.input, (acc, val, key) => {
+        acc[key] = val.model;
+        return acc;
+      }, {});
+      const response = await axios.post(this.getForm.action, data);
+      if (response.data.error) {
+        _.forEach(response.data.error, (error, field) => {
+          this.$set(this.getForm.input[field], 'error', error[0]);
+        });
+      } else {
+        console.log(response.data.result);
+      }
     },
     OnKeyPress(ev) {
       if (ev.key === 'Enter') {
-        console.log('submitting');
+        this.submit();
       }
     },
   },
