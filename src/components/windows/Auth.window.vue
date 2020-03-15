@@ -59,11 +59,20 @@ export default {
     };
   },
   computed: {
+    /**
+     * Returns the active form
+     */
     getForm() {
       return this.forms[this.name];
     },
   },
   methods: {
+    /**
+     * Returns a styling class name if the field has failed the validation checks
+     *
+     * @param {String} field          Field name to check
+     * @returns {String}  The styling class name
+     */
     hasFailed(field) {
       return (field.error) ? 'failed' : null;
     },
@@ -75,6 +84,9 @@ export default {
         this.$delete(this.getForm.input[key], 'error');
       });
     },
+    /**
+     * Submits the active form data to the server
+     */
     async submit() {
       this.clean();
       // Reduce the input fields to { 'fieldName': 'fieldValue' } to prepare it
@@ -82,7 +94,9 @@ export default {
         acc[key] = val.model;
         return acc;
       }, {});
+      // Submit the form data
       const response = await axios.post(this.getForm.action, data);
+      // Format the input errors if there are any
       if (response.data.error) {
         _.forEach(response.data.error, (error, field) => {
           this.$set(this.getForm.input[field], 'error', error[0]);
@@ -91,6 +105,9 @@ export default {
         console.log(response.data.result);
       }
     },
+    /**
+     * Checks if the pressed key when the user has any of the input fields focused
+     */
     OnKeyPress(ev) {
       if (ev.key === 'Enter') {
         this.submit();
