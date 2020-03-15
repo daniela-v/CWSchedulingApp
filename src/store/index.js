@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     windows: [],
+    tooltip: null,
   },
   mutations: {
     openWindow(state, { name, component, props, dismissable }) { // eslint-disable-line
@@ -21,6 +22,12 @@ export default new Vuex.Store({
     closeWindow(state, { id }) {
       state.windows.splice(id, 1);
     },
+    showTooltip(state, tooltip) {
+      state.tooltip = tooltip;
+    },
+    hideTooltip(state) {
+      state.tooltip = null;
+    },
   },
   getters: {
     getWindows(state) {
@@ -28,6 +35,9 @@ export default new Vuex.Store({
     },
     getWindowsNum(state) {
       return state.windows.length;
+    },
+    getTooltip(state) {
+      return state.tooltip;
     },
   },
   actions: {},
