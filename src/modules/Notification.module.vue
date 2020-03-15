@@ -43,7 +43,7 @@ export default {
     display: flex;
     align-items: center;
     height: 32px;
-    padding: 10px;
+    padding: 10px 20px;
     margin: 10px;
     border: 1px solid $color-purple;
     border-radius: 5px;
