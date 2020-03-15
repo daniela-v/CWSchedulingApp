@@ -30,9 +30,8 @@
 </template>
 
 <script>
-import Button from '../components/Button.component.vue';
-
 import Auth from '../components/windows/Auth.window.vue';
+import Button from '../components/Button.component.vue';
 
 export default {
   components: {
