@@ -18,6 +18,7 @@
 import _ from 'lodash';
 import axios from 'axios';
 
+import Auth from './Auth.window.vue'; // eslint-disable-line
 import Icon from '../Icon.component.vue';
 import Button from '../Button.component.vue';
 
@@ -41,6 +42,7 @@ export default {
             { text: 'Log In', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
           success: () => {
+            this.$store.commit('pushNotification', { icon: 'check', text: 'You have been successfully logged in' });
             this.$store.commit('closeWindow');
           },
         },
@@ -58,7 +60,8 @@ export default {
             { text: 'Register', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
           success: () => {
-            this.$store.commit('closeWindow');
+            this.$store.commit('pushNotification', { icon: 'check', text: 'Your account has been created' });
+            this.$store.commit('openWindow', { name: 'Login', component: Auth });
           },
         },
       },
@@ -100,7 +103,6 @@ export default {
         acc[key] = val.model;
         return acc;
       }, {});
-      this.getForm.success();
       // Submit the form data
       const response = await axios.post(this.getForm.action, data);
       // Format the input errors if there are any
@@ -109,7 +111,7 @@ export default {
           this.$set(this.getForm.input[field], 'error', error[0]);
         });
       } else {
-        console.log(response.data.result);
+        this.getForm.success();
       }
     },
     /**

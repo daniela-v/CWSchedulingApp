@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import _ from 'lodash';
 
 Vue.use(Vuex);
 
@@ -7,6 +8,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     windows: [],
+    notifications: [],
     tooltip: null,
   },
   mutations: {
@@ -35,6 +37,14 @@ export default new Vuex.Store({
     deauthenticate(state) {
       state.user = null;
     },
+    pushNotification(state, { text, icon, type, timeout }) {
+      const id = _.uniqueId('notification');
+      state.notifications.push({ id, icon, text, type });
+      setTimeout(this.commit, (timeout || 5) * 1000, 'hideNotification');
+    },
+    hideNotification(state) {
+      state.notifications.shift();
+    },
   },
   getters: {
     getWindows(state) {
@@ -42,6 +52,9 @@ export default new Vuex.Store({
     },
     getWindowsNum(state) {
       return state.windows.length;
+    },
+    getNotifications(state) {
+      return state.notifications;
     },
     getTooltip(state) {
       return state.tooltip;
