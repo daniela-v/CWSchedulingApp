@@ -23,7 +23,7 @@ const users = {
         .whereRaw('username = ?', [username]);
 
       if (result.length) {
-        throw Error({ username: 'This username has already been taken' });
+        throw { username: 'This username has already been taken' };
       }
 
       const cryptedPwd = await bcrypt.hash(password, 10);
@@ -35,7 +35,7 @@ const users = {
       return true;
     }
     // If this line is reached that means the form validation failed
-    throw Error(error);
+    throw error;
   },
   async authenticate(session, data) {
     const { username, password } = data;
@@ -52,7 +52,7 @@ const users = {
       }
     }
     // If this line is reached that means the either the username or the password is invalid
-    throw Error('Invalid username or password');
+    throw 'Invalid username or password';
   },
   async session(key) {
     if (key) {
@@ -65,7 +65,7 @@ const users = {
       }
     }
     // If this line is reached that means the session could not be loaded
-    throw Error({ _silent: 'Session key could not be found or was empty' });
+    throw { _silent: 'Session key could not be found or was empty' };
   },
   async deauthenticate() {
     throw Error('Empty block');
