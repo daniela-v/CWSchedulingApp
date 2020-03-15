@@ -40,6 +40,9 @@ export default {
           control: [
             { text: 'Log In', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
+          success: () => {
+            this.$store.commit('closeWindow');
+          },
         },
         register: {
           title: 'Register',
@@ -54,6 +57,9 @@ export default {
           control: [
             { text: 'Register', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
+          success: () => {
+            this.$store.commit('closeWindow');
+          },
         },
       },
     };
@@ -94,6 +100,7 @@ export default {
         acc[key] = val.model;
         return acc;
       }, {});
+      this.getForm.success();
       // Submit the form data
       const response = await axios.post(this.getForm.action, data);
       // Format the input errors if there are any
