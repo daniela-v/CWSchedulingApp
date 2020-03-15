@@ -5,7 +5,7 @@
       <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper" :class="[ hasFailed(input) ]">
         <label :for="id" class="label icon" :class="[ input.icon ]"></label>
         <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
-        <Icon v-if="input.error" class="error" name="warning"></Icon>
+        <Icon v-if="input.error" class="error" name="warning" v-tooltip="{ type: 'alert', text: input.error }"></Icon>
       </div>
     </form>
     <div class="form-control">
