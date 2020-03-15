@@ -91,7 +91,7 @@ export default {
   color: $color-light-grey;
   font-size: 16px;
   font-weight: 600;
-  transition: color .2s ease;
+  @include transition('color', .2s, ease);
   &:hover, &.active { color: lighten($color-light-grey, 20%); }
 }
 
