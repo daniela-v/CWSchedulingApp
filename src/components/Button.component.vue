@@ -22,7 +22,7 @@ export default {
       return `btn-${this.name}`;
     },
     getStyle() {
-      return `button ${this.type}-button`;
+      return `${this.type}-button`;
     },
   },
   methods: {
@@ -35,6 +35,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/scss/_mixins.scss';
 @import '@/scss/_colors.scss';
 
 .button {
@@ -43,6 +44,45 @@ export default {
   cursor: pointer;
   .icon {
     margin: 0 8px 0 0; // Add spacing between icon and text on the right side of the icon [ICON  TEXT]
+  }
+  &.inversed {
+    .text { order: 1 };
+    .icon {
+      order: 2;
+      margin: 0 0 0 8px; // Add spacing between icon and text on the left side of the icon [TEXT  ICON]
+    }
+  }
+}
+
+.bzard-button {
+  padding: 6px 16px 6px 16px;
+  background-color: darken($color-beige, 30%);
+  color: lighten($color-beige, 20%);
+  box-shadow: 0 1px 1px rgba(black, .3), 0 0 1px 1px rgba(white, .15) inset;
+  @include transition('background-color, box-shadow', .2s, ease);
+  &:not(.disabled) {
+    &.is-active, &:hover {
+      background-color: darken($color-beige, 25%);
+    }
+  }
+}
+
+.dialog-button {
+  padding: 6px 16px 6px 16px;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, darken($color-beige, 25%), darken($color-beige, 30%));
+  background-blend-mode: screen;
+  color: lighten($color-beige, 40%);
+  box-shadow: 0 1px 1px rgba(black, .3), 0 0 1px 1px rgba(white, .15) inset;
+  @include transition('background-color, border', .2s, ease);
+  &:not(.disabled) {
+    &.is-active, &:hover {
+      background-color: darken($color-beige, 45%);
+      border-top: 1px solid $color-beige;
+      border-bottom: 1px solid $color-beige;
+    }
   }
 }
 
@@ -61,12 +101,7 @@ export default {
   font-size: 24px;
   font-weight: 600;
   border-radius: 4px;
-  transition: color .2s ease, background-color .2s ease;
-  .text { order: 1; }
-  .icon {
-    order: 2;
-    margin: 0 0 0 8px; // Add spacing between icon and text on the left side of the icon [TEXT  ICON]
-  }
+  @include transition('color, backgroundcolor', .2s, ease);
   &:hover, &.active { color: lighten($color-beige, 20%); }
   &.active { background-color: rgba($color-beige, .2); }
 }
