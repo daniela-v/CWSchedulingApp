@@ -1,10 +1,11 @@
 <template>
   <div class="auth-window">
     <div class="title">{{ getForm.title }}</div>
-    <form class="auth-form" @keypress="submit">
-      <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper">
-        <label :for="id" class="icon" :class="[ input.icon ]"></label>
+    <form class="auth-form" @keypress="OnKeyPress">
+      <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper" :class="[ getError(input) ]">
+        <label :for="id" class="label icon" :class="[ input.icon ]"></label>
         <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
+        <Icon v-if="input.error" class="error" name="warning"></Icon>
       </div>
     </form>
     <div class="form-control">
@@ -14,11 +15,13 @@
 </template>
 
 <script>
+import Icon from '../Icon.component.vue';
 import Button from '../Button.component.vue';
 
 export default {
   props: ['name'],
   components: {
+    Icon,
     Button,
   },
   data() {
@@ -32,7 +35,7 @@ export default {
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
           },
           control: [
-            { text: 'Log In', icon: 'menu', type: 'inversed dialog', click: this.login.bind(null) },
+            { text: 'Log In', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
         },
         register: {
@@ -46,7 +49,7 @@ export default {
             confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
-            { text: 'Register', icon: 'menu', type: 'inversed dialog', click: this.register.bind(null) },
+            { text: 'Register', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
         },
       },
@@ -58,13 +61,13 @@ export default {
     },
   },
   methods: {
-    login() {
-      document.alert('login');
+    getError(field) {
+      return (field.error) ? 'error' : null;
     },
-    register() {
-      document.alert('login');
+    submit() {
+
     },
-    submit(ev) {
+    OnKeyPress(ev) {
       if (ev.key === 'Enter') {
         console.log('submitting');
       }
@@ -97,21 +100,26 @@ export default {
     display: grid;
     grid-auto-flow: row;
     grid-row-gap: 8px;
-    align-items: center;
     align-content: center;
-    justify-items: center;
+    padding: 0 30px;
     .input-wrapper {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "label field error";
       font-size: 16px;
       height: 32px;
-      .icon {
+      .label, .error {
         display: flex;
         align-items: center;
         padding: 0 10px;
         border-right: 1px solid $color-beige;
+        &.error {
+          font-size: 20px;
+          color: red;
+          border: none;
+        }
       }
       input {
-        width: 200px;
         padding: 0 30px 0 20px;
         color: $color-beige;
         border: 1px solid $color-beige;
@@ -125,6 +133,7 @@ export default {
         }
         background: none;
         outline: none;
+        min-width: 50px;
       }
     }
   }
