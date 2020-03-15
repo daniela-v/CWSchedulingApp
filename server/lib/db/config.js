@@ -32,6 +32,7 @@ const sql = knex({
 (async () => {
   await usersModel.create(sql, false);
   await exampleModel.create(sql, false);
+  console.log('✓   Database config finished loading\n');
 })();
 
 module.exports = sql;

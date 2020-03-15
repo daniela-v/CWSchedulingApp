@@ -5,10 +5,14 @@ async function create(sql, forced = false) {
   try {
     // If the table already exists and we don't force replace stop the execution else drop the table and create a new one
     if (await sql.schema.hasTable(tableName)) {
-      if (!forced) return;
+      if (!forced) {
+        console.log(`✓   "${tableName}" table is already created!`);
+        return;
+      }
+      console.log(`Deleting "${tableName}" ...`);
       await sql.schema.dropTable(tableName);
     }
-    console.log(`\nCreating ${tableName} ...`);
+    console.log(`Creating "${tableName}" ...`);
     // Create table
     await sql.schema.createTable(tableName, (table) => {
       table.charset('utf8');
@@ -21,8 +25,8 @@ async function create(sql, forced = false) {
       // Edit below this line only if you're sure what you're doing
       table.timestamps(true, true);
     });
-    console.log(`Table ${tableName} has been created`);
-    console.log(`Populating ${tableName} ...`);
+    console.log(`✓   "${tableName}" has been created`);
+    console.log(`Populating "${tableName}" ...`);
     // Insert seed data if table is empty
     const rows = await sql.table(tableName).select();
     if (!rows.length) {
