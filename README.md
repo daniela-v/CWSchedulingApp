@@ -1,3 +1,9 @@
+<br/>
+<p align="center">
+        <img width="50%" src="https://i.postimg.cc/BQnBsN4j/milestonemanager.png" alt="App logo">
+</p>
+<br/>
+
 # Coursework Scheduling Application
 Project for the Web Platform Development 2 module at GCU. 
 
@@ -8,7 +14,7 @@ The application is built using Node.js, Node Express and Vue.js.
 [Knex.js](http://knexjs.org/) is used for the database. Knex.js is a SQL query builder and makes it easier to create and handle queries. 
 
 ## Features
-- Sign Up feature.
+- Sign up feature.
 - Login feature.
 - Coursework projects can be added.
 - Coursework projects can be removed.
