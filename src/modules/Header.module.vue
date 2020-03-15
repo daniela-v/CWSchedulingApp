@@ -19,11 +19,12 @@
       </div>
     </router-link>
     <section class="navigation">
-      <Button name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
-      <Button name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
+      <Button v-if="!getUser" name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
+      <Button v-if="!getUser" name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
+      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate.bind()">LOGOUT</Button>
     </section>
     <section class="account">
-      <Button name="show-menu" icon="menu" type="menu"></Button>
+      <Button name="show-menu" icon="menu" type="inversed menu">{{ getUsername }}</Button>
     </section>
   </header>
 </template>
@@ -37,9 +38,21 @@ export default {
   components: {
     Button,
   },
+  computed: {
+    getUsername() {
+      const user = this.getUser;
+      return (user) ? user.username : null;
+    },
+    getUser() {
+      return this.$store.getters.getUser;
+    },
+  },
   methods: {
     showAuthOverlay(name) {
       this.$store.commit('openWindow', { name, component: Auth });
+    },
+    deauthenticate() {
+      this.$store.commit('deauthenticate');
     },
   },
 };
