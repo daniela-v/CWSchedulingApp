@@ -4,13 +4,17 @@ const validate = require('validate.js');
 const sql = require('./db/config.js');
 const validators = require('./validators/users.validator.js');
 
-function saveSession(session, passKey) {
-  session.key = passKey; // eslint-disable-line
+function storeKey(session, passKey) {
+  session.key = passKey; // eslint-disable-line no-param-reassign
+  session.save();
+}
+function clearKey(session) {
+  delete session.key; // eslint-disable-line no-param-reassign
   session.save();
 }
 
 function removeSensitive(data) {
-  delete data.password; // eslint-disable-line
+  delete data.password; // eslint-disable-line no-param-reassign
   return data;
 }
 
@@ -45,7 +49,7 @@ const users = {
       if (rows.length) {
         const match = await bcrypt.compare(password, rows[0].password);
         if (match) {
-          saveSession(session, rows[0].password);
+          storeKey(session, rows[0].password);
           return removeSensitive(rows[0]);
         }
       }
@@ -69,8 +73,13 @@ const users = {
     // If this line is reached that means the session could not be loaded
     throw { _silent: 'Session key could not be found or was empty' };
   },
-  async deauthenticate() {
-    throw Error('Empty block');
+  async deauthenticate(session) {
+    if (session.key) {
+      clearKey(session);
+      return true;
+    }
+    // If this line is reached that means there is nothing to deauthenticate
+    throw { _silent: 'Nothing to deauthenticate' };
   },
 };
 
