@@ -59,6 +59,9 @@ export default new Vuex.Store({
     getTooltip(state) {
       return state.tooltip;
     },
+    getUser(state) {
+      return state.user;
+    },
   },
   actions: {},
   modules: {},
