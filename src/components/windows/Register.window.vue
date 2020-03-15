@@ -1,7 +1,7 @@
 <template>
-  <div class="login-overlay">
-    <div class="title">Log In</div>
-    <form class="login-form">
+  <div class="register-overlay">
+    <div class="title">Register</div>
+    <form class="register-form">
       <div class="input-wrapper">
         <label for="username" class="icon icon-person"></label>
         <input id="username" type="text" name="username" />
@@ -10,15 +10,27 @@
         <label for="password" class="icon icon-key"></label>
         <input id="password" type="password" name="password" />
       </div>
+      <div class="input-wrapper">
+        <label for="confirmPassword" class="icon icon-key"></label>
+        <input id="confirmPassword" type="password" name="confirmPassword" />
+      </div>
+      <div class="input-wrapper">
+        <label for="email" class="icon icon-email"></label>
+        <input id="email" type="text" name="email" />
+      </div>
+      <div class="input-wrapper">
+        <label for="confirmEmail" class="icon icon-email"></label>
+        <input id="confirmEmail" type="text" name="confirmEmail" />
+      </div>
     </form>
     <div class="form-control">
-      <Button type="header">Log In</Button>
+      <Button type="header">Register</Button>
     </div>
   </div>
 </template>
 
 <script>
-import Button from './Button.component.vue';
+import Button from '../Button.component.vue';
 
 export default {
   components: {
@@ -31,7 +43,7 @@ export default {
 @import '@/scss/_colors';
 @import '@/scss/_mixins';
 
-.login-overlay {
+.register-overlay {
   flex: 1;
   display: flex;
   flex-direction: column;

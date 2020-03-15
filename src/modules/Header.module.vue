@@ -30,8 +30,9 @@
 
 <script>
 import Button from '../components/Button.component.vue';
-import Login from '../components/Login.window.vue';
-import Register from '../components/Register.window.vue';
+
+import Login from '../components/windows/Login.window.vue';
+import Register from '../components/windows/Register.window.vue';
 
 export default {
   components: {
