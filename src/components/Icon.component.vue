@@ -17,9 +17,9 @@ export default {
 @font-face {
   font-family: 'cwscheduleappicon';
   src:
-    url('../assets/fonts/cwscheduleappicon.ttf?pbxypx') format('truetype'),
-    url('../assets/fonts/cwscheduleappicon.woff?pbxypx') format('woff'),
-    url('../assets/fonts/cwscheduleappicon.svg?pbxypx#cwscheduleappicon') format('svg');
+    url('../assets/fonts/cwscheduleappicon.ttf?u02jkd') format('truetype'),
+    url('../assets/fonts/cwscheduleappicon.woff?u02jkd') format('woff'),
+    url('../assets/fonts/cwscheduleappicon.svg?u02jkd#cwscheduleappicon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -39,6 +39,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-check:before {
+  content: "\e907";
+}
+.icon-darrow-right:before {
+  content: "\e906";
+}
+.icon-warning:before {
+  content: "\e905";
+}
 .icon-arrow-right:before {
   content: "\e904";
 }
