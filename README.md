@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-        <img width="50%" src="https://i.postimg.cc/BQnBsN4j/milestonemanager.png" alt="App logo">
+        <img width="50%" src="https://i.postimg.cc/CKMg4z8B/logo.png" alt="App logo">
 </p>
 <br/>
 
