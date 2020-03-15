@@ -99,9 +99,9 @@ export default {
     flex: 1;
     display: grid;
     grid-auto-flow: row;
-    grid-row-gap: 8px;
+    grid-row-gap: 12px;
     align-content: center;
-    padding: 0 30px;
+    padding: 0 50px;
     .input-wrapper {
       display: grid;
       grid-template-columns: auto 1fr auto;
@@ -111,13 +111,19 @@ export default {
       .label, .error {
         display: flex;
         align-items: center;
-        padding: 0 10px;
+        padding: 0 8px;
+        font-size: 20px;
+      }
+      .label {
         border-right: 1px solid $color-beige;
-        &.error {
-          font-size: 20px;
-          color: red;
-          border: none;
-        }
+        border-radius: 4px 0 0 4px;
+        background-color: $color-beige;
+        color: black;
+        text-shadow: none;
+      }
+      .error {
+        font-size: 20px;
+        color: red;
       }
       input {
         padding: 0 30px 0 20px;
