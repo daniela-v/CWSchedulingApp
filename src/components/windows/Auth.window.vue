@@ -35,7 +35,7 @@ export default {
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
           },
           control: [
-            { text: 'Log In', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Log In', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
         },
         register: {
@@ -49,7 +49,7 @@ export default {
             confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
-            { text: 'Register', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Register', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
         },
       },
@@ -79,6 +79,7 @@ export default {
 <style lang="scss">
 @import '@/scss/_colors';
 @import '@/scss/_mixins';
+@import '@/scss/_animations';
 
 .auth-window {
   flex: 1;
@@ -99,7 +100,7 @@ export default {
     flex: 1;
     display: grid;
     grid-auto-flow: row;
-    grid-row-gap: 12px;
+    grid-row-gap: 10px;
     align-content: center;
     padding: 0 50px;
     .input-wrapper {
@@ -107,11 +108,10 @@ export default {
       grid-template-columns: auto 1fr auto;
       grid-template-areas: "label field error";
       font-size: 16px;
-      height: 32px;
       .label, .error {
         display: flex;
         align-items: center;
-        padding: 0 8px;
+        padding: 8px;
         font-size: 20px;
       }
       .label {
@@ -124,6 +124,7 @@ export default {
       .error {
         font-size: 20px;
         color: red;
+        animation: .4s fxerror ease-in-out;
       }
       input {
         padding: 0 30px 0 20px;
