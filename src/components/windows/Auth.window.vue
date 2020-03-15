@@ -84,7 +84,7 @@ export default {
   position: relative;
   padding-bottom: 20px;
   width: 380px;
-  min-height: 600px;
+  min-height: 500px;
   background: linear-gradient(to bottom, rgba($color-beige, .2), transparent 100px),
               linear-gradient(to top, rgba($color-beige, .2), transparent 100px);
   .title {
