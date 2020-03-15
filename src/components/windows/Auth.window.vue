@@ -41,9 +41,10 @@ export default {
           control: [
             { text: 'Log In', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
-          success: () => {
-            this.$store.commit('pushNotification', { icon: 'check', text: 'You have been successfully logged in' });
+          success: (user, data) => {
+            this.$store.commit('pushNotification', { icon: 'check', text: `You have been logged in as "${data.username}"` });
             this.$store.commit('closeWindow');
+            this.$store.commit('authenticate', data);
           },
         },
         register: {
@@ -59,8 +60,8 @@ export default {
           control: [
             { text: 'Register', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
-          success: () => {
-            this.$store.commit('pushNotification', { icon: 'check', text: 'Your account has been created' });
+          success: (user) => {
+            this.$store.commit('pushNotification', { icon: 'check', text: `Your account "${user}" has been created` });
             this.$store.commit('openWindow', { name: 'Login', component: Auth });
           },
         },
@@ -111,7 +112,7 @@ export default {
           this.$set(this.getForm.input[field], 'error', error[0]);
         });
       } else {
-        this.getForm.success();
+        this.getForm.success(data.username, response.data.result);
       }
     },
     /**
