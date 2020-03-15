@@ -30,8 +30,8 @@ const sql = knex({
 
 // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous table)
 (async () => {
-  await usersModel.create(sql, true);
-  await exampleModel.create(sql, true);
+  await usersModel.create(sql, false);
+  await exampleModel.create(sql, false);
 })();
 
 module.exports = sql;
