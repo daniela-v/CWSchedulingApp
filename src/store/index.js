@@ -19,8 +19,8 @@ export default new Vuex.Store({
         },
       });
     },
-    closeWindow(state, { id }) {
-      state.windows.splice(id, 1);
+    closeWindow(state, id) {
+      state.windows.splice(id || 0, 1);
     },
     showTooltip(state, tooltip) {
       state.tooltip = tooltip;
