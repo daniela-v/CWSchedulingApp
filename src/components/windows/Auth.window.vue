@@ -2,7 +2,7 @@
   <div class="auth-window">
     <div class="title">{{ getForm.title }}</div>
     <form class="auth-form" @keypress="OnKeyPress">
-      <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper" :class="[ getError(input) ]">
+      <div v-for="(input, id) in getForm.input" :key="id" class="input-wrapper" :class="[ hasFailed(input) ]">
         <label :for="id" class="label icon" :class="[ input.icon ]"></label>
         <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
         <Icon v-if="input.error" class="error" name="warning"></Icon>
@@ -61,8 +61,8 @@ export default {
     },
   },
   methods: {
-    getError(field) {
-      return (field.error) ? 'error' : null;
+    hasFailed(field) {
+      return (field.error) ? 'failed' : null;
     },
     submit() {
 
@@ -121,11 +121,6 @@ export default {
         color: black;
         text-shadow: none;
       }
-      .error {
-        font-size: 20px;
-        color: red;
-        animation: .4s fxerror ease-in-out;
-      }
       input {
         padding: 0 30px 0 20px;
         color: $color-beige;
@@ -141,6 +136,27 @@ export default {
         background: none;
         outline: none;
         min-width: 50px;
+      }
+      // If input field has failed the validation checks styling below applies
+      &.failed {
+        .label {
+          border-color: red;
+          background-color: red;
+        }
+        .error {
+          font-size: 20px;
+          color: red;
+          animation: .4s fxerror ease-in-out;
+        }
+        input {
+          color: red;
+          border: 1px solid red;
+          &:hover { background-color: rgba(red, .1); }
+          &:focus {
+            text-shadow: 0 0 2px red;
+            background-color: rgba(red, .2);
+          }
+        }
       }
     }
   }
