@@ -1,8 +1,8 @@
 <template>
   <transition name="overlayfx" appear>
     <div v-if="$store.getters.getWindowsNum" class="overlay">
-      <transition-group name="overlayfx" mode="out-in">
-        <Window v-for="(window, id) in $store.getters.getWindows" :key="id" :id="id" v-bind="window"></Window>
+      <transition-group name="windowfx" mode="out-in" appear>
+        <Window v-for="(window, id) in $store.getters.getWindows" :key="window.window.name" :id="id" v-bind="window"></Window>
       </transition-group>
     </div>
   </transition>
@@ -31,4 +31,8 @@ export default {
   overflow-y: auto;
 }
 .overlayfx-enter, .overlayfx-leave-active { opacity: 0; }
+.windowfx-enter, .windowfx-leave-active {
+  opacity: 0;
+  transform: translateY(-50px) scale(0.2);
+}
 </style>
