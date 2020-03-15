@@ -6,6 +6,7 @@ const validators = require('./validators/users.validator.js');
 
 function saveSession(session, passKey) {
   session.key = passKey; // eslint-disable-line
+  session.save();
 }
 
 function removeSensitive(data) {
