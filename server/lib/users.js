@@ -21,11 +21,9 @@ const users = {
       const result = await sql('tbl_users')
         .select()
         .whereRaw('username = ?', [username]);
-
       if (result.length) {
-        throw { username: 'This username has already been taken' };
+        throw { username: ['This username has already been taken'] };
       }
-
       const cryptedPwd = await bcrypt.hash(password, 10);
       await sql('tbl_users').insert({
         username,
@@ -51,8 +49,11 @@ const users = {
         }
       }
     }
-    // If this line is reached that means the either the username or the password is invalid
-    throw 'Invalid username or password';
+    // If this line is reached that means that either the username or the password is invalid
+    throw {
+      username: ['Invalid username or password'],
+      password: ['Invalid username or password'],
+    };
   },
   async session(key) {
     if (key) {
