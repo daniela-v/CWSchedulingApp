@@ -3,6 +3,7 @@
     <Header></Header>
     <router-view />
     <Overlay></Overlay>
+    <Notification></Notification>
     <Tooltip></Tooltip>
   </div>
 </template>
@@ -10,12 +11,14 @@
 <script>
 import Header from './modules/Header.module.vue';
 import Overlay from './modules/Overlay.module.vue';
+import Notification from './modules/Notification.module.vue';
 import Tooltip from './modules/Tooltip.module.vue';
 
 export default {
   components: {
     Header,
     Overlay,
+    Notification,
     Tooltip,
   },
 };
