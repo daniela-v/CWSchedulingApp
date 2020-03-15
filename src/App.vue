@@ -43,4 +43,17 @@ a {
   text-shadow: 1px 1px 1px #000;
   color: $color-beige;
 }
+
+::-webkit-input-placeholder {
+  opacity: .4;
+  font-size: 14px;
+}
+:-ms-input-placeholder {
+  opacity: .4;
+  font-size: 14px;
+}
+::placeholder {
+  opacity: .4;
+  font-size: 14px;
+}
 </style>

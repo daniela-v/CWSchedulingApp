@@ -12,6 +12,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'max-len': ["error", { "code": 300 }],
     'object-curly-newline': ["error", { "consistent": true }],
+    'no-throw-literal': 'off',
     'linebreak-style': 'off',
     'no-plusplus': 'off',
     'new-cap': 'off',
