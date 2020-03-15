@@ -1,7 +1,9 @@
 <template>
   <transition name="overlayfx" appear>
     <div v-if="$store.getters.getWindowsNum" class="overlay">
-      <Window v-for="(window, id) in $store.getters.getWindows" :key="id" :id="id" v-bind="window"></Window>
+      <transition-group name="overlayfx" mode="out-in">
+        <Window v-for="(window, id) in $store.getters.getWindows" :key="id" :id="id" v-bind="window"></Window>
+      </transition-group>
     </div>
   </transition>
 </template>
