@@ -12,7 +12,7 @@ async function cryptPasswords() {
     return crypted;
   });
   const result = await Promise.all(promises);
-  return result;
+  result.forEach((value, id) => { rows[id].password = value; });
 }
 
 async function insert(sql, tableName) {

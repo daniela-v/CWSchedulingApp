@@ -32,11 +32,26 @@ router.post('/authenticate', async (req, res) => {
 });
 
 /**
+ * GET /users/deauthenticate
+ */
+router.get('/deauthenticate', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = await users.deauthenticate(req.session);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
  * GET /users/session
  */
 router.get('/session', async (req, res) => {
   let error;
   let result;
+  req.session.touch();
   try {
     result = await users.session(req.session.key);
   } catch (e) {

@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 import Header from './modules/Header.module.vue';
 import Overlay from './modules/Overlay.module.vue';
 import Notification from './modules/Notification.module.vue';
@@ -20,6 +22,17 @@ export default {
     Overlay,
     Notification,
     Tooltip,
+  },
+  async created() {
+    await this.trySession();
+  },
+  methods: {
+    async trySession() {
+      const response = await axios.get('/users/session');
+      if (response.data.result) {
+        this.$store.commit('authenticate', response.data.result);
+      }
+    },
   },
 };
 </script>

@@ -35,7 +35,7 @@ export default {
   align-items: flex-end;
   right: 0;
   bottom: 0;
-  max-height: 222px;
+  max-height: 192px;
   overflow: hidden;
   z-index: 100;
   .notification {
@@ -43,11 +43,11 @@ export default {
     display: flex;
     align-items: center;
     height: 32px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     margin: 10px;
-    border: 1px solid $color-purple;
+    border: 1px solid darken($color-purple, 5%);
     border-radius: 5px;
-    background-color: rgba($color-purple, .4);
+    background-color: rgba(darken($color-purple, 5%), .8);
     color: lighten($color-purple, 20%);
     font-weight: 600;
     @include transition('height, opacity, transform', .4s, ease-in-out);

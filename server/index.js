@@ -14,21 +14,19 @@ app.use(cors());
 
 // Persisting unique sessions
 app.set('trust proxy', 1);
-app.use(
-  expressSession({
-    secret: 'bamboozleSecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 24 * 365 * 1000,
-      secure: true,
-    },
-    store: new knexSession({
-      knex,
-      clearInterval: 900000,
-    }),
+app.use(expressSession({
+  secret: 'bamboozleSecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60 * 60 * 24 * 365 * 1000,
+    secure: false,
+  },
+  store: new knexSession({
+    knex,
+    clearInterval: 900000,
   }),
-);
+}));
 
 // Use the imported routes
 app.use('/users', users);

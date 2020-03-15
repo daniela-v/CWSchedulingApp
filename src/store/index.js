@@ -1,11 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import _ from 'lodash';
+import axios from 'axios';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    user: null,
     windows: [],
     notifications: [],
     tooltip: null,
@@ -30,6 +32,12 @@ export default new Vuex.Store({
     hideTooltip(state) {
       state.tooltip = null;
     },
+    authenticate(state, user) {
+      state.user = user;
+    },
+    deauthenticate(state) {
+      state.user = null;
+    },
     pushNotification(state, { text, icon, type, timeout }) {
       const id = _.uniqueId('notification');
       state.notifications.push({ id, icon, text, type });
@@ -52,7 +60,15 @@ export default new Vuex.Store({
     getTooltip(state) {
       return state.tooltip;
     },
+    getUser(state) {
+      return state.user;
+    },
   },
-  actions: {},
+  actions: {
+    async deauthenticate(context) {
+      await axios.get('/users/deauthenticate');
+      context.commit('deauthenticate');
+    },
+  },
   modules: {},
 });
