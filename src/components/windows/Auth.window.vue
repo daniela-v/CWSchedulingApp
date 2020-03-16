@@ -39,7 +39,7 @@ export default {
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
           },
           control: [
-            { text: 'Log In', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Log In', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
           success: (user, data) => {
             this.$store.commit('pushNotification', { icon: 'check', text: `You have been logged in as "${data.username}"` });
@@ -58,7 +58,7 @@ export default {
             confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
-            { text: 'Register', icon: 'darrow-right', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Register', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
           ],
           success: (user) => {
             this.$store.commit('pushNotification', { icon: 'check', text: `Your account "${user}" has been created` });

@@ -42,12 +42,12 @@ export default {
   display: inline-flex;
   align-items: center;
   cursor: pointer;
-  .icon {
+  .icon-wrapper {
     margin: 0 8px 0 0; // Add spacing between icon and text on the right side of the icon [ICON  TEXT]
   }
   &.inversed {
     .text { order: 1 };
-    .icon {
+    .icon-wrapper {
       order: 2;
       margin: 0 0 0 8px; // Add spacing between icon and text on the left side of the icon [TEXT  ICON]
     }

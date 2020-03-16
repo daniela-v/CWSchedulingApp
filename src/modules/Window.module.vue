@@ -1,6 +1,7 @@
 <template>
   <div class="window" :class="[ slugifiedName ]">
     <div class="window-bg"></div>
+    <Icon class="close" v-if="window.dismissable" name="x" :click="close.bind()"></Icon>
     <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
   </div>
 </template>
@@ -8,8 +9,13 @@
 <script>
 import _ from 'lodash';
 
+import Icon from '../components/Icon.component.vue';
+
 export default {
   props: ['id', 'window'],
+  components: {
+    Icon,
+  },
   created() {
     window.addEventListener('resize', this.alignCenter);
     window.addEventListener('keydown', this.escape);
@@ -37,8 +43,11 @@ export default {
     escape(event) {
       const keyEscape = (event.key === 'Escape' || event.key === 'Esc');
       if (this.window.dismissable && keyEscape) {
-        this.$store.commit('closeWindow', { id: this.key });
+        this.close();
       }
+    },
+    close() {
+      this.$store.commit('closeWindow');
     },
   },
 };
@@ -65,7 +74,14 @@ export default {
     right: 0;
     background: darken($color-beige, 40%);
     background: linear-gradient(to bottom, rgba(#000, .8) 50%, rgba(#000, .5)),
-                url('../assets/bg-3.jpg') left center / 400% no-repeat;
+                url('../assets/images/bg-3.jpg') left center / 400% no-repeat;
+  }
+  .close {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    font-size: 24px;
+    z-index: 1;
   }
   .content {
     padding: 30px;
