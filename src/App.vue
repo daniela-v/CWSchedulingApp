@@ -54,7 +54,7 @@ a {
 #app {
   background: darken($color-purple, 15%);
   background: radial-gradient(rgba(#000, .4), rgba(#000, .6)),
-              $background center center / cover no-repeat fixed;
+              url('./assets/images/bg-3.jpg') center center / cover no-repeat fixed;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

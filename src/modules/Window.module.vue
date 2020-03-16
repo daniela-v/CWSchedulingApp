@@ -65,7 +65,7 @@ export default {
     right: 0;
     background: darken($color-beige, 40%);
     background: linear-gradient(to bottom, rgba(#000, .8) 50%, rgba(#000, .5)),
-                url('../assets/bg-3.jpg') left center / 400% no-repeat;
+                url('../assets/images/bg-3.jpg') left center / 400% no-repeat;
   }
   .content {
     padding: 30px;
