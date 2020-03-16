@@ -37,7 +37,7 @@ export default {
     escape(event) {
       const keyEscape = (event.key === 'Escape' || event.key === 'Esc');
       if (this.window.dismissable && keyEscape) {
-        this.$store.commit('closeWindow', { id: this.key });
+        this.$store.commit('closeWindow', this.key);
       }
     },
   },

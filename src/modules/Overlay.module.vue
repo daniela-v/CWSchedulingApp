@@ -1,6 +1,6 @@
 <template>
   <transition name="overlayfx" appear>
-    <div v-if="$store.getters.getWindowsNum" class="overlay">
+    <div v-if="$store.getters.getWindowsNum" class="overlay" @click="close">
       <transition-group name="windowfx" mode="out-in" appear>
         <Window v-for="(window, id) in $store.getters.getWindows" :key="window.window.name" :id="id" v-bind="window"></Window>
       </transition-group>
@@ -14,6 +14,13 @@ import Window from '@/modules/Window.module.vue';
 export default {
   components: {
     Window,
+  },
+  methods: {
+    close(evt) {
+      if (this.$el === evt.target) {
+        this.$store.commit('closeWindow');
+      }
+    },
   },
 };
 </script>
