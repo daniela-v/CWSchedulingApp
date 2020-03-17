@@ -1,11 +1,17 @@
 module.exports = {
   devServer: {
     proxy: {
-      "/api": {
-        target: "http://localhost:5000",
+      '/users': {
+        target: 'http://localhost:5000',
         ws: true,
-        changeOrigin: true
-      }
-    }
-  }
+        changeOrigin: true,
+      },
+    },
+  },
+  chainWebpack(config) {
+    config.plugin('html').tap((args) => {
+      args[0].title = 'Milestone Manager'; // eslint-disable-line
+      return args;
+    });
+  },
 };
