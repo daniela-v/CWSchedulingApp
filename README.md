@@ -63,7 +63,7 @@ npm run lint
 ### Web service start
 To start the web server on http://localhost:5000/ use:
 ```
-npm run backend
+npm run start now
 ```
 
 [![Built With Love](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
