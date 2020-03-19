@@ -1,6 +1,6 @@
 <template>
   <transition name="windowfx" mode="out-in" appear>
-    <div class="window" :class="[ slugifiedName, type ]">
+    <div class="window" :class="[ slugifiedName, window.type ]">
       <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
       <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
     </div>
@@ -69,12 +69,18 @@ export default {
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
-  &.full {
+  &.fullscreen {
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
     background: none;
+    border: none;
+    .close {
+      right: 10px;
+      top: 10px;
+      font-size: 30px;
+    }
   }
   .close {
     position: absolute;

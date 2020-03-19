@@ -13,12 +13,13 @@ export default new Vuex.Store({
     tooltip: null,
   },
   mutations: {
-    openWindow(state, { name, component, props, dismissable }) { // eslint-disable-line
+    openWindow(state, { name, component, props, type, dismissable }) { // eslint-disable-line
       state.windows.splice(0, 1, {
         window: {
           name,
           component,
           props,
+          type: type || 'default',
           dismissable: dismissable || true,
         },
       });
