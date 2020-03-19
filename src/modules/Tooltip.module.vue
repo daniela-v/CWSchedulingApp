@@ -58,9 +58,9 @@ export default {
   align-items: center;
   padding: 4px 6px 4px 6px;
   border-radius: 2px;
-  border-color: $color-beige;
+  border-color: $color-cyan-border;
   border: 1px solid;
-  background-color: darken($color-beige, 40%);
+  background-color: $color-cyan-bg;
   box-shadow: 0 0 20px rgba(#000, .5);
   font-size: 14px;
   white-space: pre;
@@ -75,10 +75,10 @@ export default {
     pointer-events: none;
   }
   &.alert {
-    border-color: red;
+    border-color: $color-error-soft;
     border: 1px solid;
-    color: red;
-    background-color: darken(red, 55%);
+    color: $color-error-soft;
+    background-color: darken($color-error-soft, 60%);
   }
 
   &.top:before, &.top:after, &.bottom:before, &.bottom:after {
@@ -102,18 +102,18 @@ export default {
     &:after {
       z-index: 10;
       margin-left: -1px;
-      border-left: 5px solid darken($color-beige, 40%);
+      border-left: 5px solid $color-cyan-bg;
     }
-    &.alert:after { border-left: 5px solid darken(red, 55%); }
+    &.alert:after { border-left: 5px solid darken($color-error-soft, 60%); }
   }
   &.bottom {
     &:before { border-top: 5px solid; }
     &:after {
       margin-top: -1px;
       z-index: 10;
-      border-top: 5px solid darken($color-beige, 40%);
+      border-top: 5px solid $color-cyan-bg;
     }
-    &.alert:after { border-top: 5px solid darken(red, 55%); }
+    &.alert:after { border-top: 5px solid darken($color-error-soft, 60%); }
   }
   &.left {
     &:before {
@@ -123,9 +123,9 @@ export default {
     &:after {
       left: -12px;
       z-index: 10;
-      border-right: 5px solid darken($color-beige, 40%)
+      border-right: 5px solid $color-cyan-bg;
     }
-    &.alert:after { border-right: 5px solid darken(red, 55%); }
+    &.alert:after { border-right: 5px solid darken($color-error-soft, 60%); }
   }
   &.top {
     &:before {
@@ -135,9 +135,9 @@ export default {
     &:after {
       top: -5px;
       z-index: 10;
-      border-bottom: 5px solid darken($color-beige, 40%);
+      border-bottom: 5px solid $color-cyan-bg;
     }
-    &.alert:after { border-bottom: 5px solid darken(red, 55%); }
+    &.alert:after { border-bottom: 5px solid darken($color-error-soft, 60%); }
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="window" :class="[ slugifiedName ]">
     <div class="window-bg"></div>
-    <Icon class="close" v-if="window.dismissable" name="x" :click="close.bind()"></Icon>
+    <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
     <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
   display: flex;
   flex-direction: column;
   position: absolute;
-  border: 1px solid $color-beige;
+  border: 1px solid $color-cyan-border;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
@@ -72,15 +72,14 @@ export default {
     left: 0;
     bottom: 0;
     right: 0;
-    background: darken($color-beige, 40%);
-    background: linear-gradient(to bottom, rgba(#000, .8) 50%, rgba(#000, .5)),
-                url('../assets/images/bg-3.jpg') left center / 400% no-repeat;
+    background: $color-cyan-bg;
+    background: linear-gradient(to bottom, rgba($color-cyan-bg, .8) 50%, rgba($color-cyan-bg, .4));
   }
   .close {
     position: absolute;
-    right: 8px;
-    top: 8px;
-    font-size: 24px;
+    right: 5px;
+    top: 5px;
+    font-size: 16px;
     z-index: 1;
   }
   .content {

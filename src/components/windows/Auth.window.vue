@@ -39,7 +39,7 @@ export default {
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
           },
           control: [
-            { text: 'Log In', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Log In', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
           success: (user, data) => {
             this.$store.commit('pushNotification', { icon: 'check', text: `You have been logged in as "${data.username}"` });
@@ -58,7 +58,7 @@ export default {
             confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
-            { text: 'Register', icon: 'check', type: 'inversed dialog', click: this.submit.bind(null) },
+            { text: 'Register', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
           success: (user) => {
             this.$store.commit('pushNotification', { icon: 'check', text: `Your account "${user}" has been created` });
@@ -137,15 +137,15 @@ export default {
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: 20px;
-  width: 380px;
-  min-height: 500px;
-  background: linear-gradient(to bottom, rgba($color-beige, .2), transparent 100px),
-              linear-gradient(to top, rgba($color-beige, .2), transparent 100px);
+  padding: 40px 0;
+  width: 300px;
+  min-height: 400px;
+  background: linear-gradient(to bottom, rgba($color-cyan, .1) -50px, transparent 100px),
+              linear-gradient(to top, rgba($color-cyan, .1) -50px, transparent 100px);
   .title {
-    padding: 20px 0;
-    color: $color-beige;
-    font-size: 40px;
+    color: $color-cyan;
+    font-weight: 600;
+    font-size: 28px;
   }
   .auth-form {
     flex: 1;
@@ -166,23 +166,23 @@ export default {
         font-size: 20px;
       }
       .label {
-        border-right: 1px solid $color-beige;
+        border-right: 1px solid $color-cyan;
         border-radius: 4px 0 0 4px;
-        background-color: $color-beige;
+        background-color: $color-cyan;
         color: black;
         text-shadow: none;
       }
       input {
         padding: 0 30px 0 20px;
-        color: $color-beige;
-        border: 1px solid $color-beige;
+        color: $color-cyan;
+        border: 1px solid $color-cyan;
         border-left: none;
         border-radius: 0 4px 4px 0;
         @include transition('background-color', 200ms, ease);
-        &:hover { background-color: rgba($color-beige, .1); }
+        &:hover { background-color: rgba($color-cyan, .1); }
         &:focus {
-          text-shadow: 0 0 2px $color-beige;
-          background-color: rgba($color-beige, .2);
+          text-shadow: 0 0 2px $color-cyan;
+          background-color: rgba($color-cyan, .2);
         }
         background: none;
         outline: none;
@@ -191,21 +191,21 @@ export default {
       // If input field has failed the validation checks styling below applies
       &.failed {
         .label {
-          border-color: red;
-          background-color: red;
+          border-color: $redish;
+          background-color: $redish;
         }
         .error {
           font-size: 20px;
-          color: red;
+          color: $redish;
           animation: .4s fxerror ease-in-out;
         }
         input {
-          color: red;
-          border: 1px solid red;
-          &:hover { background-color: rgba(red, .1); }
+          color: $redish;
+          border: 1px solid $redish;
+          &:hover { background-color: rgba($redish, .1); }
           &:focus {
-            text-shadow: 0 0 2px red;
-            background-color: rgba(red, .2);
+            text-shadow: 0 0 2px $redish;
+            background-color: rgba($redish, .2);
           }
         }
       }

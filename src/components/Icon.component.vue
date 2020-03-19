@@ -42,9 +42,9 @@ export default {
 @font-face {
   font-family: 'cwscheduleappicon';
   src:
-    url('../assets/fonts/cwscheduleappicon.ttf?d8p9jz') format('truetype'),
-    url('../assets/fonts/cwscheduleappicon.woff?d8p9jz') format('woff'),
-    url('../assets/fonts/cwscheduleappicon.svg?d8p9jz#cwscheduleappicon') format('svg');
+    url('../assets/fonts/cwscheduleappicon.ttf?lft96k') format('truetype'),
+    url('../assets/fonts/cwscheduleappicon.woff?lft96k') format('woff'),
+    url('../assets/fonts/cwscheduleappicon.svg?lft96k#cwscheduleappicon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -62,18 +62,36 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   @include transition(color, .2s, ease);
   &.pointer:hover {
-    color: lighten($color-beige, 20%);
+    color: lighten($color-cyan, 20%);
     cursor: pointer;
   }
 }
 
-.icon-x:before {
+.icon-refresh:before {
+  content: "\e90e";
+}
+.icon-add:before {
+  content: "\e90d";
+}
+.icon-add-circle:before {
+  content: "\e90c";
+}
+.icon-user-circle:before {
+  content: "\e90b";
+}
+.icon-user:before {
+  content: "\e90a";
+}
+.icon-next:before {
+  content: "\e909";
+}
+.icon-close:before {
   content: "\e908";
 }
 .icon-check:before {
   content: "\e907";
 }
-.icon-darrow-right:before {
+.icon-previous:before {
   content: "\e906";
 }
 .icon-warning:before {
