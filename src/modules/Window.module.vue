@@ -1,9 +1,10 @@
 <template>
-  <div class="window" :class="[ slugifiedName ]">
-    <div class="window-bg"></div>
-    <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
-    <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
-  </div>
+  <transition name="windowfx" mode="out-in" appear>
+    <div class="window" :class="[ slugifiedName, type ]">
+      <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
+      <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -63,17 +64,17 @@ export default {
   position: absolute;
   border: 1px solid $color-cyan-border;
   border-radius: 4px;
+  background: $color-cyan-bg;
+  background: linear-gradient(to bottom, rgba($color-cyan-bg, .8) 50%, rgba($color-cyan-bg, .4));
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
-  .window-bg {
-    position: absolute;
-    top: 0;
+  &.full {
     left: 0;
-    bottom: 0;
     right: 0;
-    background: $color-cyan-bg;
-    background: linear-gradient(to bottom, rgba($color-cyan-bg, .8) 50%, rgba($color-cyan-bg, .4));
+    top: 0;
+    bottom: 0;
+    background: none;
   }
   .close {
     position: absolute;
@@ -86,5 +87,9 @@ export default {
     padding: 30px;
     box-sizing: border-box;
   }
+}
+.windowfx-enter, .windowfx-leave-active {
+  opacity: 0;
+  transform: translateY(-50px) scale(0.2);
 }
 </style>
