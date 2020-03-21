@@ -7,7 +7,7 @@
       </div>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'register'" class="auth-form" id="form-register" @keydown="lastPassFix" @keyup.enter="submit()">
+      <form v-if="form === 'register'" class="auth-form" id="form-register" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="add-circle" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -36,7 +36,7 @@
       </form>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'login'" class="auth-form" id="form-login" @keydown="lastPassFix" @keyup.enter="submit()">
+      <form v-if="form === 'login'" class="auth-form" id="form-login" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="user-circle" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -70,7 +70,7 @@
       </form>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keydown="lastPassFix" @keyup.enter="submit()">
+      <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="refresh" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -285,11 +285,14 @@ export default {
      * Resets the recovery step
      */
     clearRecovery() {
-      this.$router.push({ query: { recovery: undefined } });
       this.$set(this.forms.recovery, 'step', 0);
       _.forEach(this.forms.recovery.steps, (field, key) => {
         this.$set(this.forms.recovery.steps[key], 'model', '');
       });
+      // Clear the recovery code in the URL only if it exists to prevent some weird error
+      if (this.$route.query.recovery) {
+        this.$router.replace({ query: { recovery: undefined } });
+      }
     },
     /**
      * Prepares the data of the input fields to be sent to the server
@@ -330,7 +333,7 @@ export default {
       }
     },
     /**
-     * Checks if the pressed key is enter
+     * Blocks the error thrown by LastPass when enter is pressed while form is in focus
      *
      * @param {Object} ev         - The event data holder
      */
