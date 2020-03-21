@@ -96,6 +96,8 @@ export default {
 }
 .windowfx-enter, .windowfx-leave-active {
   opacity: 0;
-  transform: translateY(-50px) scale(0.2);
+  &.default {
+    transform: translateY(-50px) scale(0.2);
+  }
 }
 </style>
