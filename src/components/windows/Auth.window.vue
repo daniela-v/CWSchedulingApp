@@ -7,7 +7,7 @@
       </div>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'register'" class="auth-form" id="form-register" @keypress="keyEnter()">
+      <form v-if="form === 'register'" class="auth-form" id="form-register" @keydown="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="add-circle" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -36,7 +36,7 @@
       </form>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'login'" class="auth-form" id="form-login" @keypress="keyEnter()">
+      <form v-if="form === 'login'" class="auth-form" id="form-login" @keydown="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="user-circle" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -70,7 +70,7 @@
       </form>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
-      <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keypress="keyEnter()">
+      <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keydown="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="refresh" class="background"></Icon>
           <Icon name="close" :click="this.setForm.bind()"></Icon>
@@ -334,10 +334,8 @@ export default {
      *
      * @param {Object} ev         - The event data holder
      */
-    keyEnter(ev) {
-      if (ev.key === 'Enter') {
-        this.submit();
-      }
+    lastPassFix(ev) {
+      ev.stopImmediatePropagation();
     },
     /**
      * Animation functions to run when recovery step is changed
