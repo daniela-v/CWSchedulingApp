@@ -42,9 +42,9 @@ export default {
 @font-face {
   font-family: 'cwscheduleappicon';
   src:
-    url('../assets/fonts/cwscheduleappicon.ttf?lft96k') format('truetype'),
-    url('../assets/fonts/cwscheduleappicon.woff?lft96k') format('woff'),
-    url('../assets/fonts/cwscheduleappicon.svg?lft96k#cwscheduleappicon') format('svg');
+    url('../assets/fonts/cwscheduleappicon.ttf?mlwla0') format('truetype'),
+    url('../assets/fonts/cwscheduleappicon.woff?mlwla0') format('woff'),
+    url('../assets/fonts/cwscheduleappicon.svg?mlwla0#cwscheduleappicon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -67,6 +67,15 @@ export default {
   }
 }
 
+.icon-google:before {
+  content: "\e911";
+}
+.icon-facebook:before {
+  content: "\e910";
+}
+.icon-code:before {
+  content: "\e90f";
+}
 .icon-refresh:before {
   content: "\e90e";
 }
