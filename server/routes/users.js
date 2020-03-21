@@ -60,4 +60,18 @@ router.get('/session', async (req, res) => {
   res.json({ result, error });
 });
 
+/**
+ * POST /users/recover
+ */
+router.post('/recover', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = true;
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
 module.exports = router;
