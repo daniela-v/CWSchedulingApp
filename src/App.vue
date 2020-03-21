@@ -16,6 +16,8 @@ import Overlay from './modules/Overlay.module.vue';
 import Notification from './modules/Notification.module.vue';
 import Tooltip from './modules/Tooltip.module.vue';
 
+import Auth from './components/windows/Auth.window.vue';
+
 export default {
   components: {
     Header,
@@ -25,6 +27,10 @@ export default {
   },
   async created() {
     await this.trySession();
+
+    if (!this.$store.getters.getUser && this.$route.query.recovery) {
+      this.$store.commit('openWindow', { name: 'Recovery', component: Auth, type: 'fullscreen' });
+    }
   },
   methods: {
     async trySession() {
@@ -42,6 +48,7 @@ export default {
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700,900&display=swap');
 @import './scss/_normalize';
 @import './scss/_colors';
+@import './scss/_mixins';
 
 html, body, #app {
   min-height: 100vh;
@@ -84,16 +91,12 @@ a {
   }
 }
 
-::-webkit-input-placeholder {
-  opacity: .4;
-  font-size: 14px;
-}
-:-ms-input-placeholder {
-  opacity: .4;
-  font-size: 14px;
-}
-::placeholder {
-  opacity: .4;
-  font-size: 14px;
+* {
+  @include setPlaceholder();
+  &::selection {
+    background-color: darken($color-cyan, 5%);
+    color: #000;
+    text-shadow: none;
+  }
 }
 </style>

@@ -3,7 +3,7 @@
     <Icon :name="icon"></Icon>
     <span class="text"><slot></slot></span>
   </router-link>
-  <div v-else :id="getName" class="button" :class="getStyle" @click="OnButtonClick">
+  <div v-else :id="getName" class="button" :class="[ getStyle, isDisabled ]" @click.capture="OnButtonClick">
     <Icon :name="icon"></Icon>
     <span class="text"><slot></slot></span>
   </div>
@@ -13,7 +13,7 @@
 import Icon from './Icon.component.vue';
 
 export default {
-  props: ['name', 'href', 'type', 'icon', 'text', 'click'],
+  props: ['name', 'href', 'type', 'icon', 'text', 'click', 'disabled'],
   components: {
     Icon,
   },
@@ -24,10 +24,13 @@ export default {
     getStyle() {
       return `${this.type}-button`;
     },
+    isDisabled() {
+      return this.disabled ? 'disabled' : null;
+    },
   },
   methods: {
     OnButtonClick() {
-      if (typeof (this.click) !== 'function') return false;
+      if (typeof (this.click) !== 'function' || this.disabled) return false;
       return this.click();
     },
   },
@@ -54,6 +57,11 @@ export default {
       margin: 0 0 0 8px; // Add spacing between icon and text on the left side of the icon [TEXT  ICON]
     }
   }
+  &.disabled {
+    cursor: default;
+    opacity: .4;
+  }
+  @include disableSelect();
 }
 
 .bzard-button {
@@ -82,8 +90,25 @@ export default {
   &:not(.disabled) {
     &.is-active, &:hover {
       background-color: darken($color-cyan, 40%);
-      border-top: 1px solid $color-cyan;
-      border-bottom: 1px solid $color-cyan;
+      border-color: $color-cyan;
+    }
+  }
+  &.google {
+    font-weight: 600;
+    background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
+    color: lighten(#dd4a36, 40%);
+    &:hover:not(.disabled) {
+      background-color: darken(#c93737, 35%);
+      border-color: #c93737;
+    }
+  }
+  &.facebook {
+    font-weight: 600;
+    background: linear-gradient(to bottom, #7289da, darken(#7289da, 10%));
+    color: lighten(#7289da, 40%);
+    &:hover:not(.disabled) {
+      background-color: darken(#7289da, 35%);
+      border-color: #7289da;
     }
   }
 }
@@ -107,45 +132,4 @@ export default {
   &:hover, &.active { color: lighten($color-cyan, 20%); }
   &.active { background-color: rgba($color-cyan, .2); }
 }
-
-/* @if $color == "teal" {
-    background: linear-gradient(to bottom, rgba(#01936e, 1), rgba(#008562, 1));
-    color: lighten(#01936e, 40%);
-
-    &:hover:not(.disabled) {
-      background-color: darken($cyan, 35%);
-    }
-  }
-  @if $color == "red" {
-    background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
-    color: lighten(#dd4a36, 40%);
-
-    &:hover:not(.disabled) {
-      background-color: darken(#c93737, 35%);
-    }
-  }
-  @if $color == "cyan" {
-    background: linear-gradient(to bottom, #00aaff, darken(#00aaff, 10%));
-    color: lighten(#00aaff, 40%);
-
-    &:hover:not(.disabled) {
-      background-color: darken(#00aaff, 35%);
-    }
-  }
-  @if $color == "blue" {
-    background: linear-gradient(to bottom, #3965a4, darken(#3965a4, 10%));
-    color: lighten(#3965a4, 40%);
-
-    &:hover:not(.disabled) {
-      background-color: darken(#3965a4, 35%);
-    }
-  }
-  @if $color == "blurple" {
-    background: linear-gradient(to bottom, #7289da, darken(#7289da, 10%));
-    color: lighten(#7289da, 40%);
-
-    &:hover:not(.disabled) {
-      background-color: darken(#7289da, 35%);
-    }
-  } */
 </style>

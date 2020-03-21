@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     showAuthOverlay(name) {
-      this.$store.commit('openWindow', { name, component: Auth });
+      this.$store.commit('openWindow', { name, component: Auth, type: 'fullscreen' });
     },
     deauthenticate() {
       this.$store.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
