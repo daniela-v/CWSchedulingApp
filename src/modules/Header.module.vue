@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     showAuthOverlay(name) {
-      this.$store.commit('openWindow', { name, component: Auth });
+      this.$store.commit('openWindow', { name, component: Auth, type: 'fullscreen' });
     },
     deauthenticate() {
       this.$store.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
@@ -66,7 +66,7 @@ header {
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
   grid-column-gap: 20px;
-  background: linear-gradient(to bottom, rgba($color-beige, .2), transparent);
+  background: linear-gradient(to bottom, rgba($color-cyan, .1), transparent);
   height: 100px;
   padding: 0 20px;
 
@@ -85,20 +85,20 @@ header {
       top: 8px;
       width: 50px;
       margin-right: 8px;
-      fill: $color-beige;
+      fill: $color-cyan;
     }
     .name {
       display: flex;
       flex-direction: column;
       .line-1 {
-        color: $color-beige;
+        color: darken($color-cyan, 25%);
         font-weight: 700;
         font-size: 28px;
       }
       .line-2 {
-        color: $color-light-grey;
+        color: $color-cyan;
         font-weight: 400;
-        font-size: 33px;
+        font-size: 32px;
       }
     }
   }
@@ -115,7 +115,7 @@ header {
       top: 2px; // Fix border vertical offset
       height: 60%;
       margin-right: 10px;
-      border-left: 1px solid $color-beige;
+      border-left: 1px solid $color-cyan-border;
     }
   }
   .account {

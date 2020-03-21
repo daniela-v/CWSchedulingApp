@@ -45,21 +45,21 @@ export default {
     height: 32px;
     padding: 5px 10px;
     margin: 10px;
-    border: 1px solid darken($color-purple, 5%);
+    border: 1px solid $color-cyan-border;
     border-radius: 5px;
-    background-color: rgba(darken($color-purple, 5%), .8);
-    color: lighten($color-purple, 20%);
+    background-color: rgba($color-cyan-bg, .8);
+    color: $color-cyan;
     font-weight: 600;
     @include transition('height, opacity, transform', .4s, ease-in-out);
     &.alert {
-      color: red;
-      border-color: red;
-      background-color: darken(red, 55%);
+      color: $color-error;
+      border-color: $color-error;
+      background-color: darken($color-error, 55%);
     }
     &.warning {
-      color: yellow,;
-      border-color: yellow,;
-      background-color: darken(yellow, 40%);
+      color: $color-error-soft;
+      border-color: $color-error-soft;
+      background-color: darken($color-error-soft, 55%);
     }
     i {
       margin-right: 10px;
