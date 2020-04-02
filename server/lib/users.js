@@ -5,6 +5,8 @@ const sql = require('./db/config.js');
 const validators = require('./validators/users.validator.js');
 const mailer = require('./mail/index.js');
 
+let generatedCode =0;
+
 function storeKey(session, passKey) {
   session.key = passKey; // eslint-disable-line no-param-reassign
   session.save();
@@ -56,7 +58,7 @@ const users = {
       .select('username')
       .whereRaw('email = ?', [email]);
     mailer.send(result, email, 'Code for password reset', code);
-    return code;
+    generatedCode = code;
   },
   async authenticate(session, data) {
     const { username, password } = data;

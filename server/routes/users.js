@@ -65,9 +65,26 @@ router.get('/session', async (req, res) => {
  */
 router.post('/recover', async (req, res) => {
   let error;
+  let result = true;
+  try {
+    const code = users.recover(req.body);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
+ * POST /users/code
+ */
+router.post('/code', async (req, res) => {
+  let error;
   let result = false;
   try {
     const code = users.recover(req.body);
+    if (code === users.generatedCode) {
+      result = true;
+    }
   } catch (e) {
     error = e;
   }
