@@ -76,6 +76,9 @@ router.post('/recover', async (req, res) => {
 
 /**
  * POST /users/code
+ * 
+ * Used to compare the code that the user enters to the code that has been generated and sent to the user via email
+ * returns true if the codes match and false if they do not
  */
 router.post('/code', async (req, res) => {
   let error;
