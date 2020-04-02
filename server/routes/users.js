@@ -65,9 +65,10 @@ router.get('/session', async (req, res) => {
  */
 router.post('/recover', async (req, res) => {
   let error;
-  let result;
+  let result = false;
   try {
-    result = true;
+    //result = true;
+    users.recover(req.body);
   } catch (e) {
     error = e;
   }
