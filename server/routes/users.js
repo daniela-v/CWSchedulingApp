@@ -67,8 +67,7 @@ router.post('/recover', async (req, res) => {
   let error;
   let result = false;
   try {
-    //result = true;
-    users.recover(req.body);
+    const code = users.recover(req.body);
   } catch (e) {
     error = e;
   }
