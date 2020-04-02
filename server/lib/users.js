@@ -19,8 +19,7 @@ function removeSensitive(data) {
   return data;
 }
 
-function generateCode()
-{
+function generateCode() {
   let min = 0;
   let max = 100;
   min = Math.ceil(min);
