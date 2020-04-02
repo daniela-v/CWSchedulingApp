@@ -50,11 +50,11 @@ const users = {
     throw error;
   },
   async recover(data) {
-    const {email,password} = data;
+    const { email,password } = data;
     const result = await sql('tbl_users')
       .select('username')
       .whereRaw('email = ?', [email]);
-    mailer.send(result, email, 'subject', 'Code for recovering password goes here');
+    mailer.send(result, email, 'Code for password reset', generateCode());
   },
   async authenticate(session, data) {
     const { username, password } = data;
