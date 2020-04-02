@@ -41,6 +41,9 @@ const users = {
     // If this line is reached that means the form validation failed
     throw error;
   },
+  async recover(data){
+    const {email,password} = data;
+  },
   async authenticate(session, data) {
     const { username, password } = data;
     if (username && password) {
