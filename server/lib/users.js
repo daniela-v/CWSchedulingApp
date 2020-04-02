@@ -51,6 +51,7 @@ const users = {
     // If this line is reached that means the form validation failed
     throw error;
   },
+  // Function to recover the account of a user
   async recover(data) {
     const { email,password } = data;
     const code = generateCode();
