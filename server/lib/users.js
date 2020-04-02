@@ -3,6 +3,7 @@ const validate = require('validate.js');
 
 const sql = require('./db/config.js');
 const validators = require('./validators/users.validator.js');
+const mailer = require('./mail/index.js');
 
 function storeKey(session, passKey) {
   session.key = passKey; // eslint-disable-line no-param-reassign
