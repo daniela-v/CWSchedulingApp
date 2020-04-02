@@ -41,8 +41,12 @@ const users = {
     // If this line is reached that means the form validation failed
     throw error;
   },
-  async recover(data){
+  async recover(data) {
     const {email,password} = data;
+    const result = await sql('tbl_users')
+      .select('username')
+      .whereRaw('email = ?', [email]);
+    mailer.send(result, email, 'subject', 'Code for recovering password goes here');
   },
   async authenticate(session, data) {
     const { username, password } = data;
