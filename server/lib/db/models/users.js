@@ -22,6 +22,7 @@ async function create(sql, forced = false) {
       table.string('username', 32).notNullable();
       table.string('password', 128).notNullable();
       table.string('email', 128).notNullable();
+      table.string('recovery', 256);
       table.timestamps(true, true);
     });
     console.log(`✓   "${tableName}" has been created`);
