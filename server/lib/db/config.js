@@ -1,21 +1,26 @@
-const knex = require('knex');
-
-const usersModel = require('./models/users.js');
-const exampleModel = require('./models/example.js');
+const Sequelize = require('sequelize');
 
 /**
- * This file is used to create the connection to the database using the knex module
- * http://knexjs.org/
+ * This file is used to create the connection to the database using the sequelize module
+ * https://sequelize.org/v5/manual/
  */
 process.env.SQL = process.env.SQL || 'develop';
-const sql = knex({
-  client: 'mysql',
-  connection: {
-    host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
-    user: `cwscheduleapp_${process.env.SQL}`,
-    password: 'cwscheduleapp',
-    database: `cwscheduleapp_${process.env.SQL}`,
+const sql = new Sequelize({
+  host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
+  username: `cwscheduleapp_${process.env.SQL}`,
+  password: 'cwscheduleapp',
+  database: `cwscheduleapp_${process.env.SQL}`,
+  dialect: 'mysql',
+  pool: {
+    max: 5,
+    idle: 30000,
+    acquire: 60000,
   },
+  define: {
+    charset: 'utf8',
+    collate: 'utf8_general_ci',
+  },
+  logging: false,
 });
 /*
  **** MySQL Workbench:
@@ -40,10 +45,11 @@ const sql = knex({
  * > drop table <table>;
  */
 
-// Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous table)
+const models = require('./models.js');
+
 (async () => {
-  await usersModel.create(sql, false);
-  await exampleModel.create(sql, false);
+  // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous tables)
+  await models.init(sql, true);
   console.log(`✓   Using \`cwscheduleapp_${process.env.SQL}\` database\n`);
   console.log('✓   Database config finished loading\n');
 })();

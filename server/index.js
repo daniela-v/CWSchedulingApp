@@ -2,8 +2,8 @@ const path = require('path');
 const cors = require('cors');
 const express = require('express');
 const expressSession = require('express-session');
-const knexSession = require('connect-session-knex')(expressSession);
-const knex = require('./lib/db/config.js');
+const sequelizeSession = require('connect-session-sequelize')(expressSession.Store);
+const sequelize = require('./lib/db/config.js');
 
 // Import routes
 const users = require('./routes/users');
@@ -24,9 +24,9 @@ app.use(expressSession({
     maxAge: 60 * 60 * 24 * 365 * 1000,
     secure: false,
   },
-  store: new knexSession({
-    knex,
-    clearInterval: 900000,
+  store: new sequelizeSession({
+    db: sequelize,
+    tableName: 'tbl_sessions',
   }),
 }));
 
