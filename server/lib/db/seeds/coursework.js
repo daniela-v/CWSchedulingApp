@@ -6,8 +6,11 @@ const rows = [
 
 async function insert(model) {
   await model.destroy({ where: {} });
-  await model.bulkCreate(rows);
-  console.log(`✓   "${model.tableName}" has been populated`);
+  // Only populate the development database with seeds
+  if (process.env.SQL === 'develop') {
+    await model.bulkCreate(rows);
+    console.log(`✓   "${model.tableName}" has been populated`);
+  }
 }
 
 module.exports = { insert };

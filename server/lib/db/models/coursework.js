@@ -1,5 +1,7 @@
 // https://sequelize.org/v5/manual/models-definition.html
-module.exports = (sequelize, type) => sequelize.define('tbl_coursework', {
+const TABLE = 'tbl_coursework';
+
+module.exports = (sequelize, type) => sequelize.define(TABLE, {
   id: {
     type: type.INTEGER,
     primaryKey: true,
