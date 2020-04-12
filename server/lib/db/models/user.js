@@ -19,8 +19,5 @@ module.exports = (sequelize, type) => sequelize.define(TABLE, {
     type: type.STRING(128),
     allowNull: false,
   },
-  recovery: {
-    type: type.STRING(128),
-    allowNull: true,
-  },
+  recovery: type.INTEGER,
 });
