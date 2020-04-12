@@ -10,7 +10,7 @@ async function send(contact) {
       from: 'Milestone Manager <milestonemanager.noreply@gmail.com>',
       to: `${user || ''} <${email}>`,
       subject: subject || 'Milestone Manager',
-      message,
+      html: message,
     };
     await transporter.sendMail(options);
   } catch (e) {

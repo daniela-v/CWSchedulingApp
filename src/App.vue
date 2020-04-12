@@ -27,16 +27,20 @@ export default {
   },
   async created() {
     await this.trySession();
-
+    await this.$nextTick();
     if (!this.$store.getters.getUser && this.$route.query.recovery) {
       this.$store.commit('openWindow', { name: 'Recovery', component: Auth, type: 'fullscreen' });
     }
   },
   methods: {
     async trySession() {
-      const response = await axios.get('/users/session');
-      if (response.data.result) {
-        this.$store.commit('authenticate', response.data.result);
+      try {
+        const response = await axios.get('/users/session');
+        if (response.data.result) {
+          this.$store.commit('authenticate', response.data.result);
+        }
+      } catch (e) {
+        console.log(e);
       }
     },
   },

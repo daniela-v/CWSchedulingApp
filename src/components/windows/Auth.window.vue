@@ -76,12 +76,7 @@
           <Icon name="close" :click="this.setForm.bind()"></Icon>
           <div class="title">{{ getForm.title }}</div>
           <section class="form">
-            <div v-for="(input, id) in getForm.input" :key="id" :id="formatInputId(id)" class="input-wrapper" :class="[ hasFailed(input) ]">
-              <label :for="id" class="label icon" :class="[ input.icon ]"></label>
-              <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
-              <Icon v-if="input.error" class="error" name="warning" v-tooltip="{ type: 'alert', text: input.error }"></Icon>
-            </div>
-            <transition v-for="(input, id) in getForm.steps" :key="id" @enter="slideEnter" @leave="slideLeave">
+            <transition v-for="(input, id) in getForm.input" :key="id" @enter="slideEnter" @leave="slideLeave">
               <div v-show="input.step <= getForm.step" :id="formatInputId(id)" class="input-wrapper" :class="[ hasFailed(input), formatStepStatus(input.step) ]">
                 <label :for="id" class="label icon" :class="[ input.icon ]"></label>
                 <input :id="id" :type="input.type" :name="id" :placeholder="input.placeholder" v-model="input.model" />
@@ -176,15 +171,12 @@ export default {
           title: 'Recover',
           action: '/users/recover',
           input: {
-            username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
-            email: { icon: 'icon-email', type: 'text', placeholder: 'email' },
-          },
-          step: 0,
-          steps: {
+            account: { icon: 'icon-person', type: 'text', placeholder: 'username or email', step: 0 },
             code: { icon: 'icon-code', type: 'text', placeholder: 'code', step: 1 },
             password: { icon: 'icon-key', type: 'password', placeholder: 'password', step: 2 },
             confirmPassword: { icon: 'icon-key', type: 'password', placeholder: 'confirm password', step: 2 },
           },
+          step: 0,
           control: [
             { text: 'Recover', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
@@ -204,7 +196,7 @@ export default {
     // If the recovery query exists in the URL path, direct the user to the recovery form and auto-complete the code
     if (this.$route.query.recovery) {
       this.$set(this.forms.recovery, 'step', 1);
-      this.$set(this.forms.recovery.steps.code, 'model', this.$route.query.recovery);
+      this.$set(this.forms.recovery.input.code, 'model', this.$route.query.recovery);
     }
   },
   computed: {
@@ -286,9 +278,6 @@ export default {
      */
     clearRecovery() {
       this.$set(this.forms.recovery, 'step', 0);
-      _.forEach(this.forms.recovery.steps, (field, key) => {
-        this.$set(this.forms.recovery.steps[key], 'model', '');
-      });
       // Clear the recovery code in the URL only if it exists to prevent some weird error
       if (this.$route.query.recovery) {
         this.$router.replace({ query: { recovery: undefined } });
@@ -303,11 +292,8 @@ export default {
         acc[key] = val.model;
         return acc;
       }, {});
-      const recovery = _.reduce(this.getForm.steps, (acc, val, key) => {
-        acc[key] = val.model;
-        return acc;
-      }, {});
-      return _.merge(recovery, data);
+      data.step = this.getForm.step;
+      return _.merge(data);
     },
     /**
      * Submits the active form data to the server
@@ -585,6 +571,42 @@ export default {
             outline: none;
             overflow: hidden;
           }
+          &.on-step:not(#input-account) {
+            .label {
+              background-color: darken(orange, 15%);
+              color: lighten(orange, 20%);
+            }
+            input {
+              @include setPlaceholder(orange);
+              border-color: darken(orange, 15%);
+              color: orange;
+              &:hover { background-color: rgba(orange, .1); }
+              &:focus {
+                background-color: rgba(orange, .1);
+                box-shadow: 0 0 3px lighten(orange, 10%) inset;
+                text-shadow: 0 0 2px orange;
+              }
+              &::selection { background-color: darken(orange, 5%); }
+            }
+          }
+          &.passed-step:not(#input-account) {
+            .label {
+              background-color: darken(lime, 15%);
+              color: lighten(lime, 20%);
+            }
+            input {
+              @include setPlaceholder(lime);
+              border-color: darken(lime, 15%);
+              color: lime;
+              &:hover { background-color: rgba(lime, .1); }
+              &:focus {
+                background-color: rgba(lime, .1);
+                box-shadow: 0 0 3px lighten(lime, 10%) inset;
+                text-shadow: 0 0 2px lime;
+              }
+              &::selection { background-color: darken(lime, 5%); }
+            }
+          }
           // If input field has failed the validation checks styling below applies
           &.failed {
             .label {
@@ -610,42 +632,6 @@ export default {
               &::selection {
                 background-color: $redish;
               }
-            }
-          }
-          &.on-step {
-            .icon {
-              background-color: darken(orange, 15%);
-              color: lighten(orange, 20%);
-            }
-            input {
-              @include setPlaceholder(orange);
-              border-color: darken(orange, 15%);
-              color: orange;
-              &:hover { background-color: rgba(orange, .1); }
-              &:focus {
-                background-color: rgba(orange, .1);
-                box-shadow: 0 0 3px lighten(orange, 10%) inset;
-                text-shadow: 0 0 2px orange;
-              }
-              &::selection { background-color: darken(orange, 5%); }
-            }
-          }
-          &.passed-step {
-            .icon {
-              background-color: darken(lime, 15%);
-              color: lighten(lime, 20%);
-            }
-            input {
-              @include setPlaceholder(lime);
-              border-color: darken(lime, 15%);
-              color: lime;
-              &:hover { background-color: rgba(lime, .1); }
-              &:focus {
-                background-color: rgba(lime, .1);
-                box-shadow: 0 0 3px lighten(lime, 10%) inset;
-                text-shadow: 0 0 2px lime;
-              }
-              &::selection { background-color: darken(lime, 5%); }
             }
           }
         }
