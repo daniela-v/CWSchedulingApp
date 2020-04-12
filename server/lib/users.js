@@ -1,18 +1,18 @@
 const bcrypt = require('bcrypt');
 const validate = require('validate.js');
 
-const sql = require('./db/config.js');
+const { User } = require('./db/models.js').models;
 const validators = require('./validators/users.validator.js');
 const mailer = require('./mail/index.js');
 
 let generatedCode =0;
 
-function storeKey(session, passKey) {
-  session.key = passKey; // eslint-disable-line no-param-reassign
+function storeUserSession(session, id) {
+  session.user = id; // eslint-disable-line no-param-reassign
   session.save();
 }
-function clearKey(session) {
-  delete session.key; // eslint-disable-line no-param-reassign
+function clearUserSession(session) {
+  delete session.user; // eslint-disable-line no-param-reassign
   session.save();
 }
 
@@ -34,18 +34,12 @@ const users = {
     const error = validate(data, validators.register);
     if (!error) {
       const { username, password, email } = data;
-      const result = await sql('tbl_users')
-        .select()
-        .whereRaw('username = ?', [username]);
-      if (result.length) {
+      const result = await User.findOne({ where: { username } });
+      if (result) {
         throw { username: ['This username has already been taken'] };
       }
       const cryptedPwd = await bcrypt.hash(password, 10);
-      await sql('tbl_users').insert({
-        username,
-        password: cryptedPwd,
-        email,
-      });
+      await User.create({ username, password: cryptedPwd, email });
       return true;
     }
     // If this line is reached that means the form validation failed
@@ -64,14 +58,12 @@ const users = {
   async authenticate(session, data) {
     const { username, password } = data;
     if (username && password) {
-      const rows = await sql('tbl_users')
-        .select()
-        .whereRaw('username = ?', [username]);
-      if (rows.length) {
-        const match = await bcrypt.compare(password, rows[0].password);
+      const result = await User.findOne({ where: { username } });
+      if (result) {
+        const match = await bcrypt.compare(password, result.password);
         if (match) {
-          storeKey(session, rows[0].password);
-          return removeSensitive(rows[0]);
+          storeUserSession(session, result.id);
+          return removeSensitive(result.dataValues);
         }
       }
     }
@@ -81,14 +73,12 @@ const users = {
       password: ['Invalid username or password'],
     };
   },
-  async session(key) {
-    if (key) {
-      const rows = await sql('tbl_users')
-        .select()
-        .whereRaw('password = ?', [key]);
-      // If the session key matches a password key from the database then authenticate the user
-      if (rows.length) {
-        return removeSensitive(rows[0]);
+  async session(id) {
+    if (id) {
+      const result = await User.findOne({ where: { id } });
+      // If the session id matches a user id from the database then authenticate the user
+      if (result) {
+        return removeSensitive(result.dataValues);
       }
     }
     // If this line is reached that means the session could not be loaded
@@ -96,7 +86,7 @@ const users = {
   },
   async deauthenticate(session) {
     if (session.key) {
-      clearKey(session);
+      clearUserSession(session);
       return true;
     }
     // If this line is reached that means there is nothing to deauthenticate

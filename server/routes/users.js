@@ -53,7 +53,7 @@ router.get('/session', async (req, res) => {
   let result;
   req.session.touch();
   try {
-    result = await users.session(req.session.key);
+    result = await users.session(req.session.user);
   } catch (e) {
     error = e;
   }

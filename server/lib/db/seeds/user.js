@@ -15,11 +15,14 @@ async function cryptPasswords() {
   result.forEach((value, id) => { rows[id].password = value; });
 }
 
-async function insert(sql, tableName) {
-  await sql.table(tableName).del();
-  await cryptPasswords();
-  await sql.table(tableName).insert(rows);
-  console.log(`✓   "${tableName}" has been populated\n`);
+async function insert(model) {
+  await model.destroy({ where: {} });
+  // Only populate the development database with seeds
+  if (process.env.SQL === 'develop') {
+    await cryptPasswords();
+    await model.bulkCreate(rows);
+    console.log(`✓   "${model.tableName}" has been populated`);
+  }
 }
 
 module.exports = { insert };

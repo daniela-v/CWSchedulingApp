@@ -1,5 +1,5 @@
 // https://sequelize.org/v5/manual/models-definition.html
-const TABLE = 'tbl_coursework';
+const TABLE = 'tbl_users';
 
 module.exports = (sequelize, type) => sequelize.define(TABLE, {
   id: {
@@ -7,21 +7,20 @@ module.exports = (sequelize, type) => sequelize.define(TABLE, {
     primaryKey: true,
     autoIncrement: true,
   },
-  title: {
+  username: {
     type: type.STRING(32),
     allowNull: false,
   },
-  module: {
+  password: {
     type: type.STRING(128),
     allowNull: false,
   },
-  intended_date: {
-    type: type.DATE,
+  email: {
+    type: type.STRING(128),
     allowNull: false,
   },
-  completion_date: type.DATE,
-  status: {
-    type: type.STRING(16),
-    allowNull: false,
+  recovery: {
+    type: type.STRING(128),
+    allowNull: true,
   },
 });
