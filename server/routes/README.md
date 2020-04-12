@@ -34,11 +34,13 @@ res.json({ result, error })
 ```javascript
 async function doSomething() {
   const result = await User.findAll();
+  // Waiting for the awaited function to complete
   return result;
 }
 
 router.get('example', async (req, res) => {
   const result = await doSomething(); // please note that doSomething function must be async as well
+  // Waiting for the awaited function to complete
 })
 ```
 
@@ -66,7 +68,7 @@ router.get('example', async (req, res) => {
     result: ...result
     error: ...error
   }
-  If doSomething() failes, then result will be undefined, else error will be undefined */
+  If doSomething() fails the result will be undefined, else error will be undefined */
 })
 ```
 
