@@ -36,7 +36,8 @@ const sequelize = {
         }
       }
     } catch (e) {
-      console.log(`${e}`);
+      console.error(e);
+      console.log('\u001b[31;1mx   Models failed loading, see error above\n\u001b[0m');
     }
   },
   capitalize(model) {

@@ -11,6 +11,7 @@ function storeUserSession(session, id) {
   session.user = id; // eslint-disable-line no-param-reassign
   session.save();
 }
+
 function clearUserSession(session) {
   delete session.user; // eslint-disable-line no-param-reassign
   session.save();

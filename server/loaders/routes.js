@@ -17,12 +17,12 @@ const routes = {
         const [name] = fn.split('.');
         const route = require(path.join(ROUTES_DIR, fn)); // eslint-disable-line
         app.use(`/${name}`, route);
-        console.log(`✓   Route \`${name}\` has loaded successfully`);
+        console.log(`\u001b[32m✓   Route \`${name}\` has loaded successfully\u001b[0m`);
       });
-      console.log('✓   Routes config finished loading\n');
+      console.log('\u001b[32m✓   Routes config finished loading\n\u001b[0m');
     } catch (e) {
       console.error(e);
-      console.log('x   Routes failed loading, see error above\n');
+      console.log('\u001b[31;1mx   Routes failed loading, see error above\n\u001b[0m');
     }
   },
 };

@@ -9,7 +9,7 @@ async function insert(model) {
   // Only populate the development database with seeds
   if (process.env.SQL === 'develop') {
     await model.bulkCreate(rows);
-    console.log(`✓   "${model.tableName}" has been populated`);
+    console.log(`\u001b[32m✓   "${model.tableName}" has been populated\u001b[0m`);
   }
 }
 

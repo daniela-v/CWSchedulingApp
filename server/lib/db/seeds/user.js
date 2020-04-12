@@ -21,7 +21,7 @@ async function insert(model) {
   if (process.env.SQL === 'develop') {
     await cryptPasswords();
     await model.bulkCreate(rows);
-    console.log(`✓   "${model.tableName}" has been populated`);
+    console.log(`\u001b[32m✓   "${model.tableName}" has been populated\u001b[0m`);
   }
 }
 

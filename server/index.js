@@ -43,6 +43,6 @@ const routes = require('./loaders/routes.js');
 
   const port = process.env.PORT || 5000;
   app.listen(port, () => {
-    console.log(`✓   Server started! Listening on port: ${port}\n`);
+    console.log(`\u001b[36m    Server started! Listening on port: ${port}\n\u001b[0m`);
   });
 })();
