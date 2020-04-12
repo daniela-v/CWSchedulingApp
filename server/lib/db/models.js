@@ -19,8 +19,8 @@ const sequelize = {
         const [name] = fn.split('.');
         const model = require(path.join(MODELS_DIR, fn)); // eslint-disable-line
         const seed = require(path.join(SEEDS_DIR, fn)) // eslint-disable-line
-        this.models[name] = model(sql, Sequelize);
-        this.seeds[name] = seed;
+        this.models[this.capitalize(name)] = model(sql, Sequelize);
+        this.seeds[this.capitalize(name)] = seed;
       });
       // Map the table name of each model
       const tables = _.map(this.models, (model) => model.tableName);
@@ -38,6 +38,9 @@ const sequelize = {
     } catch (e) {
       console.log(`${e}`);
     }
+  },
+  capitalize(model) {
+    return `${model.charAt(0).toUpperCase()}${model.slice(1)}`;
   },
   seeds: {},
   models: {},

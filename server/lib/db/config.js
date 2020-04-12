@@ -20,7 +20,7 @@ const sql = new Sequelize({
     charset: 'utf8',
     collate: 'utf8_general_ci',
   },
-  logging: false,
+  logging: false, // (process.env.SQL === 'develop'),
 });
 /*
  **** MySQL Workbench:
@@ -47,11 +47,11 @@ const sql = new Sequelize({
 
 const models = require('./models.js');
 
-(async () => {
+async function init() {
   // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous tables)
-  await models.init(sql, true);
   console.log(`✓   Using \`cwscheduleapp_${process.env.SQL}\` database\n`);
+  await models.init(sql, false);
   console.log('✓   Database config finished loading\n');
-})();
+}
 
-module.exports = sql;
+module.exports = { sql, init };

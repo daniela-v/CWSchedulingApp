@@ -1,5 +1,5 @@
 // https://sequelize.org/v5/manual/models-definition.html
-const TABLE = 'tbl_usres';
+const TABLE = 'tbl_users';
 
 module.exports = (sequelize, type) => sequelize.define(TABLE, {
   id: {
