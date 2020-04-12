@@ -5,12 +5,11 @@ const express = require('express');
 const expressSession = require('express-session');
 const sequelizeSession = require('connect-session-sequelize')(expressSession.Store);
 const sequelize = require('./lib/db/config.js');
+const routes = require('./loaders/routes.js');
 
 (async () => {
+  // Initialize sequelize ORM and models
   await sequelize.init();
-
-  // Import routes
-  const users = require('./routes/users');
 
   const app = express();
   app.use(express.urlencoded({ extended: false }));
@@ -34,8 +33,8 @@ const sequelize = require('./lib/db/config.js');
     }),
   }));
 
-  // Use the imported routes
-  app.use('/users', users);
+  // Initialize routes
+  await routes.init(app);
 
   // Handles any requests that don't match the ones above
   app.use((req, res) => {
