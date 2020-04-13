@@ -19,7 +19,7 @@ const sequelize = {
         const [name] = fn.split('.');
         const model = require(path.join(MODELS_DIR, fn)); // eslint-disable-line
         const seed = require(path.join(SEEDS_DIR, fn)) // eslint-disable-line
-        this.models[this.capitalize(name)] = model(sql, Sequelize);
+        this.models[this.capitalize(name)] = model(sql, Sequelize, name);
         this.seeds[this.capitalize(name)] = seed;
       });
       // Map the table name of each model
