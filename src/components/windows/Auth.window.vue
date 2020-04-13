@@ -90,7 +90,7 @@
           <span class="separator line"></span>
           <section class="extra">
             <span>Already have a recovery code?</span>
-            <span><a @click="forms.recovery.step === 0 ? setRecovery(1) : forms.recovery.step == 1 ? setRecovery(0) : setRecovery(1)">Enter the code here!</a></span>
+            <span><a @click="forms.recovery.step === 0 ? setRecovery(1) : setRecovery(0)">Enter the code here!</a></span>
           </section>
         </div>
       </form>
@@ -197,6 +197,7 @@ export default {
     if (this.$route.query.recovery) {
       this.$set(this.forms.recovery, 'step', 1);
       this.$set(this.forms.recovery.input.code, 'model', this.$route.query.recovery);
+      this.$router.replace({ query: { recovery: undefined } });
     }
   },
   computed: {
@@ -215,8 +216,11 @@ export default {
      *
      * @param {String} form           - The form name to change to (login, register, recovery, null)
      */
-    setForm(form) {
+    async setForm(form) {
       this.$set(this, 'form', form);
+      if (form === 'recovery') {
+        this.clear();
+      }
     },
     /**
      * Sets the recovery step
@@ -271,17 +275,7 @@ export default {
       _.forEach(this.getForm.input, (field, key) => {
         this.$set(this.getForm.input[key], 'model', '');
       });
-      this.clearRecovery();
-    },
-    /**
-     * Resets the recovery step
-     */
-    clearRecovery() {
       this.$set(this.forms.recovery, 'step', 0);
-      // Clear the recovery code in the URL only if it exists to prevent some weird error
-      if (this.$route.query.recovery) {
-        this.$router.replace({ query: { recovery: undefined } });
-      }
     },
     /**
      * Prepares the data of the input fields to be sent to the server
@@ -608,7 +602,7 @@ export default {
             }
           }
           // If input field has failed the validation checks styling below applies
-          &.failed {
+          &.failed:not(#prioritize) {
             .label {
               color: lighten($redish, 30%);
               border-color: $redish;
