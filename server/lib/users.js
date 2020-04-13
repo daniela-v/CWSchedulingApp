@@ -49,11 +49,12 @@ const users = {
   // Function to recover the account of a user
   async recover(data) {
     const { account, code, password, step } = data;
-    const constraints = _.reduce(validators.recovery, (acc, val, s) => {
-      if (s <= step) {
+    // Get the field constraints based on the current step so we know which field to validate
+    const constraints = _.reduce(validators.recovery, (acc, val, i) => {
+      if (i <= step) {
         return { ...acc, ...val };
       }
-      return { ...acc };
+      return acc;
     }, {});
     // If the validation is failing, throw the error given by the validator
     const error = validate(data, constraints);
