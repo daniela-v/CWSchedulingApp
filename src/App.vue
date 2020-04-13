@@ -72,6 +72,7 @@ a {
 }
 
 #app {
+  position: relative;
   background: $color-cyan-bg;
   background: radial-gradient(rgba(#000, .6), rgba(#000, .8)),
               url('./assets/images/bg-4.jpg') center center / cover no-repeat fixed;
