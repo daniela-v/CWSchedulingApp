@@ -6,9 +6,11 @@ Preferably the name of the model should be close to what the table will be named
 Example: If you want the table to be named `tbl_milestones` you should use `milestones.js`
 
 You should copy an existing model and modify it
-
 ##### Data types: https://sequelize.org/master/manual/model-basics.html#data-types
 ##### Column options: https://sequelize.org/master/manual/model-basics.html#column-options
+
+#### If you change an existing model
+You must set `await models.init(sql, false)` to true in `./db/config.js` on line 53 to force the models to synchronize with the database (it drops all the tables and recreates them)
 
 ### Create a seed file in /seeds/`name`.js
 
