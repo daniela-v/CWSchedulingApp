@@ -69,9 +69,9 @@ const users = {
     if (!result) {
       throw { account: ['This account is invalid'] };
     }
+    // Step 0: Insert an account to recover
+    // Generate a JWT token, using the user's creation timestamp and password hash, that automatically expires in 5 minutes then send it by email
     if (step === 0) {
-      // Step 0: Insert an account to recover
-      // Generate a JWT token, using the user's creation timestamp and password hash, that automatically expires in 5 minutes
       const token = jwt.sign({
         data: { id: result.id },
       }, `${result.createdAt}-${result.password}`, { expiresIn: 5 * 60 });
@@ -92,27 +92,30 @@ const users = {
                     <span style="font-size: 14px;">${token}</span>
                   </div>`,
       });
-    } else if (step === 1) {
-      // Step 1: Insert a code for the account
-      try {
-        // If the JWT token, generated using the user's creation timestamp and password hash, is invalid, throw an explanatory error
-        jwt.verify(code, `${result.createdAt}-${result.password}`);
-      } catch (e) {
-        if (/expired/.test(e.message)) {
-          throw { code: ['This code has expired'] };
-        }
-        throw { code: ['This code is invalid'] };
+      // Return successful to move on to the next step
+      return true;
+    }
+    // Step 1: Insert a code for the account and make sure that the code remains valid
+    // If the JWT token, generated using the user's creation timestamp and password hash, is invalid or has expired, throw an explanatory error
+    try {
+      jwt.verify(code, `${result.createdAt}-${result.password}`);
+    } catch (e) {
+      if (/expired/.test(e.message)) {
+        throw { code: ['This code has expired'] };
       }
-    } else {
-      // Step 2: Insert a password to replace the previous one
+      throw { code: ['This code is invalid'] };
+    }
+    // Step 2: Insert a password to replace the previous one but still check the code
+    // If the password is the same as before, throw an explanatory error
+    if (step === 2) {
       const samePassword = await bcrypt.compare(password, result.password);
       if (samePassword) {
         throw { password: ['You must use a different password than before'] };
       }
       result.password = await bcrypt.hash(password, 10);
-      result.save();
+      await result.save();
     }
-    // Return true on success
+    // Return successful to move on to the next step
     return true;
   },
   async authenticate(session, data) {
