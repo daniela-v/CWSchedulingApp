@@ -21,6 +21,7 @@ const validators = require('./validators/coursework.validator.js');
 
 #### How to use the created validator
 ###### First you have to define some rules in the validator file:
+List of rules: https://validatejs.org/#validators
 ```javascript
 const validator = {
   // validation rules for coursework creation form
