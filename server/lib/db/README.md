@@ -2,24 +2,24 @@
 
 ### Create a table model in /models/`name`.js
 
-Preferably the name of the model should be close to what the table will be named.
+The name of the model file will be the name of the table prefixed by `tbl_`.
 Example: If you want the table to be named `tbl_milestones` you should use `milestones.js`
 
-You should copy an existing model and modify it
+Copy an existing model and modify it
 ##### Data types: https://sequelize.org/master/manual/model-basics.html#data-types
 ##### Column options: https://sequelize.org/master/manual/model-basics.html#column-options
 
-#### If you change an existing model
+#### If you change a model that has already been synchronized with the database
 You must set `await models.init(sql, false)` to true in `./db/config.js` on line 53 to force the models to synchronize with the database (it drops all the tables and recreates them)
 
 ### Create a seed file in /seeds/`name`.js
 
 Seeds are used to auto-populate the tables on creation mostly
 
-Preferably the name of the seeds should be close to what the table will be named.
+The name of the seed file must have the same name as the name of the model file.
 Example: If the table is named `tbl_milestones` you must use `milestones.js`
 
-You should copy an existing seed and modify it
+Copy an existing seed and modify it
 
 #### If you need to add more rows to the seeds just add more items into the row array at the top
 ```javascript
