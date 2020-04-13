@@ -60,6 +60,8 @@ const coursework = {
     if (error) {
       throw error;
     }
+    // Reaching this line means the fields are validated
+    return true;
   }
 }
 ```
