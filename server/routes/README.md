@@ -20,7 +20,7 @@ router.get/post('example', (req, res) => {
 module.exports = router;
 ```
 
-#### For consistency, every route should have an unassigned variable called error and result which are send back to the requester in as a JS object;
+#### For consistency, every route should have an unassigned variable called error and result which are sent back to the requester in as a JS object;
 ```javascript
 let error;
 let result;
