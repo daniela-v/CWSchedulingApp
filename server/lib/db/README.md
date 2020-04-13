@@ -9,7 +9,7 @@ Copy an existing model and modify it
 ##### Data types: https://sequelize.org/master/manual/model-basics.html#data-types
 ##### Column options: https://sequelize.org/master/manual/model-basics.html#column-options
 
-#### If you change an existing model
+#### If you change a model that has already been synchronized with the database
 You must set `await models.init(sql, false)` to true in `./db/config.js` on line 53 to force the models to synchronize with the database (it drops all the tables and recreates them)
 
 ### Create a seed file in /seeds/`name`.js
