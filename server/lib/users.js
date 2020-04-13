@@ -32,10 +32,14 @@ const users = {
     }
 
     const { username, password, email } = data;
-    // If the user already exists in the database, throw an explanatory error
-    const result = await User.findOne({ where: { username } });
-    if (result) {
+    // If the username or the email already exists in the database, throw an explanatory error
+    const usernameExists = await User.findOne({ where: { username } });
+    if (usernameExists) {
       throw { username: ['This username has already been taken'] };
+    }
+    const emailExists = await User.findOne({ where: { email } });
+    if (emailExists) {
+      throw { email: ['This email has already been taken'] };
     }
     // Crypt the password and create a new user into the database then return successful
     const cryptedPwd = await bcrypt.hash(password, 10);
@@ -120,7 +124,7 @@ const users = {
       if (result) {
         // Hash the input password and check it against the user password hash from the database
         const match = await bcrypt.compare(password, result.password);
-        // If it matches, save it in the session and remove the sensitive data for security reasons (password field)
+        // If it matches, save it in the session and return the data with the sensitive data removed for security reasons (password field)
         if (match) {
           storeUserSession(session, result.id);
           return removeSensitive(result.dataValues);
