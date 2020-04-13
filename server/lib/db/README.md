@@ -50,7 +50,7 @@ if (process.env.SQL === 'develop') {
 
 ### Import the model to your database config
 
-The script loader is automatically adding the models to Sequelize, if a model is wrongly formatted you will notice at runtime since it throws an error.
+The model loader is automatically adding the models to Sequelize, if a model is wrongly formatted you will notice at runtime since it throws an error.
 
 ### How do I add foreign keys and relations
 
