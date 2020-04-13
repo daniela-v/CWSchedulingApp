@@ -26,11 +26,12 @@ export default {
         const el = to.element;
         const tooltip = this.$el;
         const { left, top } = el.getBoundingClientRect();
+        const { clientHeight, clientWidth } = document.querySelector('#app');
         const preset = {
-          top: document.documentElement.clientHeight - top + 15,
+          top: clientHeight - top + 15,
           middle: top + el.offsetHeight / 2 - tooltip.offsetHeight / 2,
           bottom: top + el.offsetHeight + 10,
-          left: document.documentElement.clientWidth - left + 10,
+          left: clientWidth - left + 10,
           center: left + el.offsetWidth / 2 - tooltip.offsetWidth / 2,
           right: left + el.offsetWidth + 10,
         };
@@ -40,6 +41,20 @@ export default {
         };
         this.tooltipPosition = {};
         this.arrowPosition = 'bottom';
+        if (position.x.px - tooltip.offsetWidth <= 0 || position.x.px + tooltip.offsetWidth >= clientWidth) {
+          position.y = { css: 'top', px: preset.middle };
+          if (position.x.px - tooltip.offsetWidth <= 0) {
+            position.x = { css: 'left', px: preset.right };
+            this.arrowPosition = 'left';
+          }
+          if (position.x.px + tooltip.offsetWidth >= clientWidth) {
+            position.x = { css: 'right', px: preset.left };
+            this.arrowPosition = 'right';
+          }
+        } else if (top - tooltip.offsetHeight - 10 <= 0) {
+          position.y = { css: 'top', px: preset.bottom };
+          this.arrowPosition = 'top';
+        }
         this.tooltipPosition[position.x.css] = `${position.x.px}px`;
         this.tooltipPosition[position.y.css] = `${position.y.px}px`;
       });
@@ -63,6 +78,7 @@ export default {
   background-color: $color-cyan-bg;
   box-shadow: 0 0 20px rgba(#000, .5);
   font-size: 14px;
+  font-weight: 600;
   white-space: pre;
   z-index: 5000;
   @include transition('opacity', .2s, ease);
