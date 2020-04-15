@@ -10,11 +10,11 @@
       <form v-if="form === 'register'" class="auth-form" id="form-register" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="add-circle" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="alternative">
-            <Button icon="facebook" type="dialog" class="facebook" :disabled="true">Facebook</Button>
-            <Button icon="google" type="dialog" class="google" :disabled="true">Google</Button>
+            <Button icon="facebook" type="dialog" name="facebook" :disabled="true">Facebook</Button>
+            <Button icon="google" type="dialog" name="google" :disabled="true">Google</Button>
           </section>
           <span class="separator or">or</span>
           <section class="form">
@@ -39,11 +39,11 @@
       <form v-if="form === 'login'" class="auth-form" id="form-login" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="user-circle" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="alternative">
-            <Button icon="facebook" type="dialog" class="facebook" :disabled="true">Facebook</Button>
-            <Button icon="google" type="dialog" class="google" :disabled="true">Google</Button>
+            <Button icon="facebook" type="dialog" name="facebook" :disabled="true">Facebook</Button>
+            <Button icon="google" type="dialog" name="google" :disabled="true">Google</Button>
           </section>
           <span class="separator or">or</span>
           <section class="form">
@@ -73,7 +73,7 @@
       <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="refresh" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="form">
             <transition v-for="(input, id) in getForm.input" :key="id" @enter="slideEnter" @leave="slideLeave">
@@ -379,7 +379,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/scss/_colors';
 @import '@/scss/_mixins';
 @import '@/scss/_animations';
 
@@ -453,15 +452,6 @@ export default {
         opacity: .05;
         pointer-events: none;
       }
-      .icon-close {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        z-index: 1;
-        cursor: pointer;
-        transition: color .2s linear;
-        &:hover { color: lighten($color-cyan, 40%); }
-      }
       .title {
         display: block;
         position: relative;
@@ -479,7 +469,7 @@ export default {
           justify-content: center;
           margin-left: 8px;
           margin-right: 8px;
-          &.google {
+          &.btn-google {
             background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
             color: lighten(#dd4a36, 40%);
             &:hover:not(.disabled) { background-color: darken(#c93737, 35%); }

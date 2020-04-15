@@ -8,6 +8,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
+    sidebar: false,
     windows: [],
     notifications: [],
     tooltip: null,
@@ -47,8 +48,12 @@ export default new Vuex.Store({
     hideNotification(state) {
       state.notifications.shift();
     },
+    setSidebarVisibility(state, visibility) {
+      Vue.set(state, 'sidebar', visibility);
+    },
   },
   getters: {
+    getSidebarVisibility: (state) => state.sidebar,
     getWindows(state) {
       return state.windows;
     },

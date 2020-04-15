@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header-module-vue">
     <router-link to="/" class="logo-wrapper">
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 1024 1280" xml:space="preserve">
         <g>
@@ -21,10 +21,10 @@
     <section class="navigation">
       <Button v-if="!getUser" name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
       <Button v-if="!getUser" name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
-      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate.bind()">LOGOUT</Button>
+      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate">LOGOUT</Button>
     </section>
     <section class="account">
-      <Button name="show-menu" icon="menu" type="inversed menu">{{ getUsername }}</Button>
+      <Button name="show-menu" icon="menu" type="inversed menu" :click="toggleSidebar">{{ getUsername || 'My Account' }}</Button>
     </section>
   </header>
 </template>
@@ -47,6 +47,9 @@ export default {
     },
   },
   methods: {
+    toggleSidebar() {
+      this.$store.commit('setSidebarVisibility', !this.$store.getters.getSidebarVisibility);
+    },
     showAuthOverlay(name) {
       this.$store.commit('openWindow', { name, component: Auth, type: 'fullscreen' });
     },
@@ -59,15 +62,13 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../scss/colors';
-
-header {
+.header-module-vue {
+  grid-area: header;
   display: grid;
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
   grid-column-gap: 20px;
   background: linear-gradient(to bottom, rgba($color-cyan, .1), transparent);
-  height: 100px;
   padding: 0 20px;
 
   .logo-wrapper {

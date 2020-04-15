@@ -8,6 +8,13 @@ module.exports = {
       },
     },
   },
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "~@/scss/_colors.scss";',
+      },
+    },
+  },
   chainWebpack(config) {
     config.plugin('html').tap((args) => {
       args[0].title = 'Milestone Manager'; // eslint-disable-line
