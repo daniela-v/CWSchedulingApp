@@ -25,7 +25,7 @@
             </div>
           </section>
           <section class="form-control">
-            <Button v-for="(button, id) in getForm.control" :key="id" :type="button.type" :icon="button.icon" :click="button.click">{{ button.text }}</Button>
+            <Button v-for="(button, id) in getForm.control" :key="id" v-bind="button"></Button>
           </section>
           <span class="separator line"></span>
           <section class="extra">
@@ -58,7 +58,7 @@
             <label for="remember" class="checkbox-label">Remember me!</label>
           </div>
           <section class="form-control">
-            <Button v-for="(button, id) in getForm.control" :key="id" :type="button.type" :icon="button.icon" :click="button.click">{{ button.text }}</Button>
+            <Button v-for="(button, id) in getForm.control" :key="id" v-bind="button"></Button>
           </section>
           <span class="separator line"></span>
           <section class="extra">
@@ -85,7 +85,7 @@
             </transition>
           </section>
           <section class="form-control">
-            <Button v-for="(button, id) in getForm.control" :key="id" :type="button.type" :icon="button.icon" :click="button.click">{{ button.text }}</Button>
+            <Button v-for="(button, id) in getForm.control" :key="id" v-bind="button"></Button>
           </section>
           <span class="separator line"></span>
           <section class="extra">
@@ -133,7 +133,7 @@ export default {
             confirmEmail: { icon: 'icon-email', type: 'text', placeholder: 'confirm email' },
           },
           control: [
-            { text: 'Register', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
+            { name: 'register', text: 'Register', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
           success: (user) => {
             this.clear();
@@ -154,7 +154,7 @@ export default {
           },
           remember: true,
           control: [
-            { text: 'Log In', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
+            { name: 'login', text: 'Log In', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
           success: (data) => {
             this.clear();
@@ -178,7 +178,7 @@ export default {
           },
           step: 0,
           control: [
-            { text: 'Recover', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
+            { name: 'recover', text: 'Recover', icon: 'next', type: 'dialog', click: this.submit.bind(null) },
           ],
           success: (step) => {
             this.$set(this.forms.recovery, 'step', step + 1);

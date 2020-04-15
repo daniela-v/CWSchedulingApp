@@ -31,13 +31,9 @@ export default {
   },
   methods: {
     async trySession() {
-      try {
-        const response = await axios.get('/users/session');
-        if (response.data.result) {
-          this.$store.commit('authenticate', response.data.result);
-        }
-      } catch (e) {
-        console.log(e);
+      const response = await axios.get('/users/session');
+      if (response.data.result) {
+        this.$store.commit('authenticate', response.data.result);
       }
     },
   },
