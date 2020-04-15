@@ -2,11 +2,11 @@
   <div class="button-vue">
     <router-link class="button" :class="[ getName, getStyle ]" v-if="href" :to="href">
       <Icon :name="icon"></Icon>
-      <span class="text"><slot></slot></span>
+      <span class="text">{{ getButtonText }}</span>
     </router-link>
     <div v-else class="button" :class="[ getName, getStyle, isDisabled ]" @click.capture="OnButtonClick">
       <Icon :name="icon"></Icon>
-      <span class="text"><slot></slot></span>
+      <span class="text">{{ getButtonText }}</span>
     </div>
   </div>
 </template>
@@ -20,6 +20,9 @@ export default {
   computed: {
     getName() {
       return `btn-${this.name}`;
+    },
+    getButtonText() {
+      return this.text || ((this.$slots.default && this.$slots.default.length) ? this.$slots.default[0].text : null);
     },
     getStyle() {
       return `${this.type}-style`;
