@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header-module-vue">
     <router-link to="/" class="logo-wrapper">
       <svg class="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 1024 1280" xml:space="preserve">
         <g>
@@ -24,7 +24,7 @@
       <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate.bind()">LOGOUT</Button>
     </section>
     <section class="account">
-      <Button name="show-menu" icon="menu" type="inversed header">{{ getUsername }}</Button>
+      <Button name="show-menu" icon="menu" type="inversed menu">{{ getUsername }}</Button>
     </section>
   </header>
 </template>
@@ -59,9 +59,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../scss/colors';
-
-header {
+.header-module-vue {
   display: grid;
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";

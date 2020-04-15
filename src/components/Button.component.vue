@@ -1,10 +1,10 @@
 <template>
-  <div class="button-vue" :class="getName">
-    <router-link class="button" :class="[ getStyle ]" v-if="href" :to="href">
+  <div class="button-vue">
+    <router-link class="button" :class="[ getName, getStyle ]" v-if="href" :to="href">
       <Icon :name="icon"></Icon>
       <span class="text"><slot></slot></span>
     </router-link>
-    <div v-else class="button" :class="[ getStyle, isDisabled ]" @click.capture="OnButtonClick">
+    <div v-else class="button" :class="[ getName, getStyle, isDisabled ]" @click.capture="OnButtonClick">
       <Icon :name="icon"></Icon>
       <span class="text"><slot></slot></span>
     </div>
@@ -39,7 +39,6 @@ export default {
 
 <style lang="scss">
 @import '@/scss/_mixins.scss';
-@import '@/scss/_colors.scss';
 
 .button-vue {
   position: relative;

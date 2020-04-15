@@ -50,8 +50,7 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700,900&display=swap');
-@import './scss/_normalize';
-@import './scss/_colors';
+@import './scss/_reset';
 @import './scss/_mixins';
 
 html, body, #app {
@@ -83,7 +82,6 @@ a {
   text-align: center;
   text-shadow: 1px 1px 1px #000;
   color: $color-cyan;
-  overflow: hidden;
   &:before {
     content: "";
     position: absolute;

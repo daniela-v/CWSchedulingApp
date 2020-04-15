@@ -55,7 +55,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/scss/_colors.scss';
 @import '@/scss/_mixins.scss';
 
 .window {
@@ -76,7 +75,8 @@ export default {
     bottom: 0;
     background: none;
     border: none;
-    > .btn-close {
+    // Big X in the corner when window is full screen
+    > .button-vue .button {
       right: 10px;
       top: 10px;
       font-size: 30px;
