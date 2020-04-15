@@ -21,10 +21,10 @@
     <section class="navigation">
       <Button v-if="!getUser" name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
       <Button v-if="!getUser" name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
-      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate.bind()">LOGOUT</Button>
+      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate">LOGOUT</Button>
     </section>
     <section class="account">
-      <Button name="show-menu" icon="menu" type="inversed menu">{{ getUsername }}</Button>
+      <Button name="show-menu" icon="menu" type="inversed menu" :click="toggleSidebar">{{ getUsername || 'My Account' }}</Button>
     </section>
   </header>
 </template>
@@ -47,6 +47,9 @@ export default {
     },
   },
   methods: {
+    toggleSidebar() {
+      this.$store.commit('setSidebarVisibility', !this.$store.getters.getSidebarVisibility);
+    },
     showAuthOverlay(name) {
       this.$store.commit('openWindow', { name, component: Auth, type: 'fullscreen' });
     },
@@ -60,12 +63,12 @@ export default {
 
 <style lang="scss">
 .header-module-vue {
+  grid-area: header;
   display: grid;
   grid-template-columns: auto 1fr minmax(auto, 300px);
   grid-template-areas: "logo navigation account";
   grid-column-gap: 20px;
   background: linear-gradient(to bottom, rgba($color-cyan, .1), transparent);
-  height: 100px;
   padding: 0 20px;
 
   .logo-wrapper {
