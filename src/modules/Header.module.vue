@@ -24,7 +24,7 @@
       <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate.bind()">LOGOUT</Button>
     </section>
     <section class="account">
-      <Button name="show-menu" icon="menu" type="inversed menu">{{ getUsername }}</Button>
+      <Button name="show-menu" icon="menu" type="inversed header">{{ getUsername }}</Button>
     </section>
   </header>
 </template>

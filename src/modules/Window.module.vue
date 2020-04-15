@@ -1,7 +1,7 @@
 <template>
   <transition name="windowfx" mode="out-in" appear>
     <div class="window" :class="[ slugifiedName, window.type ]">
-      <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
+      <Button name="close" type="icon" icon="close" v-if="window.dismissable" :click="close.bind()"></Button>
       <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
     </div>
   </transition>
@@ -10,12 +10,12 @@
 <script>
 import _ from 'lodash';
 
-import Icon from '../components/Icon.component.vue';
+import Button from '../components/Button.component.vue';
 
 export default {
   props: ['id', 'window'],
   components: {
-    Icon,
+    Button,
   },
   created() {
     window.addEventListener('resize', this.alignCenter);
@@ -76,13 +76,13 @@ export default {
     bottom: 0;
     background: none;
     border: none;
-    .close {
+    > .btn-close {
       right: 10px;
       top: 10px;
       font-size: 30px;
     }
   }
-  .close {
+  .btn-close {
     position: absolute;
     right: 5px;
     top: 5px;

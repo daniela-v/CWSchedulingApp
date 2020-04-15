@@ -83,6 +83,7 @@ a {
   text-align: center;
   text-shadow: 1px 1px 1px #000;
   color: $color-cyan;
+  overflow: hidden;
   &:before {
     content: "";
     position: absolute;

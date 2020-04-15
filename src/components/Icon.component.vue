@@ -1,35 +1,22 @@
 <template>
-  <router-link v-if="name && href && !disabled" :to="href" class="icon-wrapper">
+  <div class="icon-wrapper" :class="[ isDisabled ]">
     <img v-if="img" :src="getImage" :class="[ getIcon ]" />
-    <i v-else class="icon" :class="[ getIcon, isPointer ]"></i>
-  </router-link>
-  <div v-else-if="name" class="icon-wrapper" :class="[ isDisabled ]" @click.stop="OnIconClick">
-    <img v-if="img" :src="getImage" :class="[ getIcon ]" />
-    <i v-else class="icon" :class="[ getIcon, isPointer ]"></i>
+    <i v-else class="icon" :class="[ getIcon ]"></i>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['name', 'disabled', 'click', 'href', 'img'],
+  props: ['name', 'disabled', 'click', 'img'],
   computed: {
     isDisabled() {
       return this.disabled ? 'disabled' : false;
-    },
-    isPointer() {
-      return this.click || this.href ? 'pointer' : false;
     },
     getImage() {
       return require(`@/assets/images/${this.img}.png`); // eslint-disable-line
     },
     getIcon() {
       return `icon-${this.name}`;
-    },
-  },
-  methods: {
-    OnIconClick() {
-      if (this.disabled || typeof (this.click) !== 'function') return false;
-      return this.click();
     },
   },
 };
@@ -51,6 +38,8 @@ export default {
 }
 
 .icon {
+  display: flex;
+  align-items: center;
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'cwscheduleappicon' !important;
   font-style: normal;
@@ -60,11 +49,6 @@ export default {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @include transition(color, .2s, ease);
-  &.pointer:hover {
-    color: lighten($color-cyan, 20%);
-    cursor: pointer;
-  }
 }
 
 .icon-google:before {

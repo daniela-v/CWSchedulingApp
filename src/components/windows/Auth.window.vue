@@ -10,7 +10,7 @@
       <form v-if="form === 'register'" class="auth-form" id="form-register" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="add-circle" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="alternative">
             <Button icon="facebook" type="dialog" class="facebook" :disabled="true">Facebook</Button>
@@ -39,7 +39,7 @@
       <form v-if="form === 'login'" class="auth-form" id="form-login" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="user-circle" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="alternative">
             <Button icon="facebook" type="dialog" class="facebook" :disabled="true">Facebook</Button>
@@ -73,7 +73,7 @@
       <form v-if="form === 'recovery'" class="auth-form" id="form-recovery" @keydown.enter="lastPassFix" @keyup.enter="submit()">
         <div class="form-wrapper">
           <Icon name="refresh" class="background"></Icon>
-          <Icon name="close" :click="this.setForm.bind()"></Icon>
+          <Button name="close" type="icon" icon="close" :click="this.setForm.bind()"></Button>
           <div class="title">{{ getForm.title }}</div>
           <section class="form">
             <transition v-for="(input, id) in getForm.input" :key="id" @enter="slideEnter" @leave="slideLeave">
