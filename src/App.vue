@@ -43,7 +43,7 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700,900&display=swap');
-@import './scss/_reset';
+@import './scss/_normalize';
 @import './scss/_mixins';
 
 html, body, #app {
