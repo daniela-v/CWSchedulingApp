@@ -194,8 +194,11 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        color: lighten($color-cyan, 30%);
+        color: #fff;
+        .username {
+          font-weight: 700;
+          font-size: 18px;
+        }
       }
     }
   }
