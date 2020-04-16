@@ -1,12 +1,12 @@
 <template>
   <div class="button-vue">
-    <router-link class="button" :class="[ getName, getStyle ]" v-if="href" :to="href">
-      <Icon :name="icon"></Icon>
-      <span class="text">{{ getButtonText }}</span>
+    <router-link class="button" :class="[ getName, getStyle, isActive ]" v-if="href" :to="href">
+      <Icon v-if="icon" :name="icon"></Icon>
+      <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
     </router-link>
-    <div v-else class="button" :class="[ getName, getStyle, isDisabled ]" @click.capture="OnButtonClick">
-      <Icon :name="icon"></Icon>
-      <span class="text">{{ getButtonText }}</span>
+    <div v-else class="button" :class="[ getName, getStyle, isDisabled, isActive ]" @click.capture="OnButtonClick">
+      <Icon v-if="icon" :name="icon"></Icon>
+      <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
     </div>
   </div>
 </template>
@@ -15,17 +15,17 @@
 import Icon from './Icon.component.vue';
 
 export default {
-  props: ['name', 'href', 'type', 'icon', 'text', 'click', 'disabled'],
+  props: ['name', 'href', 'type', 'icon', 'text', 'click', 'disabled', 'active'],
   components: { Icon },
   computed: {
     getName() {
       return `btn-${this.name}`;
     },
-    getButtonText() {
-      return this.text || ((this.$slots.default && this.$slots.default.length) ? this.$slots.default[0].text : null);
-    },
     getStyle() {
       return `${this.type}-style`;
+    },
+    isActive() {
+      return (this.active || this.$route.path.slice(1) === this.href) ? 'active' : false;
     },
     isDisabled() {
       return this.disabled ? 'disabled' : null;
@@ -48,7 +48,10 @@ export default {
   .button {
     display: flex;
     align-items: center;
+    color: $color-cyan;
+    word-wrap: nowrap;
     cursor: pointer;
+    .text { font-weight: 600; }
     .icon-wrapper {
       position: relative;
       margin: 0 8px 0 0; // Add spacing between icon and text on the right side of the icon [ICON  TEXT]
@@ -116,6 +119,12 @@ export default {
     }
   }
 
+  .plain-style {
+    padding: 10px;
+    @include transition('color', .2s, ease);
+    &:hover, &.active { color: lighten($color-cyan, 20%); }
+  }
+
   .icon-style {
     .icon-wrapper { margin: 0; }
     @include transition('color', .2s, ease);
@@ -123,23 +132,21 @@ export default {
   }
 
   .header-style {
-    padding: 10px;
-    color: $color-cyan;
-    font-size: 16px;
-    font-weight: 600;
-    @include transition('color', .2s, ease);
-    &:hover, &.active { color: lighten($color-cyan, 20%); }
-  }
-
-  .menu-style {
-    flex: 1;
-    padding: 10px;
-    font-size: 20px;
-    font-weight: 600;
-    border-radius: 4px;
+    padding: 8px 10px;
+    font-size: 18px;
     @include transition('color, background-color', .2s, ease);
     &:hover, &.active { color: lighten($color-cyan, 20%); }
-    &.active { background-color: rgba($color-cyan, .2); }
+    &.active { background-color: rgba($color-cyan-bg, .3); }
+  }
+
+  .expand-style {
+    padding: 4px 12px;
+    .text { flex: 1; }
+    @include transition('color, background-color', .2s, ease);
+    &:hover, &.active {
+      color: lighten($color-cyan, 20%);
+      background-color: rgba($color-cyan, .2);
+    }
   }
 }
 </style>

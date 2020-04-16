@@ -32,9 +32,7 @@ export default {
   methods: {
     async trySession() {
       const response = await axios.get('/users/session');
-      if (response.data.result) {
-        this.$store.commit('authenticate', response.data.result);
-      }
+      this.$store.commit('authenticate', response.data.result || null);
     },
   },
 };
@@ -57,7 +55,7 @@ a {
   transition: color .15s linear, text-shadow .15s linear, background-color .15s linear;
   cursor: pointer;
 
-  &:hover:not(.icon):not(.button):not(.logo-wrapper) {
+  &:hover:not(.icon):not(.button):not(.logo-wrapper):not(.coursework) {
     color: lighten($color-cyan, 20%);
     text-shadow: 0 0 1px $color-cyan !important;
   }
@@ -77,7 +75,6 @@ a {
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   text-shadow: 1px 1px 1px #000;
   color: $color-cyan;
   overflow: hidden;

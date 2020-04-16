@@ -1,25 +1,118 @@
 <template>
-  <div class="sidebar-module-vue">
-    <transition name="css-animation" appear>
-      <div v-if="isVisible" class="sidebar" :class="[ isLogged ]">
+  <transition name="css-animation" appear>
+    <div v-show="isVisible" class="sidebar-module-vue">
+      <div class="sidebar" :class="[ isLogged ]">
         <template v-if="getUser">
           <div class="profile">
             <div class="avatar">
               <div class="image"></div>
             </div>
             <div class="data">
-              <span class="username"># todo</span>
+              <span class="username">{{ getUser.username }}</span>
+              <span class="email">{{ getUser.email }}</span>
             </div>
           </div>
-          <Button name="logout" type="menu">Switch account</Button>
+          <Button name="switch-account" icon="repeat" type="dialog" :click="switchAccount">Switch account</Button>
+          <SidebarPanel name="coursework" title="IN PROGRESS" :component="SidebarCoursework" :data="courseworkInProgress" :expanded="true" />
+          <SidebarPanel name="coursework" title="COMPLETED" :component="SidebarCoursework" :data="courseworkCompleted" />
         </template>
       </div>
-    </transition>
-  </div>
+    </div>
+  </transition>
 </template>
 
 <script>
+import _ from 'lodash';
+
+import Auth from '../components/windows/Auth.window.vue';
+import Button from '../components/Button.component.vue';
+import SidebarPanel from '../components/sidebar/SidebarPanel.sidebar.vue';
+import SidebarCoursework from '../components/sidebar/SidebarCoursework.sidebarpanel.vue';
+
 export default {
+  components: { Button, SidebarPanel },
+  data() {
+    return {
+      SidebarCoursework,
+      dummyCourseworks: [
+        {
+          id: 0,
+          owner: {
+            id: 5,
+            username: 'cora913',
+          },
+          title: 'Web Development Project 2',
+          module: 'Computing',
+          expected_date: Date.now() + (43200 * 1000),
+        },
+        {
+          id: 1,
+          owner: {
+            id: 5,
+            username: 'cora913',
+          },
+          title: 'Integrated Project 3',
+          module: 'Computing',
+          expected_date: Date.now() - (86400 * 2 * 1000),
+          deleted: Date.now() + (1800 * 1000),
+        },
+        {
+          id: 2,
+          owner: {
+            id: 5,
+            username: 'cora913',
+          },
+          title: 'Integrated Project 3',
+          module: 'Computing',
+          expected_date: Date.now() - (53000 * 3 * 1000),
+          deleted: Date.now() + (30 * 1000),
+        },
+        {
+          id: 3,
+          owner: {
+            id: 6,
+            username: 'cora914',
+          },
+          title: 'Random Project',
+          module: 'Physics',
+          expected_date: Date.now() + (86400 * 2 * 1000),
+          completed_date: Date.now() - (86400 * 10 * 1000),
+        },
+        {
+          id: 4,
+          owner: {
+            id: 6,
+            username: 'cora914',
+          },
+          title: 'Random Project',
+          module: 'Physics',
+          expected_date: Date.now() + (86400 * 2 * 1000),
+          completed_date: Date.now() - (86400 * 1000),
+        },
+        {
+          id: 5,
+          owner: {
+            id: 6,
+            username: 'cora914',
+          },
+          title: 'Random Project',
+          module: 'Physics',
+          expected_date: Date.now() + (86400 * 2 * 1000),
+        },
+        {
+          id: 6,
+          owner: {
+            id: 5,
+            username: 'cora914',
+          },
+          title: 'Random Project',
+          module: 'Physics',
+          expected_date: Date.now() - (86400 * 2 * 1000),
+          completed_date: Date.now() + (86400 * 1000),
+        },
+      ],
+    };
+  },
   computed: {
     getUser() {
       return this.$store.getters.getUser;
@@ -30,58 +123,91 @@ export default {
     isVisible() {
       return this.$store.getters.getSidebarVisibility;
     },
+    courseworkInProgress() {
+      return _.chain(this.dummyCourseworks)
+        .reject((c) => c.completed_date)
+        .orderBy('expected_date', 'asc')
+        .value();
+    },
+    courseworkCompleted() {
+      return _.chain(this.dummyCourseworks)
+        .filter((c) => c.completed_date)
+        .orderBy('completed_date', 'desc')
+        .value();
+    },
+  },
+  methods: {
+    switchAccount() {
+      this.$store.commit('setSidebarVisibility', false);
+      this.$store.dispatch('deauthenticate');
+      this.$store.commit('openWindow', { name: 'Login', component: Auth, type: 'fullscreen' });
+    },
   },
 };
 </script>
 
 <style lang="scss">
+@import '~@/scss/_mixins';
+
 .sidebar-module-vue {
   grid-area: sidebar;
   position: relative;
   display: flex;
+  width: 350px;
+  background-color: rgba($color-cyan-bg, .9);
+  box-shadow: -4px -4px 20px rgba(#000, .5);
+  @include transition('width, opacity', .4s);
+
   .sidebar {
     display: flex;
     flex-direction: column;
-    width: 350px;
-    background-color: rgba($color-cyan-bg, .9);
-    box-shadow: -4px -4px 20px rgba(#000, .5);
-    transition: width .4s ease;
-    * { transition: opacity .4s ease; }
+    align-items: center;
+    min-width: 350px;
+    transition: opacity .4s ease .1s;
 
+    .btn-switch-account {
+      margin: 20px 0;
+    }
     &.logged .profile {
+      align-self: stretch;
       display: grid;
-      grid-template-columns: auto 1fr;
-      grid-template-rows: auto;
+      grid-auto-flow: row;
+      grid-row-gap: 10px;
+      align-items: center;
+      justify-items: center;
       padding: 20px;
-      background-color: darken($color-cyan-border, 10%);
+      background: linear-gradient(to bottom, darken($color-cyan, 10%), darken($color-cyan, 20%));
       border-bottom: 1px solid $color-cyan;
       color: $color-cyan-bg;
-      text-shadow: none;
+
       .avatar {
+        width: 96px;
+        height: 96px;
         padding: 2px;
         border: 2px solid $color-cyan-bg;
         border-radius: 50%;
-        .image {
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          border: 1px solid $color-cyan-bg;
-          background: url('../assets/images/bg-4.jpg') no-repeat center center / cover;
-        }
+        background: url('../assets/images/bg-4.jpg') no-repeat center center / cover;
       }
+
       .data {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         font-weight: 700;
+        color: lighten($color-cyan, 30%);
       }
     }
   }
 }
 
-.sidebar.css-animation-leave-to {
-  transition: width .4s;
-  * { transition: opacity .4s ease; }
+.sidebar-module-vue.css-animation-leave-to {
+  @include transition('width, opacity', .4s, 'ease', .1s);
+  .sidebar { transition: opacity .4s ease; }
 }
-.sidebar.css-animation-enter, .sidebar.css-animation-leave-to {
+.sidebar-module-vue.css-animation-enter, .sidebar-module-vue.css-animation-leave-to {
   width: 0;
-  * { opacity: 0; }
+  opacity: 0;
+  .sidebar { opacity: 0; }
 }
 </style>

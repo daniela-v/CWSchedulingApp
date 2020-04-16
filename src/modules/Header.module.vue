@@ -19,12 +19,16 @@
       </div>
     </router-link>
     <section class="navigation">
-      <Button v-if="!getUser" name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">LOGIN</Button>
-      <Button v-if="!getUser" name="show-register" type="header" :click="showAuthOverlay.bind(null, 'Register')">REGISTER</Button>
-      <Button v-if="getUser" name="show-logout" type="header" :click="deauthenticate">LOGOUT</Button>
     </section>
-    <section class="account">
-      <Button name="show-menu" icon="menu" type="inversed menu" :click="toggleSidebar">{{ getUsername || 'My Account' }}</Button>
+    <section class="alerts">
+      <Icon name="warning"></Icon>
+    </section>
+    <section v-if="getUser !== undefined" class="account">
+      <template v-if="!getUser">
+        <Button name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">Sign In</Button>
+        <Button name="show-register" type="dialog" :click="showAuthOverlay.bind(null, 'Register')">Sign Up</Button>
+      </template>
+      <Button v-else name="show-menu" icon="menu" type="inversed header" :click="toggleSidebar">{{ getUsername }}</Button>
     </section>
   </header>
 </template>
@@ -32,15 +36,13 @@
 <script>
 import Auth from '../components/windows/Auth.window.vue';
 import Button from '../components/Button.component.vue';
+import Icon from '../components/Icon.component.vue';
 
 export default {
-  components: {
-    Button,
-  },
+  components: { Button, Icon },
   computed: {
     getUsername() {
-      const user = this.getUser;
-      return (user) ? user.username : null;
+      return 'My Account';
     },
     getUser() {
       return this.$store.getters.getUser;
@@ -53,10 +55,6 @@ export default {
     showAuthOverlay(name) {
       this.$store.commit('openWindow', { name, component: Auth, type: 'fullscreen' });
     },
-    deauthenticate() {
-      this.$store.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
-      this.$store.dispatch('deauthenticate');
-    },
   },
 };
 </script>
@@ -65,21 +63,19 @@ export default {
 .header-module-vue {
   grid-area: header;
   display: grid;
-  grid-template-columns: auto 1fr minmax(auto, 300px);
-  grid-template-areas: "logo navigation account";
+  grid-template-columns: auto 1fr auto 300px;
+  grid-template-areas: "logo navigation alerts account";
   grid-column-gap: 20px;
+  align-items: center;
   background: linear-gradient(to bottom, rgba($color-cyan, .1), transparent);
   padding: 0 20px;
 
   .logo-wrapper {
     grid-area: logo;
     display: flex;
-    align-self: center;
     align-items: center;
-    justify-content: center;
-    justify-items: center;
     line-height: 24px;
-    transition: opacity 200ms ease;
+    transition: opacity .2s ease;
     &:hover { opacity: .6; }
     .logo {
       position: relative;
@@ -105,25 +101,34 @@ export default {
   }
   .navigation {
     grid-area: navigation;
-    display: grid;
-    grid-auto-columns: auto;
-    grid-auto-flow: column;
+    display: flex;
     align-items: center;
-    justify-content: left;
     &:before {
       content: "";
       position: relative;
       top: 2px; // Fix border vertical offset
-      height: 60%;
+      height: 60px;
       margin-right: 10px;
       border-left: 1px solid $color-cyan-border;
     }
   }
+  .alerts {
+    grid-area: alerts;
+    font-size: 24px;
+  }
   .account {
     grid-area: account;
-    display: grid;
+    justify-self: right;
+    display: flex;
     align-items: center;
-    justify-content: right;
+    .btn-show-login {
+      padding: 8px 20px;
+      border: 1px solid;
+      border-radius: 4px;
+      background-color: rgba($color-cyan-bg, .2);
+      font-size: 14px;
+    }
+    .btn-show-register { margin-left: 20px;}
   }
 }
 </style>
