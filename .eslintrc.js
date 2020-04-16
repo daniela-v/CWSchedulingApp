@@ -16,5 +16,6 @@ module.exports = {
     'linebreak-style': 'off',
     'no-plusplus': 'off',
     'new-cap': 'off',
+    'no-param-reassign': 'off',
   }
 };

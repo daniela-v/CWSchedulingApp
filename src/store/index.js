@@ -7,7 +7,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: null,
+    user: undefined,
     sidebar: false,
     windows: [],
     notifications: [],
@@ -35,7 +35,7 @@ export default new Vuex.Store({
       state.tooltip = null;
     },
     authenticate(state, user) {
-      state.user = user;
+      Vue.set(state, 'user', user);
     },
     deauthenticate(state) {
       state.user = null;
@@ -74,6 +74,7 @@ export default new Vuex.Store({
     async deauthenticate(context) {
       await axios.get('/users/deauthenticate');
       context.commit('deauthenticate');
+      context.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
     },
   },
   modules: {},

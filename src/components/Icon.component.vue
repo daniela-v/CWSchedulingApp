@@ -37,6 +37,7 @@ export default {
 }
 
 .icon {
+  position: relative;
   display: flex;
   align-items: center;
   /* use !important to prevent issues with browser extensions that change fonts */
@@ -50,6 +51,33 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-notice:before {
+  content: "\e91a";
+}
+.icon-warning:before {
+  content: "\e91b";
+}
+.icon-shield2:before {
+  content: "\e919";
+}
+.icon-shield:before {
+  content: "\e918";
+}
+.icon-trash:before {
+  content: "\e917";
+}
+.icon-keyboard_arrow_down:before {
+  content: "\e916";
+}
+.icon-keyboard_arrow_up:before {
+  content: "\e915";
+}
+.icon-access_time:before {
+  content: "\e914";
+}
+.icon-repeat:before {
+  content: "\e912";
+}
 .icon-google:before {
   content: "\e911";
 }
@@ -85,9 +113,6 @@ export default {
 }
 .icon-previous:before {
   content: "\e906";
-}
-.icon-warning:before {
-  content: "\e905";
 }
 .icon-arrow-right:before {
   content: "\e904";

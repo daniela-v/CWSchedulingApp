@@ -3,7 +3,7 @@
     <transition v-for="(option, key) in forms" :key="`option-${key}`" @enter="enter" @leave="leave" mode="out-in" appear>
       <div v-if="key !== form" class="auth-option" :id="`option-${key}`" @click.capture="setForm(key)">
         <Icon :name="option.panel.icon"></Icon>
-        <span class="description">{{ option.panel.description }}</span>
+        <span class="name">{{ option.panel.description }}</span>
       </div>
     </transition>
     <transition @enter="enter" @leave="leave" @afterEnter="afterEnter" mode="out-in" appear>
@@ -121,9 +121,9 @@ export default {
         register: {
           panel: {
             icon: 'add',
-            description: 'Register a new account',
+            description: 'Sign Up',
           },
-          title: 'Register',
+          title: 'Sign Up',
           action: '/users/register',
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
@@ -144,9 +144,9 @@ export default {
         login: {
           panel: {
             icon: 'user',
-            description: 'Authenticate',
+            description: 'Sign In',
           },
-          title: 'Log In',
+          title: 'Sign In',
           action: '/users/authenticate',
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
@@ -166,7 +166,7 @@ export default {
         recovery: {
           panel: {
             icon: 'refresh',
-            description: 'Recover your account',
+            description: 'Recover',
           },
           title: 'Recover',
           action: '/users/recover',
@@ -423,6 +423,7 @@ export default {
       text-shadow: 0 0 5px $color-cyan;
       transition: text-shadow .2s linear;
     }
+    .name { font-weight: 600; }
     &:hover {
       background-color: rgba($color-cyan-d2, .5);
       .icon { text-shadow: 0 0 10px lighten($color-cyan, 5%); }
@@ -638,6 +639,7 @@ export default {
         margin-bottom: 30px;
         font-size: 14px;
         font-weight: 600;
+        text-align: center;
         span {
           display: block;
           margin-top: 2px;
