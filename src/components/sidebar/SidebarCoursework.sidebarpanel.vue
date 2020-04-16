@@ -5,8 +5,8 @@
       <div class="module">{{ coursework.module }}</div>
     </div>
     <div class="coursework-status">
-      <Icon :name="getStatusIcon" class="status" :class="[ getStatusColor ]" v-tooltip="{ text: getStatus.text }" />
-      <Icon v-if="coursework.owner.id === getUser.id" name="shield2" class="is-owner" v-tooltip="{ text: 'Owner' }" />
+      <Icon :name="getStatusIcon" class="status" :class="[ getStatusColor ]" />
+      <Icon v-if="coursework.owner.id === getUser.id" name="person" class="is-owner" />
     </div>
     <div class="coursework-time">
       <div class="deadline" :class="[ getStatusColor ]">
@@ -47,22 +47,22 @@ export default {
       return this.getStatus.icon;
     },
     getStatusColor() {
-      return (this.getStatus.status) ? this.getStatus.status : this.getStatus.text.toLowerCase().replace(/ /g, '-');
+      return this.getStatus.status;
     },
     getStatus() {
       if (this.coursework.completed_date) {
         if (this.coursework.completed_date > this.coursework.expected_date) {
-          return { icon: 'check', text: 'Completed late', status: 'late' };
+          return { icon: 'check', status: 'late' };
         }
-        return { icon: 'check', text: 'Completed on time', status: 'completed' };
+        return { icon: 'check', status: 'completed' };
       }
-      if (this.timers.expected_date <= 0) {
-        return { icon: 'warning', text: 'Late' };
+      if (this.timers.expected_date < 0) {
+        return { icon: 'warning', status: 'late' };
       }
-      if (this.timers.expected_date <= 86400) {
-        return { icon: 'notice', text: 'Soon' };
+      if (this.timers.expected_date < 86400) {
+        return { icon: 'notice', status: 'soon' };
       }
-      return { icon: 'access_time', text: 'On time' };
+      return { icon: 'access_time', status: 'on-time' };
     },
     isDeleted() {
       return !(this.timers.deleted && this.timers.deleted <= 0);
@@ -146,11 +146,8 @@ export default {
     display: flex;
     font-size: 18px;
     align-items: center;
-    .is-owner {
-      position: relative;
-      top: -1px;
-      margin-left: 8px;
-    }
+    .icon-warning { top: 1px; }
+    .is-owner { margin-left: 8px; }
   }
 
   .coursework-time {

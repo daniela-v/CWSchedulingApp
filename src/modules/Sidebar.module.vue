@@ -43,7 +43,7 @@ export default {
           },
           title: 'Web Development Project 2',
           module: 'Computing',
-          expected_date: Date.now() + (43200 * 1000),
+          expected_date: Date.now() + (15 * 1000),
         },
         {
           id: 1,
@@ -53,22 +53,11 @@ export default {
           },
           title: 'Integrated Project 3',
           module: 'Computing',
-          expected_date: Date.now() - (86400 * 2 * 1000),
-          deleted: Date.now() + (1800 * 1000),
+          expected_date: Date.now() - (53000 * 3 * 1000),
+          deleted: Date.now() + (20 * 1000),
         },
         {
           id: 2,
-          owner: {
-            id: 5,
-            username: 'cora913',
-          },
-          title: 'Integrated Project 3',
-          module: 'Computing',
-          expected_date: Date.now() - (53000 * 3 * 1000),
-          deleted: Date.now() + (30 * 1000),
-        },
-        {
-          id: 3,
           owner: {
             id: 6,
             username: 'cora914',
@@ -79,7 +68,7 @@ export default {
           completed_date: Date.now() - (86400 * 10 * 1000),
         },
         {
-          id: 4,
+          id: 3,
           owner: {
             id: 6,
             username: 'cora914',
@@ -90,9 +79,9 @@ export default {
           completed_date: Date.now() - (86400 * 1000),
         },
         {
-          id: 5,
+          id: 4,
           owner: {
-            id: 6,
+            id: 5,
             username: 'cora914',
           },
           title: 'Random Project',
@@ -100,15 +89,25 @@ export default {
           expected_date: Date.now() + (86400 * 2 * 1000),
         },
         {
-          id: 6,
+          id: 5,
           owner: {
             id: 5,
-            username: 'cora914',
+            username: 'cora913',
           },
           title: 'Random Project',
           module: 'Physics',
           expected_date: Date.now() - (86400 * 2 * 1000),
           completed_date: Date.now() + (86400 * 1000),
+        },
+        {
+          id: 6,
+          owner: {
+            id: 6,
+            username: 'cora914',
+          },
+          title: 'Web Development Project 100',
+          module: 'Computing',
+          expected_date: Date.now() + (86410 * 1000),
         },
       ],
     };
