@@ -25,7 +25,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/scss/_colors';
 @import '@/scss/_mixins';
 
 .notification-module {

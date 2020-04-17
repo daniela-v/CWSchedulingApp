@@ -5,21 +5,16 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     primaryKey: true,
     autoIncrement: true,
   },
-  title: {
+  username: {
     type: type.STRING(32),
     allowNull: false,
   },
-  module: {
+  password: {
     type: type.STRING(128),
     allowNull: false,
   },
-  intended_date: {
-    type: type.DATE,
-    allowNull: false,
-  },
-  completion_date: type.DATE,
-  status: {
-    type: type.STRING(16),
+  email: {
+    type: type.STRING(128),
     allowNull: false,
   },
 });

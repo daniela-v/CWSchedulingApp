@@ -53,7 +53,7 @@ router.get('/session', async (req, res) => {
   let result;
   req.session.touch();
   try {
-    result = await users.session(req.session.key);
+    result = await users.session(req.session.user);
   } catch (e) {
     error = e;
   }
@@ -65,29 +65,9 @@ router.get('/session', async (req, res) => {
  */
 router.post('/recover', async (req, res) => {
   let error;
-  let result = true;
+  let result;
   try {
-    users.recover(req.body);
-  } catch (e) {
-    error = e;
-  }
-  res.json({ result, error });
-});
-
-/**
- * POST /users/code
- * 
- * Used to compare the code that the user enters to the code that has been generated and sent to the user via email
- * returns true if the codes match and false if they do not
- */
-router.post('/code', async (req, res) => {
-  let error;
-  let result = false;
-  try {
-    const code = users.recover(req.body);
-    if (code === users.generatedCode) {
-      result = true;
-    }
+    result = await users.recover(req.body);
   } catch (e) {
     error = e;
   }
