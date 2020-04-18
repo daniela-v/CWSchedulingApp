@@ -34,4 +34,8 @@ const coursework = {
     const { id, setPrivacy } = data;
     await Coursework.update({ is_private: setPrivacy }, { where: { id } });
   },
+  async findAllPublic() {
+    const resultAll = await Coursework.findAll({ where: { is_private: false } });
+    return resultAll;
+  },
 };
