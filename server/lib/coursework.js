@@ -3,11 +3,11 @@ import { Op } from 'sequelize';
 const { Coursework } = require('./db/models.js').models;
 
 const coursework = {
-  async getCoursework(title) {
+  async getCoursework(id) {
     const courseworkFound = await Coursework.findOne({
       where: {
-        title: {
-          [Op.like]: `%${title}%`,
+        id: {
+          [Op.like]: `%${id}%`,
         },
       },
     });
