@@ -41,7 +41,7 @@ describe('Get all coursework milestones', () => {
       .query({ coursework: 1 });
     expect(res.body.result.length).toEqual(3);
   });
-  
+
   it('returns an empty list if coursework has no milestones', async () => {
     const res = await request.get('/milestones/list')
       .query({ coursework: 3 });
