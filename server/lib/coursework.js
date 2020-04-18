@@ -16,4 +16,14 @@ const coursework = {
     }
     throw { _notification: 'No coursework could be found with that title' };
   },
+  async removeCoursework(id) {
+    await Coursework.destroy({
+      where: {
+        id: {
+          [Op.like]: `%${id}%`,
+        },
+      },
+    });
+    throw { _notification: 'No coursework could be found with that title' };
+  },
 };
