@@ -27,6 +27,7 @@ const coursework = {
     throw { _notification: 'No coursework could be found with that title' };
   },
   async createCoursework(data) {
-    const {title,coursework, thing} = data;
+    const {owner,description, title, module, deleted, private, createdAt, updatedAt, expected_date,completed_date} = data;
+    Coursework.create({owner,description, title, module, deleted, private, createdAt, updatedAt, expected_date,completed_date});
   },
 };
