@@ -9,7 +9,3 @@ const coursework = {
     return 'No coursework could be found with that title';
   },
 };
-
-function getCourseworks(name) {
-  Coursework.findOne({ where: { name } });
-}
