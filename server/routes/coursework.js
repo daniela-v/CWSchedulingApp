@@ -38,7 +38,7 @@ router.get('/userList', async (req, res) => {
   let error;
   let result;
   try {
-    result = courseworks.findAllThatBelongToUser(req.param);
+    result = courseworks.findAllThatBelongToUser(req.query.owner);
   } catch (e) {
     error = e;
   }
