@@ -1,6 +1,6 @@
 const { Coursework } = require('./db/models.js').models;
 
-const coursework = {
+const courseworks = {
   async getCoursework(id) {
     const courseworkFound = await Coursework.findOne({ where: { id } });
     if (courseworkFound) {

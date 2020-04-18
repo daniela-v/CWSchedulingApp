@@ -1,5 +1,5 @@
 const express = require('express');
-const coursework = require('../lib/coursework.js');
+const courseworks = require('../lib/coursework.js');
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.post('/new', async (req, res) => {
   let error;
   let result;
   try {
-    result = coursework.createCoursework(req.body);
+    result = courseworks.createCoursework(req.body);
   } catch (e) {
     error = e;
   }
@@ -18,13 +18,13 @@ router.post('/new', async (req, res) => {
 });
 
 /**
- * GET /coursework/list
+ * GET /coursework/publicList
  */
 router.get('/publicList', async (req, res) => {
   let error;
   let result;
   try {
-    result = coursework.findAllPublic();
+    result = courseworks.findAllPublic();
   } catch (e) {
     error = e;
   }
@@ -38,7 +38,7 @@ router.get('/userList', async (req, res) => {
   let error;
   let result;
   try {
-    result = coursework.findAllThatBelongToUser(req.body);
+    result = courseworks.findAllThatBelongToUser(req.body);
   } catch (e) {
     error = e;
   }

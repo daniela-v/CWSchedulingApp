@@ -26,7 +26,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: true,
   },
   isPrivate: {
-    type: type.Boolean,
+    type: type.BOOLEAN,
     allowNull: false,
   },
   expectedDate: {
