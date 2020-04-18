@@ -1,7 +1,7 @@
 const rows = [
-  { title: 'coursework_1', module: '%test%', intended_date: 1578268800000, completion_date: 1583625600000, status: 'In progress' },
-  { title: 'coursework_2', module: '?test?', intended_date: 1578614400000, completion_date: 1585526400000, status: 'In progress' },
-  { title: 'coursework_3', module: '.test`', intended_date: 1582416000000, completion_date: 1585526400000, status: 'Complete' },
+  { owner: 'user_1', description: 'A simple project', deleted: 1578614400000, isPrivate: false, title: 'coursework_1', module: '%test%', expectedDate: 1578268800000, completedDate: 1583625600000, status: 'In progress' },
+  { owner: 'user_1', description: 'A harder project', deleted: 1578614400000, isPrivate: true, title: 'coursework_2', module: '%test%', expectedDate: 1578268800000, completedDate: 1583625600000, status: 'In progress' },
+  { owner: 'user_2', description: 'A simple project', deleted: 1578614400000, isPrivate: true, title: 'Honours Project', module: '%test%', expectedDate: 1578268800000, completedDate: 1583625600000, status: 'In progress' },
 ];
 
 async function insert(model) {

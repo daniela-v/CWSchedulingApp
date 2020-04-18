@@ -1,5 +1,3 @@
-import { Op } from 'sequelize';
-
 const { Coursework } = require('./db/models.js').models;
 
 const coursework = {
@@ -11,13 +9,7 @@ const coursework = {
     throw { _notification: 'No coursework could be found with that title' };
   },
   async removeCoursework(id) {
-    await Coursework.destroy({
-      where: {
-        id: {
-          [Op.like]: `%${id}%`,
-        },
-      },
-    });
+    await Coursework.destroy({ where: { id } });
     throw { _notification: 'No coursework could be found with that title' };
   },
   async createCoursework(data) {
