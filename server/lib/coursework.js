@@ -38,4 +38,8 @@ const coursework = {
     const resultAll = await Coursework.findAll({ where: { is_private: false } });
     return resultAll;
   },
+  async findAllThatBelongToUser(owner) {
+    const resultAll = await Coursework.findAll({ where: { owner } });
+    return resultAll;
+  },
 };
