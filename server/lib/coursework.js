@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 const { Coursework } = require('./db/models.js').models;
 
 const coursework = {
