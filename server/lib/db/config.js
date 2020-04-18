@@ -54,4 +54,4 @@ async function init() {
   console.log('\u001b[32m✓   Database config finished loading\n\u001b[0m');
 }
 
-module.exports = { sql, init };
+module.exports = { sql, init, models };
