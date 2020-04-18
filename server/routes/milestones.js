@@ -10,8 +10,7 @@ router.post('/list', async (req, res) => {
   let error;
   let result;
   try {
-    // result = await users.register(req.body);
-    result = true;
+    result = await milestones.getAllMilestones(req.body);
   } catch (e) {
     error = e;
   }
