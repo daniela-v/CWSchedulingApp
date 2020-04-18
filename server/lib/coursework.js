@@ -12,6 +12,6 @@ const coursework = {
     if (courseworkFound) {
       return courseworkFound;
     }
-    return 'No coursework could be found with that title';
+    throw { _notification: 'No coursework could be found with that title' };
   },
 };
