@@ -30,6 +30,7 @@ const sequelize = {
         searchPath: new RegExp(tables.join('|')),
       });
       if (force) {
+        console.log('\u001b[36m    Synchronizing database\u001b[0m');
         // eslint-disable-next-line
         for (const seed in this.seeds) {
           await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
