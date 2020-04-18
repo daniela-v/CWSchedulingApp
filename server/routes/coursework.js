@@ -38,7 +38,7 @@ router.get('/userList', async (req, res) => {
   let error;
   let result;
   try {
-    result = courseworks.findAllThatBelongToUser(req.body);
+    result = courseworks.findAllThatBelongToUser(req.param);
   } catch (e) {
     error = e;
   }
