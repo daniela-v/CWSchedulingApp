@@ -2,7 +2,13 @@ const { Coursework } = require('./db/models.js').models;
 
 const coursework = {
   async getCoursework(title) {
-    const courseworkFound = await Coursework.findOne(title);
+    const courseworkFound = await Coursework.findOne({
+      where: {
+        title: {
+          [Op.like]: `%${title}%`,
+        },
+      },
+    });
     if (courseworkFound) {
       return courseworkFound;
     }
