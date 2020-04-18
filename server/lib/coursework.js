@@ -26,4 +26,7 @@ const coursework = {
     });
     throw { _notification: 'No coursework could be found with that title' };
   },
+  async createCoursework(data) {
+    const {title,coursework, thing} = data;
+  },
 };
