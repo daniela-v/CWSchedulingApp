@@ -25,23 +25,15 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     type: type.DATE,
     allowNull: true,
   },
-  is_private: {
+  isPrivate: {
     type: type.Boolean,
     allowNull: false,
   },
-  createdAt: {
+  expectedDate: {
     type: type.DATE,
     allowNull: false,
   },
-  updatedAt: {
-    type: type.DATE,
-    allowNull: true,
-  },
-  expected_date: {
-    type: type.DATE,
-    allowNull: false,
-  },
-  completed_date: type.DATE,
+  completedDate: type.DATE,
   status: {
     type: type.STRING(16),
     allowNull: false,
