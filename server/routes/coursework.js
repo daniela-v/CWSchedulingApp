@@ -16,6 +16,20 @@ router.post('/new', async (req, res) => {
   }
   res.json({ result, error });
 });
+
+/**
+ * POST /coursework/privacy
+ */
+router.post('/privacy', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = courseworks.changePrivacy(req.body);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
 /**
  * GET /coursework/get
  */
