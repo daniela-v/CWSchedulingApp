@@ -6,7 +6,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     autoIncrement: true,
   },
   owner: {
-    type: type.STRING(32),
+    type: type.Integer,
     allowNull: false,
   },
   description: {
