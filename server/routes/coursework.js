@@ -24,7 +24,7 @@ router.get('/publicList', async (req, res) => {
   let error;
   let result;
   try {
-    result = courseworks.findAllPublic();
+    result = await courseworks.findAllPublic();
   } catch (e) {
     error = e;
   }
@@ -38,7 +38,7 @@ router.get('/userList', async (req, res) => {
   let error;
   let result;
   try {
-    result = courseworks.findAllThatBelongToUser(req.query.owner);
+    result = await courseworks.findAllThatBelongToUser(req.query.owner);
   } catch (e) {
     error = e;
   }
