@@ -26,7 +26,7 @@ afterAll(async (done) => {
 
 describe('Get read only permission for courseworks', () => {
   it('returns true when the user has permission', async () => {
-    const res = await permissions.hasCourseworkReadOnlyPermission(1, 1);
+    const res = await permissions.hasCourseworkReadOnlyPermission(4, 1);
     expect(res).toEqual(true);
   });
 

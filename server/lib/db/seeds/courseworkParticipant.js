@@ -1,7 +1,7 @@
 const rows = [
-  { coursework: 1, user: 1, team: 'Backend' },
-  { coursework: 1, user: 2, team: 'Frontend' },
-  { coursework: 2, user: 3, team: 'Frontend' },
+  { coursework: 1, user: 4, team: 'Backend' },
+  { coursework: 1, user: 5, team: 'Frontend' },
+  { coursework: 2, user: 6, team: 'Frontend' },
 ];
 
 async function insert(model) {
