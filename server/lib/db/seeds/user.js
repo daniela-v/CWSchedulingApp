@@ -4,6 +4,9 @@ const rows = [
   { username: 'admin_1', password: '%test%', email: 'admin_1@abc.com' },
   { username: 'admin_2', password: '?test?', email: 'admin_2@abc.com' },
   { username: 'admin_3', password: '.test`', email: 'admin_3@abc.com' },
+  { username: 'user_1', password: '.test`', email: 'user_1@abc.com' },
+  { username: 'user_2', password: '.test`', email: 'user_2@abc.com' },
+  { username: 'user_3', password: '.test`', email: 'user_3@abc.com' },
 ];
 
 async function cryptPasswords() {
