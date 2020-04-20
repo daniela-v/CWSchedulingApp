@@ -5,6 +5,14 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     primaryKey: true,
     autoIncrement: true,
   },
+  owner: {
+    type: type.INTEGER,
+    allowNull: false,
+  },
+  description: {
+    type: type.STRING(500),
+    allowNull: true,
+  },
   title: {
     type: type.STRING(32),
     allowNull: false,
@@ -13,11 +21,19 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     type: type.STRING(128),
     allowNull: false,
   },
-  intended_date: {
+  deleted: {
+    type: type.DATE,
+    allowNull: true,
+  },
+  isPrivate: {
+    type: type.BOOLEAN,
+    allowNull: false,
+  },
+  expectedDate: {
     type: type.DATE,
     allowNull: false,
   },
-  completion_date: type.DATE,
+  completedDate: type.DATE,
   status: {
     type: type.STRING(16),
     allowNull: false,
