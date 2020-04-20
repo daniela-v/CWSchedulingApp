@@ -3,6 +3,7 @@
         <img width="46%" src="https://i.postimg.cc/MHHmnCfX/AppLogo.png" alt="App logo">
 </p>
 <br/>
+
 # Coursework Scheduling Application
 Project for the Web Platform Development 2 module at GCU. 
 
@@ -24,11 +25,11 @@ The application is built using Node.js, Node Express and Vue.js.
 
 ## Demo
 
-Use the app online at // link to Heroku here //
+Use the app online at https://milestone-manager-production.herokuapp.com/
 
 Include demo gifs here.
 # Get Started
-Assumes local installation of [Node.js](https://nodejs.org/)
+Assumes local installation of [Node.js](https://nodejs.org/).
 
 Make sure when you install nodejs to check the **"Automatically install the necessary tools"** if you use Windows because Python and Build Tools will be needed. On Debian GNU/Linux you need to install **build-essentials** while on other repositories you need **base-devel**.
 
