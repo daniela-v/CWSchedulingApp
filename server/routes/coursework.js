@@ -1,5 +1,6 @@
 const express = require('express');
 const courseworks = require('../lib/coursework.js');
+const permissions = require('../lib/permissions.js');
 
 const router = express.Router();
 
