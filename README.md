@@ -1,9 +1,8 @@
 <br/>
 <p align="center">
-        <img width="50%" src="https://i.postimg.cc/tg4DxnxB/Logo1.png" alt="App logo">
+        <img width="46%" src="https://i.postimg.cc/MHHmnCfX/AppLogo.png" alt="App logo">
 </p>
 <br/>
-
 # Coursework Scheduling Application
 Project for the Web Platform Development 2 module at GCU. 
 
