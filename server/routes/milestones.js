@@ -1,5 +1,6 @@
 const express = require('express');
 const milestones = require('../lib/milestones.js');
+const permissions = require('../lib/permissions.js');
 
 const router = express.Router();
 
@@ -7,10 +8,10 @@ const router = express.Router();
  * GET /milestones/list
  */
 router.get('/list', async (req, res) => {
-  // Get permission
   let error;
   let result;
   try {
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
     result = await milestones.getAllMilestones(req.query);
   } catch (e) {
     error = e;
@@ -22,10 +23,10 @@ router.get('/list', async (req, res) => {
  * GET /milestones/get
  */
 router.get('/get', async (req, res) => {
-  // Get permission
   let error;
   let result;
   try {
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
     result = await milestones.getMilestone(req.query);
   } catch (e) {
     error = e;

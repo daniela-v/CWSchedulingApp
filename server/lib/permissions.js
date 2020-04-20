@@ -16,8 +16,9 @@ module.exports = {
       throw { _system: 'System called hasCourseworkReadOnlyPermission with an invalid coursework' };
     }
     if (coursework.isPrivate) {
-      const result = await CourseworkParticipant.findOne({ where: { coursework: courseworkId, user: userId } });
-      if (!result) {
+      const isOwner = (coursework.owner === userId);
+      const isParticipant = await CourseworkParticipant.findOne({ where: { coursework: courseworkId, user: userId } });
+      if (!isOwner && !isParticipant) {
         throw { _notification: 'You have not been invited to be a participant in this coursework' };
       }
     }
@@ -37,7 +38,8 @@ module.exports = {
     if (!coursework) {
       throw { _system: 'System called hasCourseworkWritePermission with an invalid coursework' };
     }
-    if (coursework.owner !== userId) {
+    const isOwner = (coursework.owner === userId);
+    if (!isOwner) {
       throw { _notification: 'You are not the owner of this coursework' };
     }
     return true;
