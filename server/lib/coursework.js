@@ -9,8 +9,13 @@ const courseworks = {
     throw { _notification: 'No coursework could be found with that title' };
   },
   async removeCoursework(id) {
-    await Coursework.destroy({ where: { id } });
-    throw { _notification: 'No coursework could be found with that title' };
+    if (id) {
+      await Coursework.destroy({ where: { id } });
+    }
+    else {
+      throw { _system: 'The id passed to the function was null/ undefined' };
+    }
+
   },
   async createCoursework(data) {
     const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
