@@ -19,7 +19,7 @@ const sequelize = {
         const [name] = fn.split('.');
         const model = require(path.join(MODELS_DIR, fn)); // eslint-disable-line
         const seed = require(path.join(SEEDS_DIR, fn)) // eslint-disable-line
-        this.models[this.capitalize(name)] = model(sql, Sequelize, name);
+        this.models[this.capitalize(name)] = model(sql, Sequelize, this.snake(name));
         this.seeds[this.capitalize(name)] = seed;
       });
       // Map the table name of each model
@@ -43,6 +43,9 @@ const sequelize = {
   },
   capitalize(model) {
     return `${model.charAt(0).toUpperCase()}${model.slice(1)}`;
+  },
+  snake(string) {
+    return string.replace(/(.+?)([A-Z])/g, (a, b, c) => `${b}_${c.toLowerCase()}`);
   },
   seeds: {},
   models: {},

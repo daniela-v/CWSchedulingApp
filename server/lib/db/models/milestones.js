@@ -10,17 +10,17 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   title: {
-    type: type.STRING(128),
+    type: type.STRING(32),
     allowNull: false,
   },
-  description: type.TEXT,
-  started_date: {
+  description: type.STRING(1024),
+  startedDate: {
     type: type.DATE,
     allowNull: false,
   },
-  expected_date: {
+  expectedDate: {
     type: type.DATE,
     allowNull: false,
   },
-  completed_date: type.DATE,
+  completedDate: type.DATE,
 });
