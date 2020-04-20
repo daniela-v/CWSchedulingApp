@@ -34,4 +34,49 @@ router.get('/get', async (req, res) => {
   res.json({ result, error });
 });
 
+/**
+ * POST /milestones/create
+ */
+router.post('/create', async (req, res) => {
+  let error;
+  let result;
+  try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
+    result = await milestones.createMilestone(req.query);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
+ * POST /milestones/edit
+ */
+router.post('/edit', async (req, res) => {
+  let error;
+  let result;
+  try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
+    result = await milestones.editMilestone(req.query);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
+ * POST /milestones/delete
+ */
+router.post('/delete', async (req, res) => {
+  let error;
+  let result;
+  try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
+    result = await milestones.deleteMilestone(req.query);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
 module.exports = router;

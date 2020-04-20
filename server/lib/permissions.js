@@ -31,7 +31,7 @@ module.exports = {
    * @param {Integer} courseworkId    - The coursework id to check permissions for (defaults to 0 if undefined)
    * @returns {Boolean}  True if the user has access to the coursework
    *
-   * @throws {Object}  _notification error
+   * @throws {Object}  _system or _notification error
    */
   async hasCourseworkWritePermission(userId = 0, courseworkId = 0) {
     const coursework = await Coursework.findOne({ where: { id: courseworkId } });
