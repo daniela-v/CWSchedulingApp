@@ -16,36 +16,6 @@ router.post('/new', async (req, res) => {
   }
   res.json({ result, error });
 });
-<<<<<<< HEAD
-=======
-
-/**
- * POST /coursework/privacy
- */
-router.post('/privacy', async (req, res) => {
-  let error;
-  let result;
-  try {
-    result = courseworks.changePrivacy(req.body);
-  } catch (e) {
-    error = e;
-  }
-  res.json({ result, error });
-});
-/**
- * GET /coursework/get
- */
-router.get('/get', async (req, res) => {
-  let error;
-  let result;
-  try {
-    result = await courseworks.getCoursework(req.query.id);
-  } catch (e) {
-    error = e;
-  }
-  res.json({ result, error });
-});
->>>>>>> 2aadcc63f02a077667033454fad1ea4dcfb625a7
 
 /**
  * GET /coursework/publicList
