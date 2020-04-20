@@ -18,6 +18,20 @@ router.post('/new', async (req, res) => {
 });
 
 /**
+ * POST /coursework/update
+ */
+router.post('/update', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = courseworks.updateCoursework(req.body);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
  * POST /coursework/privacy
  */
 router.post('/privacy', async (req, res) => {
