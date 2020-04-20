@@ -18,6 +18,33 @@ router.post('/new', async (req, res) => {
 });
 
 /**
+ * POST /coursework/privacy
+ */
+router.post('/privacy', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = courseworks.changePrivacy(req.body);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+/**
+ * GET /coursework/get
+ */
+router.get('/get', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = await courseworks.getCoursework(req.query.id);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
+/**
  * GET /coursework/publicList
  */
 router.get('/publicList', async (req, res) => {
