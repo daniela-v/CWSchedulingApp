@@ -11,6 +11,7 @@ router.post('/new', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = courseworks.createCoursework(req.body);
   } catch (e) {
     error = e;
@@ -25,6 +26,7 @@ router.post('/update', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = courseworks.updateCoursework(req.body);
   } catch (e) {
     error = e;
@@ -39,6 +41,7 @@ router.post('/privacy', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = courseworks.changePrivacy(req.body);
   } catch (e) {
     error = e;
@@ -52,6 +55,7 @@ router.get('/get', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
     result = await courseworks.getCoursework(req.query.id);
   } catch (e) {
     error = e;
@@ -66,6 +70,7 @@ router.get('/publicList', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
     result = await courseworks.findAllPublic();
   } catch (e) {
     error = e;
@@ -80,6 +85,7 @@ router.get('/userList', async (req, res) => {
   let error;
   let result;
   try {
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
     result = await courseworks.findAllThatBelongToUser(req.query.owner);
   } catch (e) {
     error = e;
