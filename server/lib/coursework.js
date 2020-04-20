@@ -20,6 +20,10 @@ const courseworks = {
     const { id, setPrivacy } = data;
     await Coursework.update({ is_private: setPrivacy }, { where: { id } });
   },
+  async updateCoursework(data) {
+    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status, id } = data;
+    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status }, { where: { id } });
+  },
   async findAllPublic() {
     const resultAll = await Coursework.findAll({ where: { isPrivate: false } });
     return resultAll;
