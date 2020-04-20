@@ -11,11 +11,9 @@ const courseworks = {
   async removeCoursework(id) {
     if (id) {
       await Coursework.destroy({ where: { id } });
-    }
-    else {
+    } else {
       throw { _system: 'The id passed to the function was null/ undefined' };
     }
-
   },
   async createCoursework(data) {
     const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
