@@ -35,11 +35,6 @@ const validator = {
         message: 'must contain only alphanumeric characters, numbers or spaces',
       },
     },
-    deleted: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
     description: {
       length: {
         maximum: 1024,
