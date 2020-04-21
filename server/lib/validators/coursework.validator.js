@@ -11,18 +11,6 @@ const validator = {
       presence: true,
       length: {
         minimum: 3,
-        maximum: 200,
-      },
-      format: {
-        pattern: '[a-z0-9 ]+',
-        flags: 'i',
-        message: 'must contain only alphanumeric characters, numbers or spaces',
-      },
-    },
-    owner: {
-      presence: true,
-      length: {
-        minimum: 3,
         maximum: 32,
       },
       format: {
@@ -31,40 +19,35 @@ const validator = {
         message: 'must contain only alphanumeric characters, numbers or spaces',
       },
     },
-    module: {
-      length: {
-        maximum: 100,
-      },
+    format: {
+      pattern: '[a-z0-9 ]+',
+      flags: 'i',
+      message: 'must contain only alphanumeric characters, numbers or spaces',
     },
-    deleted: {
-      presence: {
-        allowEmpty: false,
-      },
+  },
+  module: {
+    length: {
+      maximum: 100,
     },
-    description: {
-      length: {
-        maximum: 1024,
-      },
+    format: {
+      pattern: '[a-z0-9 ]+',
+      flags: 'i',
+      message: 'must contain only alphanumeric characters, numbers or spaces',
     },
-    isPrivate: {
-      presence: {
-        allowEmpty: false,
-      },
+  },
+  description: {
+    length: {
+      maximum: 1024,
     },
-    completedDate: {
-      presence: {
-        allowEmpty: false,
-      },
+  },
+  status: {
+    length: {
+      maximum: 100,
     },
-    status: {
-      length: {
-        maximum: 100,
-      },
-    },
-    expectedDate: {
-      presence: {
-        allowEmpty: false,
-      },
+  },
+  expectedDate: {
+    presence: {
+      allowEmpty: false,
     },
   },
 };

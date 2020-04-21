@@ -10,7 +10,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   description: {
-    type: type.STRING(500),
+    type: type.STRING(1024),
     allowNull: true,
   },
   title: {
@@ -18,7 +18,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   module: {
-    type: type.STRING(128),
+    type: type.STRING(32),
     allowNull: false,
   },
   deleted: {
@@ -30,12 +30,16 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   expectedDate: {
-    type: type.DATE,
-    allowNull: false,
+    presence: {
+      allowEmpty: false,
+    },
+    type: {
+      type: (value) => {
+        const isDate = new Date(value);
+        return !(Number.isNaN(isDate.getTime()));
+      },
+      message: () => 'must be a valid date',
+    },
   },
   completedDate: type.DATE,
-  status: {
-    type: type.STRING(16),
-    allowNull: false,
-  },
 });

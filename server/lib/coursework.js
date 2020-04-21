@@ -1,6 +1,10 @@
+const validate = require('validate.js');
 const { Coursework } = require('./db/models.js').models;
+const validators = require('./validators/coursework.validator.js');
+const util = require('./general');
 
 const courseworks = {
+
   async getCoursework(id) {
     const courseworkFound = await Coursework.findOne({ where: { id } });
     if (courseworkFound) {
@@ -16,16 +20,25 @@ const courseworks = {
     }
   },
   async createCoursework(data) {
-    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
-    Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status });
+    data.expectedDate = util.dateTime.toUTC(new Date(data.expectedDate));
+    const { owner, description, title, module, deleted, isPrivate, expectedDate } = data;
+    const error = validate(data, validators.create);
+    if (error) {
+      throw error;
+    }
+    const currentDate = new Date(Date.now);
+    if (expectedDate < currentDate) {
+      throw { _notification: ['The expected date is before the current date'] };
+    }
+    Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate });
   },
   async changePrivacy(data) {
     const { id, setPrivacy } = data;
     await Coursework.update({ is_private: setPrivacy }, { where: { id } });
   },
   async updateCoursework(data) {
-    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status, id } = data;
-    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status }, { where: { id } });
+    const { owner, description, title, module, deleted, isPrivate, expectedDate, id } = data;
+    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate }, { where: { id } });
   },
   async findAllPublic() {
     const resultAll = await Coursework.findAll({ where: { isPrivate: false } });
