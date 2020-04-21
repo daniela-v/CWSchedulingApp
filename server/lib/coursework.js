@@ -24,7 +24,10 @@ const courseworks = {
     if (error) {
       throw error;
     }
-    if ()
+    const currentDate = new Date(Date.now);
+    if (expectedDate < currentDate) {
+      throw { _notification: ['The expected date is before the current date'] };
+    }
     Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status });
   },
   async changePrivacy(data) {
