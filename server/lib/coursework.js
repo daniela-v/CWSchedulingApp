@@ -1,5 +1,5 @@
-const { Coursework } = require('./db/models.js').models;
 const validate = require('validate.js');
+const { Coursework } = require('./db/models.js').models;
 const validators = require('./validators/coursework.validator.js');
 
 const courseworks = {
