@@ -18,7 +18,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   module: {
-    type: type.STRING(128),
+    type: type.STRING(32),
     allowNull: false,
   },
   deleted: {
