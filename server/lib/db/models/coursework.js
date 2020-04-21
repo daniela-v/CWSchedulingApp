@@ -30,8 +30,16 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   expectedDate: {
-    type: type.DATE,
-    allowNull: false,
+    presence: {
+      allowEmpty: false,
+    },
+    type: {
+      type: (value) => {
+        const isDate = new Date(value);
+        return !(Number.isNaN(isDate.getTime()));
+      },
+      message: () => 'must be a valid date',
+    },
   },
   completedDate: type.DATE,
 });
