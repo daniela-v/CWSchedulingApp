@@ -1,6 +1,9 @@
 const { Coursework } = require('./db/models.js').models;
+const validate = require('validate.js');
+const validators = require('./validators/coursework.validator.js');
 
 const courseworks = {
+
   async getCoursework(id) {
     const courseworkFound = await Coursework.findOne({ where: { id } });
     if (courseworkFound) {
@@ -17,6 +20,10 @@ const courseworks = {
   },
   async createCoursework(data) {
     const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
+    const error = validate(data, validators.create);
+    if (error) {
+      throw error;
+    }
     Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status });
   },
   async changePrivacy(data) {
