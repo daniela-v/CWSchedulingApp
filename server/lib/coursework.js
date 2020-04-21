@@ -1,6 +1,7 @@
 const validate = require('validate.js');
 const { Coursework } = require('./db/models.js').models;
 const validators = require('./validators/coursework.validator.js');
+const util = require('./general');
 
 const courseworks = {
 
@@ -19,6 +20,7 @@ const courseworks = {
     }
   },
   async createCoursework(data) {
+    data.expectedDate = util.dateTime.toUTC(new Date(data.expectedDate));
     const { owner, description, title, module, deleted, isPrivate, expectedDate } = data;
     const error = validate(data, validators.create);
     if (error) {
