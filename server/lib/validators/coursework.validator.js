@@ -11,7 +11,7 @@ const validator = {
       presence: true,
       length: {
         minimum: 3,
-        maximum: 200,
+        maximum: 32,
       },
       format: {
         pattern: '[a-z0-9 ]+',
@@ -19,12 +19,6 @@ const validator = {
         message: 'must contain only alphanumeric characters, numbers or spaces',
       },
     },
-    owner: {
-      presence: true,
-      length: {
-        minimum: 3,
-        maximum: 32,
-      },
       format: {
         pattern: '[a-z0-9 ]+',
         flags: 'i',
