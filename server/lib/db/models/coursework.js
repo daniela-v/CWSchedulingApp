@@ -34,8 +34,4 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   completedDate: type.DATE,
-  status: {
-    type: type.STRING(16),
-    allowNull: false,
-  },
 });

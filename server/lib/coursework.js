@@ -19,11 +19,12 @@ const courseworks = {
     }
   },
   async createCoursework(data) {
-    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
+    const { owner, description, title, module, deleted, isPrivate, expectedDate, status } = data;
     const error = validate(data, validators.create);
     if (error) {
       throw error;
     }
+    if ()
     Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status });
   },
   async changePrivacy(data) {
