@@ -1,3 +1,5 @@
+const validate = require('validate.js');
+
 const validator = {
   delete: {
     title: {
@@ -28,12 +30,29 @@ const validator = {
       presence: {
         allowEmpty: false,
       },
+      type: {
+        type: (value) => {
+          const isDate = new Date(value);
+          return !(Number.isNaN(isDate.getTime()));
+        },
+        message: () => 'must be a valid date',
+      },
     },
     expectedDate: {
       presence: {
         allowEmpty: false,
       },
+      type: {
+        type: (value) => {
+          const isDate = new Date(value);
+          return !(Number.isNaN(isDate.getTime()));
+        },
+        message: () => 'must be a valid date',
+      },
     },
+  },
+  validate(data, rules) {
+    return validate(data, rules);
   },
 };
 

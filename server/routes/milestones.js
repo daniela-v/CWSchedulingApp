@@ -79,4 +79,19 @@ router.post('/delete', async (req, res) => {
   res.json({ result, error });
 });
 
+/**
+ * POST /milestones/setProgress
+ */
+router.post('/setProgress', async (req, res) => {
+  let error;
+  let result;
+  try {
+    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
+    result = await milestones.setMilestoneProgress(req.query);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
 module.exports = router;

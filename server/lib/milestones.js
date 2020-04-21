@@ -1,125 +1,154 @@
-const validate = require('validate.js');
-const validators = require('./validators/milestones.validator.js');
+const _ = require('lodash');
+const validator = require('./validators/milestones.validator.js');
+const util = require('./general');
 
 const { Coursework, Milestones } = require('./db/models.js').models;
 
 const milestones = {
 
   async getAllMilestones(data) {
-    const { coursework } = data;
+    const { coursework = 0 } = data;
+
     const result = await Milestones.findAll({ where: { coursework } });
-    return result;
+    return _.map(result, (row) => row.dataValues);
   },
 
   async getMilestone(data) {
-    const { coursework, milestone } = data;
-    if (!milestone) {
-      throw { _system: 'System called getMilestone on an invalid milestone' };
-    }
+    const { coursework = 0, milestone = 0 } = data;
+
     const result = await Milestones.findOne({ where: { id: milestone, coursework } });
     if (!result) {
       throw { _notification: 'The milestone you\'re trying to access cannot be found' };
     }
-    return result;
+
+    return result.dataValues;
   },
 
   async createMilestone(data) {
-    const error = validate(data, validators.create);
+    const error = validator.validate(data, validator.create);
     if (error) {
       throw error;
     }
 
-    data.startedDate = new Date(data.startedDate).getTime();
-    data.expectedDate = new Date(data.expectedDate).getTime();
+    data.startedDate = util.datetime.toUTC(new Date(data.startedDate));
+    data.expectedDate = util.datetime.toUTC(new Date(data.expectedDate));
 
-    const { coursework, title, description, startedDate, expectedDate } = data;
-    const courseworkData = Coursework.findOne({ where: { id: coursework || 0 } });
+    const { coursework = 0, title, description = null, startedDate, expectedDate } = data;
+
+    const courseworkData = await Coursework.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called createMilestone on an invalid coursework' };
     }
+
+    if (courseworkData.completedDate) {
+      throw { _notification: 'You cannot create a milestone in a completed coursework' };
+    }
+
     if (startedDate < courseworkData.createdAt) {
       throw { startedDate: ['The start date of the milestone cannot be earlier than the date the coursework has been created'] };
     }
     if (expectedDate > courseworkData.expectedDate) {
       throw { expectedDate: ['The expected date of the milestone cannot be later than the expected date of the coursework'] };
     }
-    await Milestones.create({
-      coursework,
-      title,
-      description,
-      startedDate,
-      expectedDate,
-    });
-    return true;
+    if (startedDate >= expectedDate) {
+      throw { startedDate: ['The start date cannot be later than the expected date'] };
+    }
+
+    const toInsert = { coursework, title, description, startedDate, expectedDate };
+    const created = await Milestones.create(toInsert);
+    return created.dataValues;
   },
 
   async editMilestone(data) {
-    const error = validate(data, validators.create);
+    const error = validator.validate(data, validator.create);
     if (error) {
       throw error;
     }
 
-    data.startedDate = new Date(data.startedDate).getTime();
-    data.expectedDate = new Date(data.expectedDate).getTime();
+    data.startedDate = util.datetime.toUTC(new Date(data.startedDate));
+    data.expectedDate = util.datetime.toUTC(new Date(data.expectedDate));
 
-    const { coursework, milestone, title, description, startedDate, expectedDate, completedDate } = data;
-    const courseworkData = Coursework.findOne({ where: { id: coursework } });
+    const { coursework = 0, milestone = 0, title, description = null, startedDate, expectedDate } = data;
+
+    const courseworkData = await Coursework.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called editMilestone on an invalid coursework' };
     }
+
+    if (courseworkData.completedDate) {
+      throw { _notification: 'You cannot edit a milestone in a completed coursework' };
+    }
+
+    const milestoneData = await Milestones.findOne({ where: { id: milestone, coursework } });
+    if (!milestoneData) {
+      throw { _system: 'System called editMilestone on an invalid milestone' };
+    }
+
+    if (milestoneData.completedDate) {
+      throw { _notification: 'You cannot edit a completed milestone' };
+    }
+
+    const copy = { ...milestoneData.dataValues, title, description, startedDate, expectedDate };
+    if (_.isEqual(copy, milestoneData.dataValues)) {
+      throw { _notification: 'No changes have been made to the milestone' };
+    }
+
     if (startedDate < courseworkData.createdAt) {
       throw { startedDate: ['The start date of the milestone cannot be earlier than the date the coursework has been created'] };
     }
     if (expectedDate > courseworkData.expectedDate) {
       throw { expectedDate: ['The expected date of the milestone cannot be later than the expected date of the coursework'] };
     }
-    const [affectedRows] = await Milestones.update({
-      title,
-      description,
-      startedDate,
-      expectedDate,
-      completedDate,
-    }, { where: { id: milestone } });
-    if (!affectedRows) {
-      throw { _system: 'System called editMilestone on an invalid milestone' };
+    if (startedDate >= expectedDate) {
+      throw { startedDate: ['The start date cannot be later than the expected date'] };
     }
-    return true;
+
+    const toUpdate = { title, description, startedDate, expectedDate };
+    await Milestones.update(toUpdate, { where: { id: milestone, coursework } });
+
+    return data;
   },
 
   async deleteMilestone(data) {
-    const error = validate(data, validators.delete);
+    const error = validator.validate(data, validator.delete);
     if (error) {
       throw error;
     }
-    const { milestone, title } = data;
-    const milestoneData = Milestones.findOne({ where: { id: milestone } });
+
+    const { coursework = 0, milestone = 0, title } = data;
+
+    const milestoneData = await Milestones.findOne({ where: { id: milestone, coursework } });
     if (!milestoneData) {
       throw { _system: 'System called deleteMilestone on an invalid milestone' };
     }
+
     const sameTitle = (milestoneData.title === title);
     if (!sameTitle) {
-      throw { title: ['You must enter the title of the milestone you want to delete'] };
+      throw { title: ['You must enter the same title of the milestone you want to delete'] };
     }
-    await Milestones.destroy({ where: { id: milestone } });
+
+    await Milestones.destroy({ where: { id: milestone, coursework } });
     return true;
   },
 
   async setMilestoneProgress(data) {
-    const { milestone, completed } = data;
-    const milestoneData = Milestones.findOne({ where: { id: milestone } });
+    const { coursework = 0, milestone = 0, completed } = data;
+
+    const milestoneData = await Milestones.findOne({ where: { id: milestone, coursework } });
     if (!milestoneData) {
       throw { _system: 'System called setMilestoneProgress on an invalid milestone' };
     }
-    const alreadyCompleted = (milestone.completedDate);
-    if (!!completed === !!milestone.completedDate) {
+
+    const alreadyCompleted = milestoneData.completedDate;
+    if (!!completed === !!alreadyCompleted) {
       throw { _notification: `The milestone is already marked as ${alreadyCompleted ? 'complete' : 'incomplete'}` };
     }
-    const [affectedRows] = await Milestones.update({
-      completedDate: (completed) ? Date.now() : null,
-    }, { where: { id: milestone } });
-    if (!affectedRows) {
-      throw { _system: 'System called setMilestoneProgress on an invalid milestone' };
-    }
+
+    const completedDate = (completed) ? util.datetime.toUTC(new Date(Date.now())) : null;
+
+    const toUpdate = { completedDate };
+    await Milestones.update(toUpdate, { where: { id: milestone, coursework } });
+
     return true;
   },
 };
