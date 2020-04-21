@@ -29,6 +29,11 @@ const validator = {
       length: {
         maximum: 100,
       },
+      format: {
+        pattern: '[a-z0-9 ]+',
+        flags: 'i',
+        message: 'must contain only alphanumeric characters, numbers or spaces',
+      },
     },
     deleted: {
       presence: {
