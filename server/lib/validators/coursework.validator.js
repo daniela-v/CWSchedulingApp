@@ -40,16 +40,6 @@ const validator = {
         maximum: 1024,
       },
     },
-    isPrivate: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
-    completedDate: {
-      presence: {
-        allowEmpty: false,
-      },
-    },
     status: {
       length: {
         maximum: 100,
