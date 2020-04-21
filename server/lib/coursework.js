@@ -19,7 +19,7 @@ const courseworks = {
     }
   },
   async createCoursework(data) {
-    const { owner, description, title, module, deleted, isPrivate, expectedDate, status } = data;
+    const { owner, description, title, module, deleted, isPrivate, expectedDate } = data;
     const error = validate(data, validators.create);
     if (error) {
       throw error;
@@ -28,15 +28,15 @@ const courseworks = {
     if (expectedDate < currentDate) {
       throw { _notification: ['The expected date is before the current date'] };
     }
-    Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status });
+    Coursework.create({ owner, description, title, module, deleted, isPrivate, expectedDate });
   },
   async changePrivacy(data) {
     const { id, setPrivacy } = data;
     await Coursework.update({ is_private: setPrivacy }, { where: { id } });
   },
   async updateCoursework(data) {
-    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status, id } = data;
-    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status }, { where: { id } });
+    const { owner, description, title, module, deleted, isPrivate, expectedDate, id } = data;
+    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate }, { where: { id } });
   },
   async findAllPublic() {
     const resultAll = await Coursework.findAll({ where: { isPrivate: false } });
