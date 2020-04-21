@@ -90,15 +90,11 @@ describe('Get a coursework milestone', () => {
     expect(res.body.error._notification).toEqual('The milestone you\'re trying to access cannot be found');
   });
 
-  it('throws a system error if params not fully specified', async () => {
+  it('throws a system error if no params specified', async () => {
     let res;
     res = await request.get('/milestones/get')
       .set('Cookie', cookies)
       .query({});
-    expect(res.body.error._system).toBeDefined();
-    res = await request.get('/milestones/get')
-      .set('Cookie', cookies)
-      .query({ cursework: 1 });
     expect(res.body.error._system).toBeDefined();
   });
 });
