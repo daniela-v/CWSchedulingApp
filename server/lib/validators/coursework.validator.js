@@ -19,36 +19,35 @@ const validator = {
         message: 'must contain only alphanumeric characters, numbers or spaces',
       },
     },
-      format: {
-        pattern: '[a-z0-9 ]+',
-        flags: 'i',
-        message: 'must contain only alphanumeric characters, numbers or spaces',
-      },
+    format: {
+      pattern: '[a-z0-9 ]+',
+      flags: 'i',
+      message: 'must contain only alphanumeric characters, numbers or spaces',
     },
-    module: {
-      length: {
-        maximum: 100,
-      },
-      format: {
-        pattern: '[a-z0-9 ]+',
-        flags: 'i',
-        message: 'must contain only alphanumeric characters, numbers or spaces',
-      },
+  },
+  module: {
+    length: {
+      maximum: 100,
     },
-    description: {
-      length: {
-        maximum: 1024,
-      },
+    format: {
+      pattern: '[a-z0-9 ]+',
+      flags: 'i',
+      message: 'must contain only alphanumeric characters, numbers or spaces',
     },
-    status: {
-      length: {
-        maximum: 100,
-      },
+  },
+  description: {
+    length: {
+      maximum: 1024,
     },
-    expectedDate: {
-      presence: {
-        allowEmpty: false,
-      },
+  },
+  status: {
+    length: {
+      maximum: 100,
+    },
+  },
+  expectedDate: {
+    presence: {
+      allowEmpty: false,
     },
   },
 };
