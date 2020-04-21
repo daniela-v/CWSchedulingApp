@@ -9,8 +9,11 @@ const courseworks = {
     throw { _notification: 'No coursework could be found with that title' };
   },
   async removeCoursework(id) {
-    await Coursework.destroy({ where: { id } });
-    throw { _notification: 'No coursework could be found with that title' };
+    if (id) {
+      await Coursework.destroy({ where: { id } });
+    } else {
+      throw { _system: 'The id passed to the function was null/ undefined' };
+    }
   },
   async createCoursework(data) {
     const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status } = data;
@@ -19,6 +22,10 @@ const courseworks = {
   async changePrivacy(data) {
     const { id, setPrivacy } = data;
     await Coursework.update({ is_private: setPrivacy }, { where: { id } });
+  },
+  async updateCoursework(data) {
+    const { owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status, id } = data;
+    await Coursework.update({ owner, description, title, module, deleted, isPrivate, expectedDate, completedDate, status }, { where: { id } });
   },
   async findAllPublic() {
     const resultAll = await Coursework.findAll({ where: { isPrivate: false } });
@@ -30,6 +37,21 @@ const courseworks = {
       throw { _notification: 'There are no courseworks that belong to that user' };
     }
     return resultAll;
+  },
+
+  async hasCourseworkWritePermission(user, coursework) {
+    if (!user) {
+      throw { _notification: 'You cannot perform this operation while logged out' };
+    }
+    if (!coursework) {
+      // This should never happen which is why a system level error is thrown
+      throw { _system: 'System called hasCourseworkWritePermission without a coursework' };
+    }
+    const result = Coursework.findOne({ id: coursework, owner: user });
+    if (!result) {
+      throw { _notification: 'You are not the owner of this coursework' };
+    }
+    return true;
   },
 };
 module.exports = courseworks;
