@@ -5,9 +5,9 @@ const permissions = require('../lib/permissions.js');
 const router = express.Router();
 
 /**
- * POST /coursework/new
+ * POST /coursework/create
  */
-router.post('/new', async (req, res) => {
+router.post('/create', async (req, res) => {
   let error;
   let result;
   try {
@@ -55,7 +55,7 @@ router.get('/get', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework, req.query.shared);
     result = await courseworks.getCoursework(req.query.id);
   } catch (e) {
     error = e;

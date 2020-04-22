@@ -26,7 +26,7 @@ router.get('/get', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework, req.query.shared);
     result = await milestones.getMilestone(req.query);
   } catch (e) {
     error = e;
