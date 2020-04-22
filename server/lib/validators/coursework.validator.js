@@ -49,6 +49,13 @@ const validator = {
     presence: {
       allowEmpty: false,
     },
+    type: {
+      type: (value) => {
+        const isDate = new Date(value);
+        return !(Number.isNaN(isDate.getTime()));
+      },
+      message: () => 'must be a valid date',
+    },
   },
 };
 
