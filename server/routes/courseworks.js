@@ -43,7 +43,6 @@ router.post('/create', async (req, res) => {
     await permissions.hasPrivileges(req.session.user);
     result = await courseworks.createCoursework(req.session.user, req.body);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });
@@ -74,7 +73,6 @@ router.post('/delete', async (req, res) => {
     await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = await courseworks.deleteCoursework(req.body);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });
