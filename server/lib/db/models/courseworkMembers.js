@@ -5,7 +5,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
     primaryKey: true,
   },
-  user: {
+  member: {
     type: type.INTEGER,
     allowNull: false,
     primaryKey: true,

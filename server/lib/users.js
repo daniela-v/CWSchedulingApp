@@ -1,10 +1,9 @@
+const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const validate = require('validate.js');
-const _ = require('lodash');
 
-const { User } = require('./db/models.js').models;
-const validators = require('./validators/users.validator.js');
+const validator = require('./validators/users.validator.js');
+const { Users } = require('./db/models.js').models;
 const mail = require('./mail');
 
 function storeUserSession(session, id) {
@@ -26,45 +25,45 @@ function removeSensitive(data) {
 const users = {
   async register(data) {
     // If the validation is failing, throw the error given by the validator
-    const error = validate(data, validators.register);
+    const error = validator.validate(data, validator.register);
     if (error) {
       throw error;
     }
 
     const { username, password, email } = data;
     // If the username or the email already exists in the database, throw an explanatory error
-    const usernameExists = await User.findOne({ where: { username } });
+    const usernameExists = await Users.findOne({ where: { username } });
     if (usernameExists) {
       throw { username: ['This username has already been taken'] };
     }
-    const emailExists = await User.findOne({ where: { email } });
+    const emailExists = await Users.findOne({ where: { email } });
     if (emailExists) {
       throw { email: ['This email has already been taken'] };
     }
     // Crypt the password and create a new user into the database then return successful
     const cryptedPwd = await bcrypt.hash(password, 10);
-    await User.create({ username, password: cryptedPwd, email });
+    await Users.create({ username, password: cryptedPwd, email });
     return true;
   },
   // Function to recover the account of a user
   async recover(data) {
     const { account, code, password, step } = data;
     // Get the field constraints based on the current step so we know which field to validate
-    const constraints = _.reduce(validators.recovery, (acc, val, i) => {
+    const constraints = _.reduce(validator.recovery, (acc, val, i) => {
       if (i <= step) {
         return { ...acc, ...val };
       }
       return acc;
     }, {});
     // If the validation is failing, throw the error given by the validator
-    const error = validate(data, constraints);
+    const error = validator.validate(data, constraints);
     if (error) {
       throw error;
     }
     // Get the user from the database depending if the input is an email or not
-    const isEmail = !validate.single(account, { email: true });
+    const isEmail = !validator.validate.single(account, { email: true });
     const condition = (isEmail) ? { email: account } : { username: account };
-    const result = await User.findOne({ where: condition });
+    const result = await Users.findOne({ where: condition });
     // If the user cannot be found, throw an explanatory error
     if (!result) {
       throw { account: ['This account is invalid'] };
@@ -123,7 +122,7 @@ const users = {
     // If the username and password are not empty
     if (username && password) {
       // Find the user in the database by username
-      const result = await User.findOne({ where: { username } });
+      const result = await Users.findOne({ where: { username } });
       // If the user is valid
       if (result) {
         // Hash the input password and check it against the user password hash from the database
@@ -143,7 +142,7 @@ const users = {
   },
   async session(id) {
     if (id) {
-      const result = await User.findOne({ where: { id } });
+      const result = await Users.findOne({ where: { id } });
       // If the session id matches a user id from the database then authenticate the user
       if (result) {
         return removeSensitive(result.dataValues);

@@ -52,7 +52,7 @@ describe('Get read only permission for courseworks', () => {
     } catch (e) {
       error = e;
     }
-    expect(error._notification).toEqual('You have not been invited to be a participant in this coursework');
+    expect(error._notification).toEqual('You have not been invited to view this coursework');
   });
 });
 

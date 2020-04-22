@@ -30,7 +30,7 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   expectedDate: {
-    completedDate: type.DATE,
+    type: type.DATE,
     allowNull: false,
   },
   completedDate: type.DATE,

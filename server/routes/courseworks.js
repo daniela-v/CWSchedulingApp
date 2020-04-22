@@ -1,5 +1,5 @@
 const express = require('express');
-const courseworks = require('../lib/coursework.js');
+const courseworks = require('../lib/courseworks.js');
 const permissions = require('../lib/permissions.js');
 
 const router = express.Router();
@@ -64,14 +64,13 @@ router.get('/get', async (req, res) => {
 });
 
 /**
- * GET /coursework/publicList
+ * GET /coursework/list
  */
-router.get('/publicList', async (req, res) => {
+router.get('/list', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
-    result = await courseworks.findAllPublic();
+    result = await courseworks.getAllCourseworks(req.session.user, req.query);
   } catch (e) {
     error = e;
   }

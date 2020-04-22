@@ -1,3 +1,5 @@
+const validate = require('validate.js');
+
 const validator = {
   delete: {
     title: {
@@ -56,6 +58,9 @@ const validator = {
       },
       message: () => 'must be a valid date',
     },
+  },
+  validate(data, rules) {
+    return validate(data, rules);
   },
 };
 

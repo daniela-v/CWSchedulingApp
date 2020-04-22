@@ -2,7 +2,7 @@ const _ = require('lodash');
 const validator = require('./validators/milestones.validator.js');
 const util = require('./general');
 
-const { Coursework, Milestones } = require('./db/models.js').models;
+const { Courseworks, Milestones } = require('./db/models.js').models;
 
 const milestones = {
 
@@ -35,7 +35,7 @@ const milestones = {
 
     const { coursework = 0, title, description = null, startedDate, expectedDate } = data;
 
-    const courseworkData = await Coursework.findOne({ where: { id: coursework } });
+    const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called createMilestone on an invalid coursework' };
     }
@@ -70,7 +70,7 @@ const milestones = {
 
     const { coursework = 0, milestone = 0, title, description = null, startedDate, expectedDate } = data;
 
-    const courseworkData = await Coursework.findOne({ where: { id: coursework } });
+    const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called editMilestone on an invalid coursework' };
     }

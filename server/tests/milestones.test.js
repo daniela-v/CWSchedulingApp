@@ -40,7 +40,7 @@ describe('Get all coursework milestones', () => {
     const res = await request.get('/milestones/list')
       .set('Cookie', cookies)
       .query({ coursework: 2 });
-    expect(res.body.error._notification).toEqual('You have not been invited to be a participant in this coursework');
+    expect(res.body.error._notification).toEqual('You have not been invited to view this coursework');
   });
 
   it('returns a list of items if coursework has milestones', async () => {
@@ -72,7 +72,7 @@ describe('Get a coursework milestone', () => {
     const res = await request.get('/milestones/get')
       .set('Cookie', cookies)
       .query({ coursework: 3, milestone: 4 });
-    expect(res.body.error._notification).toEqual('You have not been invited to be a participant in this coursework');
+    expect(res.body.error._notification).toEqual('You have not been invited to view this coursework');
   });
 
   it('returns the correct milestone', async () => {

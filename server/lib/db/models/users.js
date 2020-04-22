@@ -17,4 +17,5 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     type: type.STRING(128),
     allowNull: false,
   },
+  isPrivate: type.BOOLEAN,
 });

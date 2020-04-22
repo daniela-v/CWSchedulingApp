@@ -1,3 +1,5 @@
+const validate = require('validate.js');
+
 const validator = {
   recovery: [
     {
@@ -69,6 +71,9 @@ const validator = {
         message: '^The email does not match',
       },
     },
+  },
+  validate(data, rules) {
+    return validate(data, rules);
   },
 };
 
