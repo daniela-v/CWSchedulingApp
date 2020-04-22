@@ -113,7 +113,7 @@ describe('Milestone operations', () => {
     await authenticate('admin_3', '.test`');
     const res = await request.post('/milestones/create')
       .set('Cookie', cookies)
-      .query({ coursework });
+      .send({ coursework });
     expect(res.body.error._notification).toEqual('You are not the owner of this coursework');
   });
 
@@ -121,14 +121,14 @@ describe('Milestone operations', () => {
     await authenticate('admin_1', '%test%');
     const result1 = await request.post('/milestones/create')
       .set('Cookie', cookies)
-      .query({
+      .send({
         ...data,
         startedDate: new Date(Date.now() - (86400 * 31 * 1000))
       });
     expect(result1.body.error.startedDate).toEqual(['The start date of the milestone cannot be earlier than the date the coursework has been created']);
     const result2 = await request.post('/milestones/create')
       .set('Cookie', cookies)
-      .query({
+      .send({
         ...data,
         expectedDate: new Date(Date.now() + (86400 * 31 * 1000)),
       });
@@ -136,7 +136,7 @@ describe('Milestone operations', () => {
     data.expectedDate = new Date(Date.now() + (86400 * 14 * 1000));
     const result3 = await request.post('/milestones/create')
       .set('Cookie', cookies)
-      .query({
+      .send({
         ...data,
         startedDate: new Date(Date.now() + (86400 * 14 * 1000)),
       });
@@ -146,7 +146,7 @@ describe('Milestone operations', () => {
   it('creates a milestone', async () => {
     const res = await request.post('/milestones/create')
       .set('Cookie', cookies)
-      .query(data);
+      .send(data);
     milestone = res.body.result.id;
     const result = await milestones.getMilestone({ coursework, milestone });
     expect(result).toBeTruthy();
@@ -156,7 +156,7 @@ describe('Milestone operations', () => {
     await authenticate('admin_3', '.test`');
     const res = await request.post('/milestones/edit')
       .set('Cookie', cookies)
-      .query({ coursework });
+      .send({ coursework });
     expect(res.body.error._notification).toEqual('You are not the owner of this coursework');
   });
 
@@ -165,7 +165,7 @@ describe('Milestone operations', () => {
     await authenticate('admin_1', '%test%');
     await request.post('/milestones/edit')
       .set('Cookie', cookies)
-      .query({
+      .send({
         ...data,
         milestone,
       });
@@ -176,7 +176,7 @@ describe('Milestone operations', () => {
   it('sets a milestone progress', async () => {
     await request.post('/milestones/setProgress')
       .set('Cookie', cookies)
-      .query({
+      .send({
         coursework,
         milestone,
         completed: true,
@@ -188,7 +188,7 @@ describe('Milestone operations', () => {
   it('does not set the same progress twice', async () => {
     const res = await request.post('/milestones/setProgress')
       .set('Cookie', cookies)
-      .query({
+      .send({
         coursework,
         milestone,
         completed: true,
@@ -199,7 +199,7 @@ describe('Milestone operations', () => {
   it('does not edit a completed milestone', async () => {
     const res = await request.post('/milestones/edit')
       .set('Cookie', cookies)
-      .query({
+      .send({
         ...data,
         milestone,
       });
@@ -210,7 +210,7 @@ describe('Milestone operations', () => {
     await authenticate('admin_3', '.test`');
     const res = await request.post('/milestones/delete')
       .set('Cookie', cookies)
-      .query({ coursework });
+      .send({ coursework });
     expect(res.body.error._notification).toEqual('You are not the owner of this coursework');
   });
 
@@ -218,7 +218,7 @@ describe('Milestone operations', () => {
     await authenticate('admin_1', '%test%');
     const res = await request.post('/milestones/delete')
       .set('Cookie', cookies)
-      .query({
+      .send({
         coursework,
         milestone,
         title: 'random title',
@@ -229,7 +229,7 @@ describe('Milestone operations', () => {
   it('deletes a milestone', async () => {
     await request.post('/milestones/delete')
       .set('Cookie', cookies)
-      .query({
+      .send({
         coursework,
         milestone,
         title: data.title,

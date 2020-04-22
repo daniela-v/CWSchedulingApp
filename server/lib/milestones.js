@@ -10,7 +10,7 @@ const milestones = {
     const { coursework = 0 } = data;
 
     const result = await Milestones.findAll({ where: { coursework } });
-    return _.map(result, (row) => row.dataValues);
+    return result.map((r) => r.dataValues);
   },
 
   async getMilestone(data) {
@@ -106,7 +106,7 @@ const milestones = {
     const toUpdate = { title, description, startedDate, expectedDate };
     await Milestones.update(toUpdate, { where: { id: milestone, coursework } });
 
-    return data;
+    return copy;
   },
 
   async deleteMilestone(data) {
@@ -131,12 +131,12 @@ const milestones = {
     return true;
   },
 
-  async setMilestoneProgress(data) {
+  async changeProgress(data) {
     const { coursework = 0, milestone = 0, completed } = data;
 
     const milestoneData = await Milestones.findOne({ where: { id: milestone, coursework } });
     if (!milestoneData) {
-      throw { _system: 'System called setMilestoneProgress on an invalid milestone' };
+      throw { _system: 'System called changeProgress on an invalid milestone' };
     }
 
     const alreadyCompleted = milestoneData.completedDate;

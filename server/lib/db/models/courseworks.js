@@ -17,15 +17,9 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     type: type.STRING(32),
     allowNull: false,
   },
-  description: {
-    type: type.STRING(1024),
-    allowNull: true,
-  },
-  deleted: {
-    type: type.DATE,
-    allowNull: true,
-  },
-  isPrivate: {
+  description: type.STRING(1024),
+  deleted: type.DATE,
+  privacy: {
     type: type.BOOLEAN,
     allowNull: false,
   },

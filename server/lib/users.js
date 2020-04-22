@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { Op } = require('sequelize');
 
 const validator = require('./validators/users.validator.js');
 const { Users } = require('./db/models.js').models;
@@ -71,9 +72,7 @@ const users = {
     // Step 0: Insert an account to recover
     // Generate a JWT token, using the user's creation timestamp and password hash, that automatically expires in 5 minutes then send it by email
     if (step === 0) {
-      const token = jwt.sign({
-        data: { id: result.id },
-      }, `${result.createdAt}-${result.password}`, { expiresIn: 5 * 60 });
+      const token = jwt.sign({ data: { id: result.id } }, `${result.createdAt}-${result.password}`, { expiresIn: 5 * 60 });
       // Send an email with the token to the user's email
       mail.send({
         user: result.username,
@@ -158,6 +157,23 @@ const users = {
     }
     // If this line is reached that means there is nothing to deauthenticate
     throw { _silent: 'Nothing to deauthenticate' };
+  },
+  async find(user = 0, err) {
+    // Find the user either by id or username depending on what is passed
+    const found = await Users.findOne({
+      where: {
+        [Op.or]: [
+          { id: user },
+          { username: user },
+        ],
+      },
+    });
+
+    if (!found) {
+      throw err;
+    }
+
+    return found;
   },
 };
 

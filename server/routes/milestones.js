@@ -11,7 +11,7 @@ router.get('/list', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework);
+    await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework, req.query.shared);
     result = await milestones.getAllMilestones(req.query);
   } catch (e) {
     error = e;
@@ -41,8 +41,8 @@ router.post('/create', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
-    result = await milestones.createMilestone(req.query);
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
+    result = await milestones.createMilestone(req.body);
   } catch (e) {
     error = e;
   }
@@ -56,8 +56,8 @@ router.post('/edit', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
-    result = await milestones.editMilestone(req.query);
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
+    result = await milestones.editMilestone(req.body);
   } catch (e) {
     error = e;
   }
@@ -71,8 +71,8 @@ router.post('/delete', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
-    result = await milestones.deleteMilestone(req.query);
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
+    result = await milestones.deleteMilestone(req.body);
   } catch (e) {
     error = e;
   }
@@ -86,8 +86,8 @@ router.post('/setProgress', async (req, res) => {
   let error;
   let result;
   try {
-    await permissions.hasCourseworkWritePermission(req.session.user, req.query.coursework);
-    result = await milestones.setMilestoneProgress(req.query);
+    await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
+    result = await milestones.changeProgress(req.body);
   } catch (e) {
     error = e;
   }

@@ -1,8 +1,24 @@
 const jwt = require('jsonwebtoken');
 
-const { Courseworks, CourseworkMembers } = require('./db/models').models;
+const { Users, Courseworks, CourseworkMembers } = require('./db/models').models;
 
 module.exports = {
+  /**
+   * Returns whether the user is authenticated or not
+   *
+   * @param {Integer} userId        - The user id taken from the session (defaults to 0 if guest)
+   * @returns {Boolean}  True if the user has access to the coursework
+   *
+   * @throws {Object}  _notification error
+   */
+  async hasPrivileges(userId = 0) {
+    const user = await Users.findOne({ where: { id: userId } });
+    if (!user) {
+      throw { _notification: 'You must be authenticated to perform this operation' };
+    }
+    return true;
+  },
+
   /**
    * Returns whether the user has permission to view the coursework or not
    *
@@ -26,14 +42,14 @@ module.exports = {
       }
       // Attempting to sign the access jwt
       try {
-        jwt.verify(sharedToken, `${coursework.shared}`);
+        jwt.verify(sharedToken, `${new Date(coursework.shared)}`);
       } catch (e) {
         sharedToken = null;
       }
     }
 
     // Checking if the coursework is private and the client doesn't have a valid shared token
-    if (coursework.isPrivate && !sharedToken) {
+    if (coursework.privacy && !sharedToken) {
       const isParticipant = await CourseworkMembers.findOne({ where: { coursework: courseworkId, member: userId } });
       if (!isParticipant) {
         throw { _notification: 'You have not been invited to view this coursework' };
@@ -52,6 +68,8 @@ module.exports = {
    * @throws {Object}  _system or _notification error
    */
   async hasCourseworkWritePermission(userId = 0, courseworkId = 0) {
+    await this.hasPrivileges(userId);
+
     const coursework = await Courseworks.findOne({ where: { id: courseworkId } });
     if (!coursework) {
       throw { _system: 'System called hasCourseworkWritePermission with an invalid coursework' };

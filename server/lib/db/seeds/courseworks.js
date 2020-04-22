@@ -1,7 +1,7 @@
 const rows = [
-  { owner: 1, description: 'A simple project', isPrivate: false, title: 'coursework_1', module: '%test%', expectedDate: Date.now() + (86400 * 30 * 1000), status: 'In progress', createdAt: Date.now() - (86400 * 30 * 1000) },
-  { owner: 1, description: 'A harder project', isPrivate: true, title: 'coursework_2', module: '%test%', expectedDate: Date.now() + (86400 * 60 * 1000), status: 'In progress', createdAt: Date.now() - (86400 * 60 * 1000) },
-  { owner: 2, description: 'A simple project', isPrivate: true, title: 'Honours Project', module: '%test%', expectedDate: Date.now() + (86400 * 30 * 1000), status: 'In progress', createdAt: Date.now() - (86400 * 30 * 1000) },
+  { owner: 1, description: 'A simple project', privacy: false, title: 'coursework_1', module: '%test%', expectedDate: Date.now() + (86400 * 30 * 1000), createdAt: Date.now() - (86400 * 30 * 1000) },
+  { owner: 1, description: 'A harder project', privacy: true, title: 'coursework_2', module: '%test%', expectedDate: Date.now() + (86400 * 60 * 1000), createdAt: Date.now() - (86400 * 60 * 1000) },
+  { owner: 2, description: 'A simple project', privacy: true, title: 'Honours Project', module: '%test%', expectedDate: Date.now() + (86400 * 30 * 1000), createdAt: Date.now() - (86400 * 30 * 1000) },
 ];
 
 async function insert(model) {
