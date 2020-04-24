@@ -33,6 +33,21 @@ router.get('/get', async (req, res) => {
   res.json({ result, error });
 });
 
+
+/**
+ * GET /courseworks/search
+ */
+router.get('/search', async (req, res) => {
+  let error;
+  let result;
+  try {
+    result = await courseworks.searchCourseworks(req.session.user, req.query);
+  } catch (e) {
+    error = e;
+  }
+  res.json({ result, error });
+});
+
 /**
  * POST /courseworks/create
  */

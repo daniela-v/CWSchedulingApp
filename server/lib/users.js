@@ -169,7 +169,7 @@ const users = {
       },
     });
 
-    if (!found) {
+    if (!found && err) {
       throw err;
     }
 

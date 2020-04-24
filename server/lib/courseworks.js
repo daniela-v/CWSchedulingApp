@@ -11,32 +11,142 @@ const { Courseworks, CourseworkMembers } = require('./db/models.js').models;
 
 const courseworks = {
 
-  async getAllCourseworks(user, data) {
-    const userLookup = data.user || user;
-    let foundCourseworks = [];
-    if (data.global) {
-      // Accessing latest public courseworks limited to 10
-      const result = await Courseworks.findAll({
-        where: { privacy: false },
-        order: ['createdAt', 'DESC'],
-        limit: 10,
-      });
-      foundCourseworks = result.map((r) => r.dataValues);
-    } else if (userLookup) {
-      // Accessing a users' courseworks
-      const userFound = await users.find(userLookup, { _system: 'System called getAllCourseworks on an invalid user' });
+  async searchCoursework(user = 0, data) {
+    const { owner, participant, title, module, description, completed } = data;
 
-      // Default condition
-      let condition = `member = ${userFound.id}`;
-      if (userFound.id !== user) {
-        // If the user is viewing a different profile
-        condition = `${condition} AND privacy IS FALSE`;
-      }
-      const queryResult = await sql.query(`SELECT * FROM tbl_coursework_members LEFT JOIN tbl_courseworks ON coursework = id WHERE ${condition}`, { type: QueryTypes.SELECT });
-      const courseworkReturnPromise = queryResult.map((coursework) => this.formatCourseworkReturn(coursework));
-      foundCourseworks = await Promise.all(courseworkReturnPromise);
+    const select = ['cw.*', 'cwu.username as ownerName'];
+    const joins = [];
+    const condition = [];
+    const group = [];
+    const order = [];
+    let table = 'tbl_courseworks AS cw';
+    if (owner) {
+      const userFound = await users.find(owner);
+      condition.push(`cw.owner = ${userFound.id}`);
     }
-    return foundCourseworks;
+    if (participant) {
+      const userFound = await users.find(participant);
+      table = 'tbl_coursework_members AS cwm';
+      select.push('cwmu.id as participant');
+      select.push('cwmu.username as participantName');
+      joins.push('tbl_users AS cwmu ON cwmu.id = cwm.member');
+      joins.push('tbl_courseworks AS cw ON cw.id = cwm.coursework');
+      condition.push(`cwm.member = ${userFound.id}`);
+    }
+    if (title) {
+      condition.push('cw.title LIKE :title');
+    }
+    if (module) {
+      condition.push('cw.module LIKE :module');
+    }
+    if (description) {
+      condition.push('cw.description LIKE :description');
+    }
+    if (completed !== undefined) {
+      const toSql = (completed === true) ? 'IS NOT NULL' : 'IS NULL';
+      condition.push(`cw.completedDate ${toSql}`);
+    }
+    condition.push(`(cw.owner = ${user} OR (cw.owner <> ${user} AND cw.privacy IS FALSE))`);
+    joins.push('tbl_users AS cwu ON cwu.id = cw.owner');
+    const milestoneCount = [
+      'coursework',
+      'COUNT(CASE WHEN completedDate IS NOT NULL THEN 1 END) as milestoneComplete',
+      'COUNT(CASE WHEN completedDate IS NULL THEN 1 END) as milestoneIncomplete',
+    ];
+    const memberCount = [
+      'coursework',
+      'COUNT(coursework) as participantsNumber',
+    ];
+    select.push('milestone.milestoneComplete, milestone.milestoneIncomplete');
+    select.push('cwmc.participantsNumber');
+    joins.push(`(SELECT ${milestoneCount.join(', ')} FROM tbl_milestones GROUP BY coursework) as milestone ON milestone.coursework = cw.id`);
+    joins.push(`(SELECT ${memberCount.join(', ')} FROM tbl_coursework_members GROUP BY coursework) AS cwmc ON cwmc.coursework = cw.id`);
+    group.push('cw.id');
+    order.push('cw.createdAt DESC');
+    const query = `
+      SELECT \
+        ${select.join(', ')} \
+      FROM \
+        ${table} \
+      ${(joins.length) ? `LEFT JOIN ${joins.join(' LEFT JOIN ')}` : ''} \
+      ${(condition.length) ? `WHERE ${condition.join(' AND ')}` : ''} \
+      ${(group.length) ? `GROUP BY ${group.join(', ')}` : ''} \
+      ${(order.length) ? `ORDER BY ${order.join(', ')}` : ''} \
+      LIMIT 50 \
+      `;
+    const queryResult = await sql.query(query, {
+      replacements: { owner, title: `%${title}%`, module: `%${module}%`, description: `%${description}%` },
+      type: QueryTypes.SELECT,
+      // logging: (log) => console.log(log.replace(/[ ]+/g, ' ')),
+    });
+    return queryResult;
+  },
+
+  async getAllCourseworks(isLogged, data) {
+    const { user = isLogged, global, brief } = data;
+    let table = '';
+    const select = ['cw.*, cwu.username as ownerName'];
+    const joins = [];
+    const condition = [];
+    const group = [];
+    const order = [];
+    let limit = '';
+    let publicOnly = global || false;
+    if (user) {
+      const userFound = await users.find(user, { _system: 'System called getAllCourseworks on an invalid user' });
+
+      table = 'tbl_coursework_members AS cwm';
+      select.push('cwmu.id as participant');
+      select.push('cwmu.username as participantName');
+      joins.push('tbl_users AS cwmu ON cwmu.id = cwm.member');
+      joins.push('tbl_courseworks AS cw ON cw.id = cwm.coursework');
+
+      if (userFound.id !== isLogged) {
+        publicOnly = true;
+      }
+      condition.push(`cwmu.id = ${userFound.id}`);
+    } else {
+      table = 'tbl_courseworks AS cw';
+    }
+    joins.push('tbl_users AS cwu ON cwu.id = cw.owner');
+    if (brief) {
+      const milestoneCount = [
+        'coursework',
+        'COUNT(CASE WHEN completedDate IS NOT NULL THEN 1 END) as milestoneComplete',
+        'COUNT(CASE WHEN completedDate IS NULL THEN 1 END) as milestoneIncomplete',
+      ];
+      select.push('milestone.milestoneComplete, milestone.milestoneIncomplete');
+      const memberCount = [
+        'coursework',
+        'COUNT(coursework) as participantsNumber',
+      ];
+      select.push('cwmc.participantsNumber');
+      joins.push(`(SELECT ${milestoneCount.join(', ')} FROM tbl_milestones GROUP BY coursework) as milestone ON milestone.coursework = cw.id`);
+      joins.push(`(SELECT ${memberCount.join(', ')} FROM tbl_coursework_members GROUP BY coursework) AS cwmc ON cwmc.coursework = cw.id`);
+      group.push('cw.id');
+      order.push('cw.createdAt DESC');
+      limit = 'LIMIT 25';
+    }
+    if (publicOnly) {
+      condition.push('cw.privacy IS FALSE');
+    }
+    const query = `
+      SELECT \
+        ${select.join(', ')} \
+      FROM \
+        ${table} \
+      ${(joins.length) ? `LEFT JOIN ${joins.join(' LEFT JOIN ')}` : ''} \
+      ${(condition.length) ? `WHERE ${condition.join(' AND ')}` : ''} \
+      ${(group.length) ? `GROUP BY ${group.join(', ')}` : ''} \
+      ${(order.length) ? `ORDER BY ${order.join(', ')}` : ''} \
+      ${limit} \
+      `;
+    let queryResult = await sql.query(query, { type: QueryTypes.SELECT });
+    if (!brief) {
+      const courseworkReturnPromise = queryResult.map((coursework) => this.formatCourseworkReturn(coursework));
+      queryResult = await Promise.all(courseworkReturnPromise);
+    }
+    return queryResult;
   },
 
   async getCoursework(data) {
@@ -62,7 +172,7 @@ const courseworks = {
     const { title, module, description = null, privacy = false, expectedDate } = data;
 
     if (expectedDate < currentDate) {
-      throw { _notification: ['The expected date of the coursework cannot be earlier than the current date'] };
+      throw { expectedDate: ['The expected date of the coursework cannot be earlier than the current date'] };
     }
 
     const owner = user;
@@ -197,13 +307,14 @@ const courseworks = {
   },
 
   async getParticipants(coursework, participant) {
+    const condition = [];
     // Default condition
-    let condition = `coursework = ${coursework}`;
+    condition.push(`coursework = ${coursework}`);
     if (participant) {
       // If a specific participant is requested
-      condition = `${condition} AND member = ${participant}`;
+      condition.push(`member = ${participant}`);
     }
-    const queryResult = await sql.query(`SELECT id, username, team FROM tbl_coursework_members LEFT JOIN tbl_users ON member = id WHERE ${condition}`, { type: QueryTypes.SELECT });
+    const queryResult = await sql.query(`SELECT id, username, team FROM tbl_coursework_members LEFT JOIN tbl_users ON member = id WHERE ${condition.join(' AND ')}`, { type: QueryTypes.SELECT });
     return queryResult;
   },
 
@@ -224,7 +335,7 @@ const courseworks = {
 
     const toInsertMember = { coursework, member: userFound.id, team };
     await CourseworkMembers.create(toInsertMember);
-    return this.getParticipants(coursework, userFound.id);
+    return { id: userFound.id, username: userFound.username, team };
   },
 
   async editParticipant(data) {
