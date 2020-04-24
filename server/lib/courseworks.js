@@ -1,13 +1,17 @@
 const _ = require('lodash');
+const jwt = require('jsonwebtoken');
 const { QueryTypes } = require('sequelize');
 const { sql } = require('./db/config');
 
 const validator = require('./validators/courseworks.validator.js');
 const users = require('./users');
 const milestones = require('./milestones');
-const util = require('./general');
 
 const { Courseworks, CourseworkMembers } = require('./db/models.js').models;
+
+function generateSharedKey(date) {
+  return (date) ? jwt.sign('correct', `${new Date(date).toISOString()}`) : null;
+}
 
 const courseworks = {
 
@@ -46,7 +50,6 @@ const courseworks = {
       const toSql = (completed === true) ? 'IS NOT NULL' : 'IS NULL';
       condition.push(`cw.completedDate ${toSql}`);
     }
-    condition.push(`(cw.owner = ${user} OR (cw.owner <> ${user} AND cw.privacy IS FALSE))`);
     joins.push('tbl_users AS cwu ON cwu.id = cw.owner');
     const milestoneCount = [
       'coursework',
@@ -63,6 +66,8 @@ const courseworks = {
     joins.push(`(SELECT ${memberCount.join(', ')} FROM tbl_coursework_members GROUP BY coursework) AS cwmc ON cwmc.coursework = cw.id`);
     group.push('cw.id');
     order.push('cw.createdAt DESC');
+    condition.push(`(cw.owner = ${user} OR (cw.owner <> ${user} AND cw.privacy IS FALSE))`);
+    condition.push(`(cw.deleted IS NULL OR cw.deleted > '${new Date().toISOString()}')`);
     const query = `
       SELECT \
         ${select.join(', ')} \
@@ -77,9 +82,9 @@ const courseworks = {
     const queryResult = await sql.query(query, {
       replacements: { owner, title: `%${title}%`, module: `%${module}%`, description: `%${description}%` },
       type: QueryTypes.SELECT,
-      // logging: (log) => console.log(log.replace(/[ ]+/g, ' ')),
     });
-    return queryResult;
+    const courseworkReturnPromise = queryResult.map((coursework) => this.formatCourseworkReturn(coursework, true));
+    return Promise.all(courseworkReturnPromise);
   },
 
   async getAllCourseworks(isLogged, data) {
@@ -130,6 +135,7 @@ const courseworks = {
     if (publicOnly) {
       condition.push('cw.privacy IS FALSE');
     }
+    condition.push(`(cw.deleted IS NULL OR cw.deleted > '${new Date().toISOString()}')`);
     const query = `
       SELECT \
         ${select.join(', ')} \
@@ -141,12 +147,9 @@ const courseworks = {
       ${(order.length) ? `ORDER BY ${order.join(', ')}` : ''} \
       ${limit} \
       `;
-    let queryResult = await sql.query(query, { type: QueryTypes.SELECT });
-    if (!brief) {
-      const courseworkReturnPromise = queryResult.map((coursework) => this.formatCourseworkReturn(coursework));
-      queryResult = await Promise.all(courseworkReturnPromise);
-    }
-    return queryResult;
+    const queryResult = await sql.query(query, { type: QueryTypes.SELECT });
+    const courseworkReturnPromise = queryResult.map((coursework) => this.formatCourseworkReturn(coursework, brief));
+    return Promise.all(courseworkReturnPromise);
   },
 
   async getCoursework(data) {
@@ -166,8 +169,8 @@ const courseworks = {
       throw error;
     }
 
-    const currentDate = util.datetime.toUTC(new Date(Date.now()));
-    data.expectedDate = util.datetime.toUTC(new Date(data.expectedDate));
+    const currentDate = new Date(Date.now()).toISOString();
+    data.expectedDate = new Date(data.expectedDate).toISOString();
 
     const { title, module, description = null, privacy = false, expectedDate } = data;
 
@@ -184,7 +187,7 @@ const courseworks = {
     const toInsertMember = { coursework: created.id, member: owner, team: 'Manager' };
     await CourseworkMembers.create(toInsertMember);
 
-    return this.formatCourseworkReturn(created.dataValues, []);
+    return this.formatCourseworkReturn(created.dataValues);
   },
 
   async editCoursework(data) {
@@ -193,8 +196,8 @@ const courseworks = {
       throw error;
     }
 
-    const currentDate = util.datetime.toUTC(new Date(Date.now()));
-    data.expectedDate = util.datetime.toUTC(new Date(data.expectedDate));
+    const currentDate = new Date(Date.now()).toISOString();
+    data.expectedDate = new Date(data.expectedDate).toISOString();
 
     const { coursework = 0, title, module, description = null, expectedDate } = data;
 
@@ -240,7 +243,7 @@ const courseworks = {
       throw { title: ['You must enter the same title of the coursework you want to delete'] };
     }
 
-    const deleted = util.datetime.toUTC(new Date(Date.now()));
+    const deleted = new Date(Date.now()).toISOString();
     courseworkData.deleted = deleted;
     await courseworkData.save();
     return { deleted };
@@ -278,7 +281,7 @@ const courseworks = {
       throw { _notification: `The coursework is already marked as ${alreadyCompleted ? 'complete' : 'incomplete'}` };
     }
 
-    const completedDate = (completed) ? util.datetime.toUTC(new Date(Date.now())) : null;
+    const completedDate = (completed) ? new Date(Date.now()).toISOString() : null;
 
     courseworkData.completedDate = completedDate;
     await courseworkData.save();
@@ -298,12 +301,12 @@ const courseworks = {
       throw { _notification: 'The coursework sharing is already disabled' };
     }
 
-    const shared = (change) ? util.datetime.toUTC(new Date(Date.now())) : null;
+    const shared = (change) ? new Date(Date.now()).toISOString() : null;
 
     courseworkData.shared = shared;
     await courseworkData.save();
 
-    return { shared, token: util.token.generateSharedKey(shared) };
+    return { shared, token: generateSharedKey(shared) };
   },
 
   async getParticipants(coursework, participant) {
@@ -390,15 +393,21 @@ const courseworks = {
     return true;
   },
 
-  async formatCourseworkReturn(coursework) {
-    const participantsResult = await this.getParticipants(coursework.id);
-    const milestonesResult = await milestones.getAllMilestones({ coursework: coursework.id });
-    return {
+  async formatCourseworkReturn(coursework, brief) {
+    let toReturn = {
       ...coursework,
-      participants: participantsResult,
-      milestones: milestonesResult,
-      sharedToken: util.token.generateSharedKey(coursework.shared),
+      sharedToken: generateSharedKey(coursework.shared),
     };
+    if (!brief) {
+      const participantsResult = await this.getParticipants(coursework.id);
+      const milestonesResult = await milestones.getAllMilestones({ coursework: coursework.id });
+      toReturn = {
+        ...toReturn,
+        participants: participantsResult,
+        milestones: milestonesResult,
+      };
+    }
+    return toReturn;
   },
 };
 

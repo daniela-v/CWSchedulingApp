@@ -1,8 +1,8 @@
 <template>
-  <div :id="getPanelName" class="sidepanel-component-vue">
+  <div v-if="data.length" :id="getPanelName" class="sidepanel-component-vue">
     <Button name="sidepanel-title" :icon="getArrowDirection" type="inversed expand" :click="expand">{{ title }}</Button>
     <transition @enter="expandEnter" @afterEnter="expandAfterEnter" @leave="expandLeave" appear>
-      <div v-show="isExpanded" class="sidepanel-content">
+      <div v-if="isExpanded" class="sidepanel-content">
         <component :is="component" v-for="(item, id) in data" :key="id" :data="item" />
       </div>
     </transition>
@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       isExpanded: this.expanded,
+      isLoading: true,
     };
   },
   computed: {
@@ -61,6 +62,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 .sidepanel-component-vue {
   align-self: stretch;
   display: flex;

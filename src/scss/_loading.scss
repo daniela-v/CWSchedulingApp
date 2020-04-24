@@ -1,0 +1,38 @@
+@import '~@/scss/_colors';
+
+#loading-nest {
+  position: relative;
+  display: block;
+  height: 50px;
+  width: 50px;
+  border: 2px solid transparent;
+  border-top-color: $color-cyan;
+  border-radius: 50%;
+  animation: nestSpin 1.5s ease infinite;
+}
+
+#loading-nest:before {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  bottom: 7px;
+  left: 7px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  border-top-color: $color-cyan;
+  animation: nestSpin 3s linear infinite;
+}
+
+#loading-nest:after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  border-top-color: $color-cyan;
+  animation: nestSpin 1.5s ease infinite;
+}

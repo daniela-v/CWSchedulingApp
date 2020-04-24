@@ -380,7 +380,6 @@ export default {
 
 <style lang="scss">
 @import '@/scss/_mixins';
-@import '@/scss/_animations';
 
 .auth-window {
   position: absolute;
@@ -552,9 +551,6 @@ export default {
               box-shadow: 0 0 3px lighten($color-cyan, 10%) inset;
               text-shadow: 0 0 2px $color-cyan;
             }
-            background: none;
-            outline: none;
-            overflow: hidden;
           }
           &.on-step:not(#input-account) {
             .label {
