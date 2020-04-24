@@ -51,11 +51,20 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-notice:before {
-  content: "\e91a";
+.icon-search:before {
+  content: "\e91e";
+}
+.icon-eye:before {
+  content: "\e91d";
+}
+.icon-eye-blocked:before {
+  content: "\e91c";
 }
 .icon-warning:before {
   content: "\e91b";
+}
+.icon-notice:before {
+  content: "\e91a";
 }
 .icon-shield2:before {
   content: "\e919";
@@ -74,6 +83,9 @@ export default {
 }
 .icon-access_time:before {
   content: "\e914";
+}
+.icon-share:before {
+  content: "\e913";
 }
 .icon-repeat:before {
   content: "\e912";

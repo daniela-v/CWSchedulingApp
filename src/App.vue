@@ -1,17 +1,19 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Search />
+    <Header />
     <router-view class="page" />
-    <Sidebar></Sidebar>
-    <Overlay></Overlay>
-    <Notification></Notification>
-    <Tooltip></Tooltip>
+    <Sidebar />
+    <Overlay />
+    <Notification />
+    <Tooltip />
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 
+import Search from './modules/Search.module.vue';
 import Header from './modules/Header.module.vue';
 import Sidebar from './modules/Sidebar.module.vue';
 import Overlay from './modules/Overlay.module.vue';
@@ -21,7 +23,7 @@ import Tooltip from './modules/Tooltip.module.vue';
 import Auth from './components/windows/Auth.window.vue';
 
 export default {
-  components: { Header, Overlay, Notification, Tooltip, Sidebar },
+  components: { Search, Header, Overlay, Notification, Tooltip, Sidebar },
   async created() {
     await this.trySession();
     await this.$nextTick();
@@ -41,11 +43,20 @@ export default {
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700,900&display=swap');
+@import './scss/_animations';
+@import './scss/_loading';
 @import './scss/_normalize';
 @import './scss/_mixins';
 
 html, body, #app {
   min-height: 100vh;
+}
+
+input {
+  border: none;
+  background: none;
+  outline: none;
+  overflow: hidden;
 }
 
 a {

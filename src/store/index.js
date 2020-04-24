@@ -40,7 +40,7 @@ export default new Vuex.Store({
     deauthenticate(state) {
       state.user = null;
     },
-    pushNotification(state, { text, icon, type, timeout }) {
+    pushNotification(state, { text, icon = 'check', type, timeout }) {
       const id = _.uniqueId('notification');
       state.notifications.push({ id, icon, text, type });
       setTimeout(this.commit, (timeout || 5) * 1000, 'hideNotification');

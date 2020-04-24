@@ -5,6 +5,8 @@ const rows = [
   { coursework: 1, member: 4, team: 'Backend' },
   { coursework: 1, member: 5, team: 'Frontend' },
   { coursework: 2, member: 6, team: 'Frontend' },
+  { coursework: 4, member: 1, team: 'Manager' },
+  { coursework: 5, member: 1, team: 'Manager' },
 ];
 
 async function insert(model) {

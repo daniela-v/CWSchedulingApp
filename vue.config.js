@@ -6,6 +6,16 @@ module.exports = {
         ws: true,
         changeOrigin: true,
       },
+      '/milestones': {
+        target: 'http://localhost:5000',
+        ws: true,
+        changeOrigin: true,
+      },
+      '/courseworks': {
+        target: 'http://localhost:5000',
+        ws: true,
+        changeOrigin: true,
+      },
     },
   },
   css: {

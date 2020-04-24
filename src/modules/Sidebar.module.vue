@@ -1,20 +1,32 @@
 <template>
   <transition name="css-animation" appear>
     <div v-show="isVisible" class="sidebar-module-vue">
-      <div class="sidebar" :class="[ isLogged ]">
-        <template v-if="getUser">
-          <div class="profile">
-            <div class="avatar">
-              <div class="image"></div>
-            </div>
-            <div class="data">
-              <span class="username">{{ getUser.username }}</span>
-              <span class="email">{{ getUser.email }}</span>
-            </div>
+      <div v-if="getUser" class="sidebar">
+        <div class="profile">
+          <div class="avatar">
+            <div class="image"></div>
           </div>
-          <Button name="switch-account" icon="repeat" type="dialog" :click="switchAccount">Switch account</Button>
-          <SidebarPanel name="coursework" title="IN PROGRESS" :component="SidebarCoursework" :data="courseworkInProgress" :expanded="true" />
-          <SidebarPanel name="coursework" title="COMPLETED" :component="SidebarCoursework" :data="courseworkCompleted" />
+          <div class="data">
+            <span class="username">{{ getUser.username }}</span>
+            <span class="email">{{ getUser.email }}</span>
+          </div>
+        </div>
+        <Button name="switch-account" icon="repeat" type="dialog" :click="switchAccount">Switch account</Button>
+        <template v-if="isLoading">
+          <div class="sidebar-loading">
+            <div id="loading-nest"></div>
+            <span class="loading-text">Loading</span>
+          </div>
+        </template>
+        <template v-else>
+          <template v-if="courseworks.length">
+            <SidebarPanel name="coursework" title="IN PROGRESS" :component="SidebarCoursework" :data="courseworkInProgress" :expanded="true" />
+            <SidebarPanel name="coursework" title="COMPLETED" :component="SidebarCoursework" :data="courseworkCompleted" />
+          </template>
+          <div v-else>
+            No courseworks
+            <Button name="create-coursework" icon="repeat" type="dialog" :click="switchAccount">Create a coursework</Button>
+          </div>
         </template>
       </div>
     </div>
@@ -23,6 +35,7 @@
 
 <script>
 import _ from 'lodash';
+import axios from 'axios';
 
 import Auth from '../components/windows/Auth.window.vue';
 import Button from '../components/Button.component.vue';
@@ -34,104 +47,27 @@ export default {
   data() {
     return {
       SidebarCoursework,
-      dummyCourseworks: [
-        {
-          id: 0,
-          owner: {
-            id: 5,
-            username: 'cora913',
-          },
-          title: 'Web Development Project 2',
-          module: 'Computing',
-          expected_date: Date.now() + (15 * 1000),
-        },
-        {
-          id: 1,
-          owner: {
-            id: 5,
-            username: 'cora913',
-          },
-          title: 'Integrated Project 3',
-          module: 'Computing',
-          expected_date: Date.now() - (53000 * 3 * 1000),
-          deleted: Date.now() + (20 * 1000),
-        },
-        {
-          id: 2,
-          owner: {
-            id: 6,
-            username: 'cora914',
-          },
-          title: 'Random Project',
-          module: 'Physics',
-          expected_date: Date.now() + (86400 * 2 * 1000),
-          completed_date: Date.now() - (86400 * 10 * 1000),
-        },
-        {
-          id: 3,
-          owner: {
-            id: 6,
-            username: 'cora914',
-          },
-          title: 'Random Project',
-          module: 'Physics',
-          expected_date: Date.now() + (86400 * 2 * 1000),
-          completed_date: Date.now() - (86400 * 1000),
-        },
-        {
-          id: 4,
-          owner: {
-            id: 5,
-            username: 'cora914',
-          },
-          title: 'Random Project',
-          module: 'Physics',
-          expected_date: Date.now() + (86400 * 2 * 1000),
-        },
-        {
-          id: 5,
-          owner: {
-            id: 5,
-            username: 'cora913',
-          },
-          title: 'Random Project',
-          module: 'Physics',
-          expected_date: Date.now() - (86400 * 2 * 1000),
-          completed_date: Date.now() + (86400 * 1000),
-        },
-        {
-          id: 6,
-          owner: {
-            id: 6,
-            username: 'cora914',
-          },
-          title: 'Web Development Project 100',
-          module: 'Computing',
-          expected_date: Date.now() + (86410 * 1000),
-        },
-      ],
+      courseworks: [],
+      isLoading: false,
     };
   },
   computed: {
     getUser() {
       return this.$store.getters.getUser;
     },
-    isLogged() {
-      return (this.getUser) ? 'logged' : 'guest';
-    },
     isVisible() {
       return this.$store.getters.getSidebarVisibility;
     },
     courseworkInProgress() {
-      return _.chain(this.dummyCourseworks)
-        .reject((c) => c.completed_date)
-        .orderBy('expected_date', 'asc')
+      return _.chain(this.courseworks)
+        .reject((c) => c.completedDate)
+        .orderBy('expectedDate', 'asc')
         .value();
     },
     courseworkCompleted() {
-      return _.chain(this.dummyCourseworks)
-        .filter((c) => c.completed_date)
-        .orderBy('completed_date', 'desc')
+      return _.chain(this.courseworks)
+        .filter((c) => c.completedDate)
+        .orderBy('completedDate', 'desc')
         .value();
     },
   },
@@ -140,6 +76,20 @@ export default {
       this.$store.commit('setSidebarVisibility', false);
       this.$store.dispatch('deauthenticate');
       this.$store.commit('openWindow', { name: 'Login', component: Auth, type: 'fullscreen' });
+    },
+    async loadCourseworks() {
+      this.isLoading = true;
+      setTimeout(async () => {
+        const courseworks = await axios.get('/courseworks/list', { params: { brief: true } });
+        this.courseworks = courseworks.data.result;
+        this.isLoading = false;
+      }, 1000);
+    },
+  },
+  watch: {
+    async isVisible(to) {
+      if (!to || this.isLoading) return;
+      await this.loadCourseworks();
     },
   },
 };
@@ -157,6 +107,19 @@ export default {
   box-shadow: -4px -4px 20px rgba(#000, .5);
   @include transition('width, opacity', .4s);
 
+  .sidebar-loading {
+    align-self: flex-start;
+    min-width: 350px;
+    display: grid;
+    grid-row-gap: 10px;
+    align-content: center;
+    justify-content: center;
+    margin: 40px 0;
+    .loading-text {
+      animation: fadeInOut 2s ease infinite;
+    }
+  }
+
   .sidebar {
     display: flex;
     flex-direction: column;
@@ -164,10 +127,7 @@ export default {
     min-width: 350px;
     transition: opacity .4s ease .1s;
 
-    .btn-switch-account {
-      margin: 20px 0;
-    }
-    &.logged .profile {
+    .profile {
       align-self: stretch;
       display: grid;
       grid-auto-flow: row;
@@ -193,12 +153,12 @@ export default {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: #fff;
-        .username {
-          font-weight: 700;
-          font-size: 18px;
-        }
+        font-weight: 700;
+        color: lighten($color-cyan, 30%);
       }
+    }
+    .btn-switch-account {
+      margin: 20px 0;
     }
   }
 }

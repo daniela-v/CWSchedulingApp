@@ -19,6 +19,7 @@
       </div>
     </router-link>
     <section class="navigation">
+      <Button name="go-to-coursework" type="header" :href="{ name: 'coursework' }">Courseworks</Button>
     </section>
     <section class="alerts">
       <Icon name="warning"></Icon>

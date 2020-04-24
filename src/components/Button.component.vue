@@ -1,6 +1,6 @@
 <template>
   <div class="button-vue">
-    <router-link class="button" :class="[ getName, getStyle, isActive ]" v-if="href" :to="href">
+    <router-link v-if="href" :to="href" class="button" :class="[ getName, getStyle, isActive ]">
       <Icon v-if="icon" :name="icon"></Icon>
       <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
     </router-link>
@@ -46,6 +46,7 @@ export default {
 .button-vue {
   position: relative;
   .button {
+    position: relative;
     display: flex;
     align-items: center;
     color: $color-cyan;
@@ -115,6 +116,33 @@ export default {
       &:hover:not(.disabled) {
         background-color: darken(#7289da, 35%);
         border-color: #7289da;
+      }
+    }
+  }
+
+  .search-style {
+    padding: 8px 20px;
+    border-radius: 0 0 6px 6px;
+    background: linear-gradient(to bottom, darken($color-cyan, 10%), darken($color-cyan, 20%));
+    background-blend-mode: screen;
+    color: lighten($color-cyan, 40%);
+    box-shadow: 0 1px 0 rgba(black, .8);
+    @include transition('background-color, border', .2s, ease);
+    z-index: 1;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 1px 0 0 darken($color-cyan, 45%), -1px 0 0 darken($color-cyan, 45%);
+    }
+    &:not(.disabled) {
+      &.active, &:hover {
+        background-color: darken($teal, 35%);
+        border-color: $color-cyan;
       }
     }
   }
