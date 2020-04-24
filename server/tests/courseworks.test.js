@@ -56,7 +56,7 @@ describe('Coursework operations', () => {
         ...create,
         expectedDate: new Date(Date.now() - (86400 * 7 * 1000)),
       });
-    expect(res.body.error._notification).toEqual(['The expected date of the coursework cannot be earlier than the current date']);
+    expect(res.body.error.expectedDate).toEqual(['The expected date of the coursework cannot be earlier than the current date']);
   });
 
   it('creates a new coursework', async () => {
