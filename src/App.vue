@@ -2,7 +2,9 @@
   <div id="app">
     <Search />
     <Header />
-    <router-view class="page" />
+    <transition name="fade" mode="out-in">
+      <router-view class="page" />
+    </transition>
     <Sidebar />
     <Overlay />
     <Notification />
@@ -66,7 +68,7 @@ a {
   transition: color .15s linear, text-shadow .15s linear, background-color .15s linear;
   cursor: pointer;
 
-  &:hover:not(.icon):not(.button):not(.logo-wrapper):not(.coursework) {
+  &:hover:not(.icon):not(.button):not(.logo-wrapper):not(.coursework):not(.coursework-component-vue) {
     color: lighten($color-cyan, 20%);
     text-shadow: 0 0 1px $color-cyan !important;
   }
@@ -91,6 +93,7 @@ a {
   overflow: hidden;
   .page {
     grid-area: view;
+    transition: opacity .2s ease;
   }
   &:before {
     content: "";
@@ -113,4 +116,6 @@ a {
     text-shadow: none;
   }
 }
+
+.fade-enter, .fade-leave-active { opacity: 0; }
 </style>

@@ -42,7 +42,7 @@ module.exports = {
       }
       // Attempting to sign the access jwt
       try {
-        jwt.verify(sharedToken, `${new Date(coursework.shared)}`);
+        jwt.verify(sharedToken, `${new Date(coursework.shared).toISOString()}`);
       } catch (e) {
         sharedToken = null;
       }

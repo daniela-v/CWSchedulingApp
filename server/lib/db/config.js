@@ -50,7 +50,7 @@ const models = require('./models.js');
 async function init() {
   // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous tables)
   console.log(`\u001b[36m    Using \`cwscheduleapp_${process.env.SQL}\` database\n\u001b[0m`);
-  await models.init(sql, true);
+  await models.init(sql, false);
   console.log('\u001b[32m✓   Database config finished loading\n\u001b[0m');
 }
 

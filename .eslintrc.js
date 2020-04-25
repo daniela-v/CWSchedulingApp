@@ -17,5 +17,6 @@ module.exports = {
     'no-plusplus': 'off',
     'new-cap': 'off',
     'no-param-reassign': 'off',
+    'no-underscore-dangle': 'off',
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'coursework', params: { coursework: coursework.id } }" v-if="isDeleted" class="coursework">
+  <router-link :to="{ name: 'courseworkView', params: { coursework: coursework.id } }" v-if="isDeleted" class="coursework">
     <div class="coursework-title">
       <div class="name">{{ coursework.title }}</div>
       <div class="module">{{ coursework.module }}</div>
@@ -105,7 +105,7 @@ export default {
     },
     async getSharedLink(ev) {
       ev.stopImmediatePropagation();
-      const path = this.$router.resolve({ name: 'coursework', params: { coursework: this.coursework.id } }).href;
+      const path = this.$router.resolve({ name: 'courseworkView', params: { coursework: this.coursework.id } }).href;
       await navigator.clipboard.writeText(`${window.location.origin}${path}?share=${this.coursework.sharedToken}`);
       this.$store.commit('pushNotification', { icon: 'share', text: 'The share link has been copied to your clipboard' });
     },
@@ -130,7 +130,7 @@ export default {
     height: 80px;
     grid-column-gap: 10px;
     padding: 10px;
-    background-color: rgba(#000, .2);
+    background-color: rgba(darken($color-cyan-bg, 4%), .8);
     margin: 4px 0;
     overflow: hidden;
 

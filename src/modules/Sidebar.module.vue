@@ -35,7 +35,6 @@
 
 <script>
 import _ from 'lodash';
-import axios from 'axios';
 
 import Auth from '../components/windows/Auth.window.vue';
 import Button from '../components/Button.component.vue';
@@ -80,10 +79,10 @@ export default {
     async loadCourseworks() {
       this.isLoading = true;
       setTimeout(async () => {
-        const courseworks = await axios.get('/courseworks/list', { params: { brief: true } });
+        const courseworks = await this.$store.dispatch('getAllCourseworks', { section: 'my', brief: true });
         this.courseworks = courseworks.data.result;
         this.isLoading = false;
-      }, 1000);
+      }, 4000);
     },
   },
   watch: {
@@ -116,6 +115,7 @@ export default {
     justify-content: center;
     margin: 40px 0;
     .loading-text {
+      font-weight: 600;
       animation: fadeInOut 2s ease infinite;
     }
   }

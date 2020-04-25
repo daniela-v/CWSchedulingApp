@@ -11,8 +11,9 @@ router.get('/list', async (req, res) => {
   let error;
   let result;
   try {
-    result = await courseworks.getAllCourseworks(req.session.user, req.query);
+    result = await courseworks.getCourseworks({ user: req.session.user }, req.query);
   } catch (e) {
+    console.log(e);
     error = e;
   }
   res.json({ result, error });
@@ -28,21 +29,7 @@ router.get('/get', async (req, res) => {
     await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework, req.query.shared);
     result = await courseworks.getCoursework(req.query);
   } catch (e) {
-    error = e;
-  }
-  res.json({ result, error });
-});
-
-
-/**
- * GET /courseworks/search
- */
-router.get('/search', async (req, res) => {
-  let error;
-  let result;
-  try {
-    result = await courseworks.searchCourseworks(req.session.user, req.query);
-  } catch (e) {
+    console.log(e);
     error = e;
   }
   res.json({ result, error });

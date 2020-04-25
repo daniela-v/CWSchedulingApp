@@ -11,6 +11,7 @@ function hide() {
 
 const tooltipDirective = {
   bind(el, binding) {
+    if (!binding.value.text) return;
     el.addEventListener('mouseenter', show.bind(el, binding));
     el.addEventListener('mouseleave', hide);
   },

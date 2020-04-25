@@ -5,7 +5,7 @@
       <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
     </router-link>
     <div v-else class="button" :class="[ getName, getStyle, isDisabled, isActive ]" @click.capture="OnButtonClick">
-      <Icon v-if="icon" :name="icon"></Icon>
+      <Icon v-if="icon" :name="isPending"></Icon>
       <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
     </div>
   </div>
@@ -15,7 +15,7 @@
 import Icon from './Icon.component.vue';
 
 export default {
-  props: ['name', 'href', 'type', 'icon', 'text', 'click', 'disabled', 'active'],
+  props: ['name', 'href', 'type', 'icon', 'text', 'click', 'disabled', 'active', 'pending', 'condition'],
   components: { Icon },
   computed: {
     getName() {
@@ -29,6 +29,9 @@ export default {
     },
     isDisabled() {
       return this.disabled ? 'disabled' : null;
+    },
+    isPending() {
+      return (this.pending ? 'spinner-quad' : this.icon);
     },
   },
   methods: {
@@ -142,6 +145,38 @@ export default {
     &:not(.disabled) {
       &.active, &:hover {
         background-color: darken($teal, 35%);
+        border-color: $color-cyan;
+      }
+    }
+  }
+
+  .tab-style {
+    padding: 8px 20px;
+    border-radius: 6px 6px 0 0;
+    background: linear-gradient(to bottom, darken($color-cyan, 10%), darken($color-cyan, 20%));
+    background-blend-mode: screen;
+    color: lighten($color-cyan, 40%);
+    box-shadow: 0 -1px 0 rgba(black, .8);
+    @include transition('background-color, border', .2s, ease);
+    z-index: 1;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-radius: 6px 6px 0 0;
+      box-shadow: -1px 0 0 darken($color-cyan, 45%), 1px 0 0 darken($color-cyan, 45%);
+    }
+    &.active {
+      &:before {
+        bottom: 8px;
+      }
+    }
+    &:not(.disabled) {
+      &.active, &:hover {
+        background-color: darken($teal, 30%);
         border-color: $color-cyan;
       }
     }
