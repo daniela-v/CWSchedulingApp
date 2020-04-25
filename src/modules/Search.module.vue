@@ -1,11 +1,11 @@
 <template>
   <div class="search-module-vue" :class="getSearchVisibility" @click.self="toggleSearch">
     <div class="search-box">
-      <div class="filter">Filter: By Author</div>
-      <input />
-      <Button name="run-search" icon="search" type="plain">Search</Button>
+      <div class="filter">Filter: By Title</div>
+      <input id="search-input" type="text" :name="input.search.title" placeholder="type in the title of the coursework" v-model="input.search.model" />
+      <Button v-bind="control.submit" :click="runSearch"></Button>
     </div>
-    <Button name="show-search" type="search" :click="toggleSearch" :active="searchVisible">Search for a coursework</Button>
+    <Button name="toggle-search" icon="menu" type="search" :click="toggleSearch" :active="searchVisible">Search for a coursework</Button>
   </div>
 </template>
 
@@ -16,6 +16,12 @@ export default {
   components: { Button },
   data() {
     return {
+      input: {
+        search: { name: 'title' },
+      },
+      control: {
+        submit: { name: 'run-search', icon: 'search', type: 'plain', text: 'Search', pending: false },
+      },
       searchVisible: false,
     };
   },
@@ -27,6 +33,14 @@ export default {
   methods: {
     toggleSearch() {
       this.$set(this, 'searchVisible', !this.searchVisible);
+    },
+    async runSearch() {
+      if (this.control.submit.pending) return;
+      this.$set(this.control.submit, 'pending', true);
+      await this.$store.dispatch('getAllCourseworks', { section: 'search', search: { title: this.input.search.model } });
+      this.$set(this.control.submit, 'pending', false);
+      this.$router.push({ name: 'coursework', query: { tab: 'search' } }, () => {});
+      this.toggleSearch();
     },
   },
 };
@@ -49,7 +63,7 @@ export default {
     background-color: rgba($color-cyan-d2, .5);
     transition: background-color .2s ease, opacity .2s ease;
     .search-box {
-      height: 24px;
+      height: 30px;
       transition: height .2s ease;
       > * {
         opacity: 1;

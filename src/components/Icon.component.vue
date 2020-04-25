@@ -51,6 +51,28 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-copy:before {
+  content: "\e924";
+}
+.icon-document:before {
+  content: "\e923";
+}
+.icon-module:before {
+  content: "\e922";
+}
+.icon-progress:before {
+  content: "\e921";
+}
+.icon-spinner-duo:before {
+  content: "\e920";
+  animation: nestSpin 1s linear infinite;
+  text-shadow: 0 0 2px #000;
+}
+.icon-spinner-quad:before {
+  content: "\e91f";
+  animation: nestSpin 1s linear infinite;
+  text-shadow: 0 0 2px #000;
+}
 .icon-search:before {
   content: "\e91e";
 }

@@ -12,6 +12,24 @@ export default new Vuex.Store({
     windows: [],
     notifications: [],
     tooltip: null,
+    coursework: {
+      search: [],
+      searchFilter: null,
+      recent: [],
+      profile: [],
+      my: [],
+    },
+  },
+  getters: {
+    getSidebarVisibility: (state) => state.sidebar,
+    getWindows: (state) => state.windows,
+    getWindowsNum: (state) => state.windows.length,
+    getNotifications: (state) => state.notifications,
+    getTooltip: (state) => state.tooltip,
+    getUser: (state) => state.user,
+    //
+    getSearchFilter: (state) => state.coursework.searchFilter,
+    getAllCourseworks: (state) => (section) => state.coursework[section],
   },
   mutations: {
     openWindow(state, { name, component, props, type, dismissable }) { // eslint-disable-line
@@ -29,16 +47,16 @@ export default new Vuex.Store({
       state.windows.splice(id || 0, 1);
     },
     showTooltip(state, tooltip) {
-      state.tooltip = tooltip;
+      Vue.set(state, 'tooltip', tooltip);
     },
     hideTooltip(state) {
-      state.tooltip = null;
+      Vue.set(state, 'tooltip', null);
     },
     authenticate(state, user) {
       Vue.set(state, 'user', user);
     },
     deauthenticate(state) {
-      state.user = null;
+      Vue.set(state, 'user', null);
     },
     pushNotification(state, { text, icon = 'check', type, timeout }) {
       const id = _.uniqueId('notification');
@@ -51,30 +69,48 @@ export default new Vuex.Store({
     setSidebarVisibility(state, visibility) {
       Vue.set(state, 'sidebar', visibility);
     },
-  },
-  getters: {
-    getSidebarVisibility: (state) => state.sidebar,
-    getWindows(state) {
-      return state.windows;
+    //
+    updateSearchFilter(state, filter) {
+      Vue.set(state.coursework, 'searchFilter', filter);
     },
-    getWindowsNum(state) {
-      return state.windows.length;
+    clearAllCourseworks(state, section) {
+      Vue.set(state.coursework, section, []);
     },
-    getNotifications(state) {
-      return state.notifications;
-    },
-    getTooltip(state) {
-      return state.tooltip;
-    },
-    getUser(state) {
-      return state.user;
+    setAllCourseworks(state, { section, results }) {
+      Vue.set(state.coursework, section, results);
     },
   },
   actions: {
-    async deauthenticate(context) {
+    async deauthenticate({ commit }) {
       await axios.get('/users/deauthenticate');
-      context.commit('deauthenticate');
-      context.commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
+      commit('deauthenticate');
+      commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
+    },
+    async getAllCourseworks({ commit }, { section = 'recent', participant, brief, search }) {
+      let results;
+      if (section === 'my') {
+        // Load my own courseworks
+        results = await axios.get('/courseworks/list', { params: { brief } });
+        if (brief) {
+          // If loading for sidebar, don't store in vuex
+          return results;
+        }
+      } else if (section === 'profile') {
+        // Load courseworks for a specific user profile
+        results = await axios.get('/courseworks/list', { params: { participant } });
+      } else {
+        // Load all searched courseworks
+        if (search) {
+          commit('updateSearchFilter', search);
+        }
+        results = await axios.get('/courseworks/list', { params: { ...search, search: true } });
+      }
+      console.log(results);
+      if (results.data.error) {
+        commit('pushNotification', { icon: 'warning', text: results.data.error._system });
+      }
+      commit('setAllCourseworks', { section, results: results.data.result });
+      return results;
     },
   },
   modules: {},

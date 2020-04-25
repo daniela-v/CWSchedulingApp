@@ -1,4 +1,4 @@
 @import '~@/scss/_colors';
 @keyframes fxerror { 0% { opacity: 0; } 50% { opacity: 1; color: lighten($redish, 10%); } 100% { color: $redish; } }
 @keyframes fadeOutIn { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-@keyframes nestSpin { from { -webkit-transform: rotate(0deg); transform: rotate(0deg); } to { -webkit-transform: rotate(359deg); transform: rotate(359deg); } }
+@keyframes nestSpin { from { transform: rotate(0deg); } to { transform: rotate(359deg); } }

@@ -1,6 +1,6 @@
 <template>
   <div class="coursework-route">
-
+    <router-view />
   </div>
 </template>
 
