@@ -124,7 +124,7 @@ export default {
             description: 'Sign Up',
           },
           title: 'Sign Up',
-          action: '/users/register',
+          action: '/user/register',
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
@@ -147,7 +147,7 @@ export default {
             description: 'Sign In',
           },
           title: 'Sign In',
-          action: '/users/authenticate',
+          action: '/user/authenticate',
           input: {
             username: { icon: 'icon-person', type: 'text', placeholder: 'username' },
             password: { icon: 'icon-key', type: 'password', placeholder: 'password' },
@@ -169,7 +169,7 @@ export default {
             description: 'Recover',
           },
           title: 'Recover',
-          action: '/users/recover',
+          action: '/user/recover',
           input: {
             account: { icon: 'icon-person', type: 'text', placeholder: 'username or email', step: 0 },
             code: { icon: 'icon-code', type: 'text', placeholder: 'code', step: 1 },

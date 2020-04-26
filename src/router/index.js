@@ -19,33 +19,38 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: '/coursework',
+    path: '/courseworks',
     name: 'coursework',
     component: () => import('../views/coursework/Coursework.vue'),
   },
   {
-    path: '/coursework/:coursework?',
+    path: '/courseworks/:coursework?',
     name: 'courseworkView',
     component: () => import('../views/coursework/CourseworkView.vue'),
     children: [
       {
-        path: '/edit',
+        path: 'edit',
         name: 'courseworkEdit',
         component: () => import('../views/coursework/CourseworkEdit.vue'),
       },
       {
-        path: '/milestone/:milestone?',
+        path: 'milestones/:milestone?',
         name: 'milestoneView',
         component: () => import('../views/coursework/milestone/MilestoneView.vue'),
         children: [
           {
-            path: '/edit',
+            path: 'edit',
             name: 'milestoneEdit',
             component: () => import('../views/coursework/milestone/MilestoneEdit.vue'),
           },
         ],
       },
     ],
+  },
+  {
+    path: '*',
+    name: 'home',
+    component: Home,
   },
 ];
 

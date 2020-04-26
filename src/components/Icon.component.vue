@@ -51,6 +51,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-crown:before {
+  content: "\e927";
+}
+.icon-box:before {
+  content: "\e926";
+}
+.icon-clipboard:before {
+  content: "\e925";
+}
 .icon-copy:before {
   content: "\e924";
 }

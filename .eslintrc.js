@@ -18,5 +18,6 @@ module.exports = {
     'new-cap': 'off',
     'no-param-reassign': 'off',
     'no-underscore-dangle': 'off',
+    'valid-v-for': 'off',
   }
 };

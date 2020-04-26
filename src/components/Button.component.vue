@@ -1,5 +1,5 @@
 <template>
-  <div class="button-vue">
+  <div v-if="isCondition" class="button-vue">
     <router-link v-if="href" :to="href" class="button" :class="[ getName, getStyle, isActive ]">
       <Icon v-if="icon" :name="icon"></Icon>
       <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
@@ -33,9 +33,13 @@ export default {
     isPending() {
       return (this.pending ? 'spinner-quad' : this.icon);
     },
+    isCondition() {
+      if (typeof (this.condition) !== 'function') return true;
+      return this.condition();
+    },
   },
   methods: {
-    OnButtonClick() {
+    async OnButtonClick() {
       if (typeof (this.click) !== 'function' || this.disabled) return false;
       return this.click();
     },
@@ -52,10 +56,14 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: $color-cyan;
     word-wrap: nowrap;
     cursor: pointer;
-    .text { font-weight: 600; }
+    .text {
+      font-weight: 600;
+      text-align: center;
+    }
     .icon-wrapper {
       position: relative;
       margin: 0 8px 0 0; // Add spacing between icon and text on the right side of the icon [ICON  TEXT]
@@ -99,7 +107,7 @@ export default {
     @include transition('background-color, border', .2s, ease);
     &:not(.disabled) {
       &.is-active, &:hover {
-        background-color: darken($color-cyan, 40%);
+        background-color: darken($color-cyan, 35%);
         border-color: $color-cyan;
       }
     }

@@ -7,7 +7,7 @@ const validator = require('./validators/courseworks.validator.js');
 const users = require('./users');
 const milestones = require('./milestones');
 
-const { Courseworks, CourseworkMembers } = require('./db/models.js').models;
+const { Milestones, Courseworks, CourseworkMembers } = require('./db/models.js').models;
 
 function generateSharedKey(date) {
   return (date) ? jwt.sign('correct', `${new Date(date).toISOString()}`) : null;
@@ -147,6 +147,11 @@ const courseworks = {
       throw { _system: 'System called editCoursework on an invalid coursework' };
     }
 
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called deleteCoursework on a deleted coursework' };
+    }
+
     if (courseworkData.completedDate) {
       throw { _notification: 'You cannot edit a completed coursework' };
     }
@@ -179,12 +184,18 @@ const courseworks = {
       throw { _system: 'System called deleteCoursework on an invalid coursework' };
     }
 
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called deleteCoursework on a deleted coursework' };
+    }
+
     const sameTitle = (courseworkData.title === title);
     if (!sameTitle) {
       throw { title: ['You must enter the same title of the coursework you want to delete'] };
     }
 
-    const deleted = new Date(Date.now()).toISOString();
+    const deleted = (!isDeleted) ? new Date(Date.now() + (3600 * 1000)).toISOString() : null;
     courseworkData.deleted = deleted;
     await courseworkData.save();
     return { deleted };
@@ -196,6 +207,12 @@ const courseworks = {
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called changePrivacy on an invalid coursework' };
+    }
+
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called changePrivacy on a deleted coursework' };
     }
 
     const alreadyPrivate = courseworkData.privacy;
@@ -217,9 +234,22 @@ const courseworks = {
       throw { _system: 'System called changeProgress on an invalid coursework' };
     }
 
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called changeProgress on a deleted coursework' };
+    }
+
     const alreadyCompleted = courseworkData.completedDate;
     if (!!completed === !!alreadyCompleted) {
       throw { _notification: `The coursework is already marked as ${alreadyCompleted ? 'complete' : 'incomplete'}` };
+    }
+
+    if (!alreadyCompleted) {
+      const incompleteMilestones = Milestones.findOne({ where: { coursework, completedDate: null } });
+      if (incompleteMilestones) {
+        throw { _notification: 'You cannot complete a coursework if there are still incomplete milestones' };
+      }
     }
 
     const completedDate = (completed) ? new Date(Date.now()).toISOString() : null;
@@ -236,6 +266,12 @@ const courseworks = {
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called changeShared on an invalid coursework' };
+    }
+
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called changeShared on a deleted coursework' };
     }
 
     if (!change && !courseworkData.shared) {
@@ -270,6 +306,12 @@ const courseworks = {
       throw { _system: 'System called addParticipant on an invalid coursework' };
     }
 
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called addParticipant on a deleted coursework' };
+    }
+
     const userFound = await users.find(member, { _notification: 'The user you\'re trying to invite does not exist' });
 
     const courseworkMember = await CourseworkMembers.findOne({ where: { coursework, member: userFound.id } });
@@ -288,6 +330,12 @@ const courseworks = {
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called editParticipant on an invalid coursework' };
+    }
+
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called editParticipant on a deleted coursework' };
     }
 
     const courseworkMember = await CourseworkMembers.findOne({ where: { coursework, member } });
@@ -312,6 +360,12 @@ const courseworks = {
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
       throw { _system: 'System called deleteParticipant on an invalid coursework' };
+    }
+
+    const currentDate = new Date(Date.now()).toISOString();
+    const isDeleted = courseworkData.deleted;
+    if (isDeleted && currentDate > isDeleted) {
+      throw { _system: 'System called deleteParticipant on a deleted coursework' };
     }
 
     const courseworkMember = await CourseworkMembers.findOne({ where: { coursework, member } });

@@ -1,56 +1,56 @@
 <template>
   <div class="coursework-route">
     <div class="coursework-tabs">
-      <template v-for="(tab, key) in tabs">
-        <Button v-if="tab.condition()" :key="key" class="btn-tab" v-bind="tab" type="tab" :class="[ isTabActive(key), key ]" :active="isTabActive(key)" />
-      </template>
+      <Button v-for="(tab, key) in tabs" :key="key" class="btn-tab" v-bind="tab" type="tab" :class="[ isTabActive(key), key ]" :active="isTabActive(key)" />
     </div>
     <!-- In progress -->
-    <transition name="fade" mode="out-in">
-      <div v-if="isTabActive('progress')" :key="renderKey" class="panel coursework-progress">
+    <transition name="fade" mode="out-in" appear>
+      <div v-if="isTabActive('progress') && getUser" :key="tabRKey" class="panel coursework-progress">
         <div class="panel-title">
           <div class="title">
             <Tag>IN PROGRESS</Tag>
           </div>
           <div class="control">
-            <Button v-bind="control.refreshSearch" />
+            <Button v-bind="control.refreshCoursework" />
           </div>
         </div>
-        <div class="panel-content">
-          <template v-if="courseworkInProgress.length > 0">
-            <Coursework v-for="(coursework, id) in courseworkInProgress" :key="id" :data="coursework" />
-          </template>
-          <template v-else>
-            <div class="not-found">
+        <transition name="fade" mode="out-in">
+          <div class="panel-content" v-if="getMyResults" :key="contentRKey">
+            <template v-if="courseworkInProgress.length > 0">
+              <Coursework v-for="(coursework) in courseworkInProgress" :key="coursework.id" :data="coursework" />
+            </template>
+            <div v-else class="not-found">
               <span class="message">You don't have any courseworks in progress</span>
               <Button name="start-a-new-course" type="dialog">Start a new coursework</Button>
             </div>
-          </template>
-        </div>
+          </div>
+        </transition>
       </div>
       <!-- Completed -->
-      <div v-else-if="isTabActive('completed')" :key="renderKey" class="panel coursework-completed">
+      <div v-else-if="isTabActive('completed') && getUser" :key="tabRKey" class="panel coursework-completed">
         <div class="panel-title">
           <div class="title">
             <Tag>COMPLETED</Tag>
           </div>
           <div class="control">
-            <Button v-bind="control.refreshSearch" />
+            <Button v-bind="control.refreshCoursework" />
           </div>
         </div>
-        <div class="panel-content">
-          <template v-if="courseworkCompleted.length > 0">
-            <Coursework v-for="(coursework, id) in courseworkCompleted" :key="id" :data="coursework" />
-          </template>
-          <template v-else>
-            <div class="not-found">
-              <span class="message">You don't have any completed courseworks</span>
-            </div>
-          </template>
-        </div>
+        <transition name="fade" mode="out-in">
+          <div class="panel-content" v-if="getMyResults" :key="contentRKey">
+            <template v-if="courseworkCompleted.length > 0">
+              <Coursework v-for="(coursework) in courseworkCompleted" :key="coursework.id" :data="coursework" />
+            </template>
+            <template v-else>
+              <div class="not-found">
+                <span class="message">You don't have any completed courseworks</span>
+              </div>
+            </template>
+          </div>
+        </transition>
       </div>
       <!-- Search -->
-      <div v-else-if="isTabActive('search')" :key="renderKey" class="panel coursework-search">
+      <div v-else-if="isTabActive('search')" :key="tabRKey" class="panel coursework-search">
         <div class="panel-title">
           <div class="title">
             <Tag>SEARCH RESULT</Tag>
@@ -64,19 +64,21 @@
             <Button v-bind="control.refreshSearch" />
           </div>
         </div>
-        <div class="panel-content">
-          <template v-if="getSearchResults.length > 0">
-            <Coursework v-for="(coursework, id) in getSearchResults" :key="id" :data="coursework" />
-          </template>
-          <template v-else>
-            <div class="not-found">
-              <span class="message">No results found</span>
-            </div>
-          </template>
-        </div>
+        <transition name="fade" mode="out-in">
+          <div class="panel-content" v-if="getSearchResults" :key="contentRKey">
+            <template v-if="getSearchResults.length > 0">
+              <Coursework v-for="(coursework, id) in getSearchResults" :key="id" :data="coursework" />
+            </template>
+            <template v-else>
+              <div class="not-found">
+                <span class="message">No results found</span>
+              </div>
+            </template>
+          </div>
+        </transition>
       </div>
       <!-- Recent -->
-      <div v-else :key="renderKey" class="panel coursework-recent">
+      <div v-else-if="isTabActive('recent')" :key="tabRKey" class="panel coursework-recent">
         <div class="panel-title">
           <div class="title">
             <Tag>MOST RECENT</Tag>
@@ -101,14 +103,14 @@ export default {
   components: { Coursework, Button, Tag },
   data() {
     return {
-      renderKey: 0,
+      tabRKey: 0,
+      contentRKey: 0,
       tabs: {
-        progress: { href: { name: 'coursework', query: { tab: 'progress' } }, name: 'tab-in-progress', icon: 'access_time', text: 'In progress', condition: (() => this.getUser).bind() },
-        completed: { href: { name: 'coursework', query: { tab: 'completed' } }, name: 'tab-completed', icon: 'check', text: 'Completed', condition: (() => this.getUser).bind() },
-        search: { href: { name: 'coursework', query: { tab: 'search' } }, name: 'tab-search-result', icon: 'search', text: 'Search result', condition: (() => this.searchTags).bind() },
-        recent: { href: { name: 'coursework', query: { tab: 'recent' } }, name: 'tab-recent', icon: 'menu', text: 'Most recent', condition: (() => this.getRecentResults.length > 0).bind() },
+        progress: { href: { name: 'coursework', query: { tab: 'progress' } }, name: 'tab-in-progress', icon: 'access_time', text: 'In progress', condition: (() => this.getUser) },
+        completed: { href: { name: 'coursework', query: { tab: 'completed' } }, name: 'tab-completed', icon: 'check', text: 'Completed', condition: (() => this.getUser) },
+        search: { href: { name: 'coursework', query: { tab: 'search' } }, name: 'tab-search-result', icon: 'search', text: 'Search result', condition: (() => this.searchTags) },
+        recent: { href: { name: 'coursework', query: { tab: 'recent' } }, name: 'tab-recent', icon: 'menu', text: 'Most recent' },
       },
-      tab: 'recent',
       control: {
         refreshSearch: { name: 'refresh-search', type: 'dialog', icon: 'repeat', text: 'Refresh', click: this.refreshSearch },
         refreshCoursework: { name: 'refresh-coursework', type: 'dialog', icon: 'repeat', text: 'Refresh', click: this.refreshCoursework },
@@ -117,8 +119,10 @@ export default {
     };
   },
   async mounted() {
-    await this.$store.dispatch('getAllCourseworks', { section: 'recent' });
-    await this.$store.dispatch('getAllCourseworks', { section: 'my' });
+    if (this.getUser !== undefined) {
+      await this.$store.dispatch('getAllCourseworks', { section: 'recent' });
+      await this.$store.dispatch('getAllCourseworks', { section: 'my' });
+    }
   },
   computed: {
     getUser() {
@@ -132,23 +136,25 @@ export default {
       }, {});
       return _.isEmpty(filters) ? null : filters;
     },
+    getMyResults() {
+      return this.$store.getters.getAllCourseworks('my');
+    },
     getSearchResults() {
       return this.$store.getters.getAllCourseworks('search');
     },
     getRecentResults() {
       return this.$store.getters.getAllCourseworks('recent');
     },
-    getCourseworkStyle() {
-      return (this.getSearchResults.length) ? 'compact' : null;
-    },
     courseworkInProgress() {
-      return _.chain(this.$store.getters.getAllCourseworks('my'))
+      if (!this.getMyResults) return null;
+      return _.chain(this.getMyResults)
         .reject((c) => c.completedDate)
         .orderBy('expectedDate', 'asc')
         .value();
     },
     courseworkCompleted() {
-      return _.chain(this.$store.getters.getAllCourseworks('my'))
+      if (!this.getMyResults) return null;
+      return _.chain(this.getMyResults)
         .filter((c) => c.completedDate)
         .orderBy('completedDate', 'desc')
         .value();
@@ -156,7 +162,7 @@ export default {
   },
   methods: {
     isTabActive(tab) {
-      const query = this.$route.query.tab;
+      const query = this.$route.query.tab || 'recent';
       return (query === tab) ? 'active' : null;
     },
     clearSearch() {
@@ -169,28 +175,29 @@ export default {
       this.$set(this.control.refreshSearch, 'pending', true);
       await this.$store.dispatch('getAllCourseworks', { section: 'search', search: this.$store.getters.getSearchFilter });
       this.$set(this.control.refreshSearch, 'pending', false);
+      this.contentRKey += 1;
     },
     async refreshCoursework() {
       if (this.control.refreshCoursework.pending) return;
       this.$set(this.control.refreshCoursework, 'pending', true);
       await this.$store.dispatch('getAllCourseworks', { section: 'my' });
       this.$set(this.control.refreshCoursework, 'pending', false);
+      this.contentRKey += 1;
     },
   },
   watch: {
     '$route.query.tab': function tabChange() {
-      this.renderKey += 1;
+      this.tabRKey += 1;
     },
     async getUser(to) {
-      this.$store.commit('clearAllCourseworks', 'my');
-      this.$store.commit('clearAllCourseworks', 'recent');
+      await this.$store.dispatch('getAllCourseworks', { section: 'recent' });
       if (to) {
         await this.$store.dispatch('getAllCourseworks', { section: 'my' });
         this.$router.push({ name: 'coursework', query: { tab: 'progress' } }, () => {});
       } else {
+        this.$store.commit('clearAllCourseworks', 'my');
         this.$router.push({ name: 'coursework', query: { tab: 'recent' } }, () => {});
       }
-      await this.$store.dispatch('getAllCourseworks', { section: 'recent' });
     },
   },
 };
@@ -251,6 +258,7 @@ export default {
       align-items: stretch;
       height: 739px;
       overflow: auto;
+      transition: opacity .2s ease;
 
       .not-found {
         flex: 1;

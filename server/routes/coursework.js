@@ -1,11 +1,12 @@
 const express = require('express');
+const path = require('path');
 const courseworks = require('../lib/courseworks.js');
 const permissions = require('../lib/permissions.js');
 
 const router = express.Router();
 
 /**
- * GET /courseworks/list
+ * GET /coursework/list
  */
 router.get('/list', async (req, res) => {
   let error;
@@ -20,7 +21,7 @@ router.get('/list', async (req, res) => {
 });
 
 /**
- * GET /courseworks/get
+ * GET /coursework/get
  */
 router.get('/get', async (req, res) => {
   let error;
@@ -36,7 +37,7 @@ router.get('/get', async (req, res) => {
 });
 
 /**
- * POST /courseworks/create
+ * POST /coursework/create
  */
 router.post('/create', async (req, res) => {
   let error;
@@ -51,7 +52,7 @@ router.post('/create', async (req, res) => {
 });
 
 /**
- * POST /courseworks/edit
+ * POST /coursework/edit
  */
 router.post('/edit', async (req, res) => {
   let error;
@@ -66,7 +67,7 @@ router.post('/edit', async (req, res) => {
 });
 
 /**
- * POST /courseworks/delete
+ * POST /coursework/delete
  */
 router.post('/delete', async (req, res) => {
   let error;
@@ -81,7 +82,7 @@ router.post('/delete', async (req, res) => {
 });
 
 /**
- * POST /courseworks/changePrivacy
+ * POST /coursework/changePrivacy
  */
 router.post('/changePrivacy', async (req, res) => {
   let error;
@@ -96,7 +97,7 @@ router.post('/changePrivacy', async (req, res) => {
 });
 
 /**
- * POST /courseworks/changeProgress
+ * POST /coursework/changeProgress
  */
 router.post('/changeProgress', async (req, res) => {
   let error;
@@ -111,7 +112,7 @@ router.post('/changeProgress', async (req, res) => {
 });
 
 /**
- * POST /courseworks/changeShared
+ * POST /coursework/changeShared
  */
 router.post('/changeShared', async (req, res) => {
   let error;
@@ -126,7 +127,7 @@ router.post('/changeShared', async (req, res) => {
 });
 
 /**
- * POST /courseworks/addParticipant
+ * POST /coursework/addParticipant
  */
 router.post('/addParticipant', async (req, res) => {
   let error;
@@ -141,7 +142,7 @@ router.post('/addParticipant', async (req, res) => {
 });
 
 /**
- * POST /courseworks/editParticipant
+ * POST /coursework/editParticipant
  */
 router.post('/editParticipant', async (req, res) => {
   let error;
@@ -156,7 +157,7 @@ router.post('/editParticipant', async (req, res) => {
 });
 
 /**
- * POST /courseworks/deleteParticipant
+ * POST /coursework/deleteParticipant
  */
 router.post('/deleteParticipant', async (req, res) => {
   let error;
@@ -169,6 +170,5 @@ router.post('/deleteParticipant', async (req, res) => {
   }
   res.json({ result, error });
 });
-
 
 module.exports = router;

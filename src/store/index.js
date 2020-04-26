@@ -13,11 +13,11 @@ export default new Vuex.Store({
     notifications: [],
     tooltip: null,
     coursework: {
-      search: [],
+      search: undefined,
       searchFilter: null,
       recent: [],
-      profile: [],
-      my: [],
+      profile: undefined,
+      my: undefined,
     },
   },
   getters: {
@@ -81,8 +81,34 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    async post({ commit }, { url, data, options }) {
+      const response = await axios.post(url, { ...options, data });
+      if (response.data.error) {
+        const { _system, _notification } = response.data.error;
+        if (_system) {
+          commit('pushNotification', { text: _system, icon: 'warning', type: 'alert' });
+        }
+        if (_notification) {
+          commit('pushNotification', { text: _notification, icon: 'notice', type: 'warning' });
+        }
+      }
+      return response.data || null;
+    },
+    async get({ commit }, { url, params, options }) {
+      const response = await axios.get(url, { ...options, params });
+      if (response.data.error) {
+        const { _system, _notification } = response.data.error;
+        if (_system) {
+          commit('pushNotification', { text: _system, icon: 'warning', type: 'alert' });
+        }
+        if (_notification) {
+          commit('pushNotification', { text: _notification, icon: 'notice', type: 'warning' });
+        }
+      }
+      return response.data || null;
+    },
     async deauthenticate({ commit }) {
-      await axios.get('/users/deauthenticate');
+      await axios.get('/user/deauthenticate');
       commit('deauthenticate');
       commit('pushNotification', { icon: 'check', text: 'You have been logged out' });
     },
@@ -90,20 +116,20 @@ export default new Vuex.Store({
       let results;
       if (section === 'my') {
         // Load my own courseworks
-        results = await axios.get('/courseworks/list', { params: { brief } });
+        results = await axios.get('/coursework/list', { params: { brief } });
         if (brief) {
           // If loading for sidebar, don't store in vuex
           return results;
         }
       } else if (section === 'profile') {
         // Load courseworks for a specific user profile
-        results = await axios.get('/courseworks/list', { params: { participant } });
+        results = await axios.get('/coursework/list', { params: { participant } });
       } else {
         // Load all searched courseworks
         if (search) {
           commit('updateSearchFilter', search);
         }
-        results = await axios.get('/courseworks/list', { params: { ...search, search: true } });
+        results = await axios.get('/coursework/list', { params: { ...search, search: true } });
       }
       console.log(results);
       if (results.data.error) {
