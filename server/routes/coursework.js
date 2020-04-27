@@ -1,5 +1,4 @@
 const express = require('express');
-const path = require('path');
 const courseworks = require('../lib/courseworks.js');
 const permissions = require('../lib/permissions.js');
 
@@ -14,7 +13,6 @@ router.get('/list', async (req, res) => {
   try {
     result = await courseworks.getCourseworks({ user: req.session.user }, req.query);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });
@@ -30,7 +28,6 @@ router.get('/get', async (req, res) => {
     await permissions.hasCourseworkReadOnlyPermission(req.session.user, req.query.coursework, req.query.shared);
     result = await courseworks.getCoursework(req.query);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });
@@ -136,6 +133,7 @@ router.post('/addParticipant', async (req, res) => {
     await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = await courseworks.addParticipant(req.body);
   } catch (e) {
+    console.log(e);
     error = e;
   }
   res.json({ result, error });

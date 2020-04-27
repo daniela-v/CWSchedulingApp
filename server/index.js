@@ -19,6 +19,11 @@ const routes = require('./loaders/routes.js');
 
   // Persisting unique sessions
   app.set('trust proxy', 1);
+  const store = new sequelizeSession({
+    db: sequelize.sql,
+    tableName: 'tbl_sessions',
+  });
+  await store.sync();
   app.use(expressSession({
     secret: 'bamboozleSecret',
     resave: false,
@@ -27,10 +32,7 @@ const routes = require('./loaders/routes.js');
       maxAge: 60 * 60 * 24 * 365 * 1000,
       secure: false,
     },
-    store: new sequelizeSession({
-      db: sequelize.sql,
-      tableName: 'tbl_sessions',
-    }),
+    store,
   }));
 
   // Initialize routes

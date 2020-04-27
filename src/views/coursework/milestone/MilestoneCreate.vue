@@ -1,5 +1,5 @@
 <template>
-  <div class="coursework-route">
+  <div class="coursework-route-create">
     <router-view />
   </div>
 </template>

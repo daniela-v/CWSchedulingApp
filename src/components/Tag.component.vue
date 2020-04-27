@@ -86,6 +86,10 @@ export default {
       color: lighten(#dd4a36, 40%);
       background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
     }
+    &.notice-style {
+      color: lighten($color-mustard, 40%);
+      background: linear-gradient(to bottom, darken($color-mustard, 35%), darken($color-mustard, 40%));
+    }
   }
 }
 </style>

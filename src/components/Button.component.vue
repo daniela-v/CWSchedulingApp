@@ -103,6 +103,7 @@ export default {
     background: linear-gradient(to bottom, darken($color-cyan, 10%), darken($color-cyan, 20%));
     background-blend-mode: screen;
     color: lighten($color-cyan, 40%);
+    font-weight: 600;
     box-shadow: 0 1px 2px rgba(black, .8), 0 0 1px 1px rgba(white, .15) inset;
     @include transition('background-color, border', .2s, ease);
     &:not(.disabled) {
@@ -111,8 +112,15 @@ export default {
         border-color: $color-cyan;
       }
     }
-    &.google {
-      font-weight: 600;
+    &.notice {
+      background: linear-gradient(to bottom, darken($color-mustard, 30%), darken($color-mustard, 40%));
+      color: lighten($color-mustard, 40%);
+      &:hover:not(.disabled) {
+        background-color: darken($color-mustard, 60%);
+        border-color: $color-mustard;
+      }
+    }
+    &.google, &.alert {
       background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
       color: lighten(#dd4a36, 40%);
       &:hover:not(.disabled) {
@@ -121,7 +129,6 @@ export default {
       }
     }
     &.facebook {
-      font-weight: 600;
       background: linear-gradient(to bottom, #7289da, darken(#7289da, 10%));
       color: lighten(#7289da, 40%);
       &:hover:not(.disabled) {

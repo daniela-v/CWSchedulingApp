@@ -172,11 +172,6 @@ const courseworks = {
   },
 
   async deleteCoursework(data) {
-    const error = validator.validate(data, validator.delete);
-    if (error) {
-      throw error;
-    }
-
     const { coursework = 0, title } = data;
 
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
@@ -190,9 +185,11 @@ const courseworks = {
       throw { _system: 'System called deleteCoursework on a deleted coursework' };
     }
 
-    const sameTitle = (courseworkData.title === title);
-    if (!sameTitle) {
-      throw { title: ['You must enter the same title of the coursework you want to delete'] };
+    if (!isDeleted) {
+      const sameTitle = (courseworkData.title === title);
+      if (!sameTitle) {
+        throw { title: ['You must enter the same title of the coursework you want to delete'] };
+      }
     }
 
     const deleted = (!isDeleted) ? new Date(Date.now() + (3600 * 1000)).toISOString() : null;
@@ -223,7 +220,7 @@ const courseworks = {
     courseworkData.privacy = privacy;
     await courseworkData.save();
 
-    return true;
+    return { privacy };
   },
 
   async changeProgress(data) {
@@ -246,7 +243,7 @@ const courseworks = {
     }
 
     if (!alreadyCompleted) {
-      const incompleteMilestones = Milestones.findOne({ where: { coursework, completedDate: null } });
+      const incompleteMilestones = await Milestones.findOne({ where: { coursework, completedDate: null } });
       if (incompleteMilestones) {
         throw { _notification: 'You cannot complete a coursework if there are still incomplete milestones' };
       }
@@ -257,7 +254,7 @@ const courseworks = {
     courseworkData.completedDate = completedDate;
     await courseworkData.save();
 
-    return true;
+    return { completedDate };
   },
 
   async changeShared(data) {
@@ -283,7 +280,7 @@ const courseworks = {
     courseworkData.shared = shared;
     await courseworkData.save();
 
-    return { shared, token: generateSharedKey(shared) };
+    return { shared, sharedToken: generateSharedKey(shared) };
   },
 
   async getParticipants(coursework, participant) {
@@ -294,12 +291,16 @@ const courseworks = {
       // If a specific participant is requested
       condition.push(`member = ${participant}`);
     }
-    const queryResult = await sql.query(`SELECT id, username, team FROM tbl_coursework_members LEFT JOIN tbl_users ON member = id WHERE ${condition.join(' AND ')}`, { type: QueryTypes.SELECT });
+    const queryResult = await sql.query(`SELECT id, username, team, cwm.createdAt FROM tbl_coursework_members AS cwm LEFT JOIN tbl_users ON member = id WHERE ${condition.join(' AND ')}`, { type: QueryTypes.SELECT });
     return queryResult;
   },
 
   async addParticipant(data) {
-    const { coursework = 0, member = 0, team = 'Member' } = data;
+    const error = validator.validate(data, validator.addParticipant);
+    if (error) {
+      throw error;
+    }
+    const { coursework = 0, member, team = 'Member' } = data;
 
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
@@ -312,20 +313,24 @@ const courseworks = {
       throw { _system: 'System called addParticipant on a deleted coursework' };
     }
 
-    const userFound = await users.find(member, { _notification: 'The user you\'re trying to invite does not exist' });
+    const userFound = await users.find(member, { member: ['The user you\'re trying to invite does not exist'] });
 
     const courseworkMember = await CourseworkMembers.findOne({ where: { coursework, member: userFound.id } });
     if (courseworkMember) {
-      throw { _notification: 'The user you\'re trying to invite is already a member in this coursework' };
+      throw { member: ['The user you\'re trying to invite is already a member'] };
     }
 
     const toInsertMember = { coursework, member: userFound.id, team };
     await CourseworkMembers.create(toInsertMember);
-    return { id: userFound.id, username: userFound.username, team };
+    return { id: userFound.id, username: userFound.username, team, createdAt: currentDate };
   },
 
   async editParticipant(data) {
-    const { coursework = 0, member = 0, team = null } = data;
+    const error = validator.validate(data, validator.editParticipant);
+    if (error) {
+      throw error;
+    }
+    const { coursework = 0, member = 0, team } = data;
 
     const courseworkData = await Courseworks.findOne({ where: { id: coursework } });
     if (!courseworkData) {
@@ -351,7 +356,7 @@ const courseworks = {
     const toUpdate = { team };
     await CourseworkMembers.update(toUpdate, { where: { coursework, member } });
 
-    return copy;
+    return team;
   },
 
   async deleteParticipant(data) {

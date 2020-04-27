@@ -160,11 +160,12 @@ const users = {
   },
   async find(user = 0, err) {
     // Find the user either by id or username depending on what is passed
+
     const found = await Users.findOne({
       where: {
         [Op.or]: [
           { id: user },
-          { username: user },
+          { username: user.toString() },
         ],
       },
     });
@@ -173,7 +174,7 @@ const users = {
       throw err;
     }
 
-    return found;
+    return (found) ? found.dataValues : found;
   },
 };
 

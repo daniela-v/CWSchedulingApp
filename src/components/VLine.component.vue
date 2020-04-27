@@ -1,5 +1,5 @@
 <template>
-  <div class="v-line-component-vue">
+  <div class="v-line-component-vue" :class="[ getStyle ]">
     <div class="label">
       <Icon v-if="icon" :name="icon" />{{ label }}
     </div>
@@ -13,7 +13,12 @@ import Icon from '@/components/Icon.component.vue';
 
 export default {
   components: { Icon },
-  props: ['icon', 'label'],
+  props: ['icon', 'type', 'label'],
+  computed: {
+    getStyle() {
+      return `${this.type || 'default'}-style`;
+    },
+  },
 };
 </script>
 
@@ -35,6 +40,14 @@ export default {
     align-items: center;
     justify-content: center;
     > .icon-wrapper { margin-right: 5px; }
+  }
+  &.alert-style {
+    color: $color-error-soft;
+    .h-separator { border-color: $color-error-soft; }
+  }
+  &.notice-style {
+    color: $color-mustard;
+    .h-separator { border-color: $color-mustard; }
   }
 }
 </style>

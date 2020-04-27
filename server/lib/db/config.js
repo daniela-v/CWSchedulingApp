@@ -6,13 +6,14 @@ const Sequelize = require('sequelize');
  */
 process.env.SQL = process.env.SQL || 'develop';
 const sql = new Sequelize({
-  host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
+  host: 'localhost',
+  // host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
   username: `cwscheduleapp_${process.env.SQL}`,
   password: 'cwscheduleapp',
   database: `cwscheduleapp_${process.env.SQL}`,
   dialect: 'mysql',
   pool: {
-    max: 5,
+    max: 10,
     idle: 30000,
     acquire: 60000,
   },
@@ -22,6 +23,7 @@ const sql = new Sequelize({
   },
   logging: false, // (process.env.SQL === 'develop'),
 });
+
 /*
  **** MySQL Workbench:
  * host: database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com
@@ -50,7 +52,7 @@ const models = require('./models.js');
 async function init() {
   // Automatically create tables if they don't exist (add a second parameter set to true if you want to remove the previous tables)
   console.log(`\u001b[36m    Using \`cwscheduleapp_${process.env.SQL}\` database\n\u001b[0m`);
-  await models.init(sql, false);
+  await models.init(sql, true);
   console.log('\u001b[32m✓   Database config finished loading\n\u001b[0m');
 }
 

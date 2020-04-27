@@ -32,10 +32,11 @@ export default new Vuex.Store({
     getAllCourseworks: (state) => (section) => state.coursework[section],
   },
   mutations: {
-    openWindow(state, { name, component, props, type, dismissable }) { // eslint-disable-line
+    openWindow(state, { name, title, component, props, type, dismissable }) { // eslint-disable-line
       state.windows.splice(0, 1, {
         window: {
           name,
+          title,
           component,
           props,
           type: type || 'default',
@@ -81,8 +82,8 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    async post({ commit }, { url, data, options }) {
-      const response = await axios.post(url, { ...options, data });
+    async post({ commit }, { url, data }) {
+      const response = await axios.post(url, data);
       if (response.data.error) {
         const { _system, _notification } = response.data.error;
         if (_system) {
@@ -94,8 +95,8 @@ export default new Vuex.Store({
       }
       return response.data || null;
     },
-    async get({ commit }, { url, params, options }) {
-      const response = await axios.get(url, { ...options, params });
+    async get({ commit }, { url, params }) {
+      const response = await axios.get(url, { params });
       if (response.data.error) {
         const { _system, _notification } = response.data.error;
         if (_system) {
