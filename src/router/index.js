@@ -19,33 +19,54 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
   },
   {
-    path: '/coursework',
+    path: '/courseworks',
     name: 'coursework',
     component: () => import('../views/coursework/Coursework.vue'),
+    children: [
+      {
+        path: 'create',
+        name: 'courseworkCreate',
+        component: () => import('../views/coursework/CourseworkCreate.vue'),
+      },
+    ],
   },
   {
-    path: '/coursework/:coursework?',
+    path: '/courseworks/:coursework?',
     name: 'courseworkView',
     component: () => import('../views/coursework/CourseworkView.vue'),
     children: [
       {
-        path: '/edit',
+        path: 'edit',
         name: 'courseworkEdit',
         component: () => import('../views/coursework/CourseworkEdit.vue'),
       },
       {
-        path: '/milestone/:milestone?',
+        path: 'milestones',
+        redirect: (to) => ({ name: 'courseworkView', params: to.params, query: { tab: 'milestones', ...to.query } }),
+      },
+      {
+        path: 'milestones/create',
+        name: 'milestoneCreate',
+        component: () => import('../views/coursework/milestone/MilestoneCreate.vue'),
+      },
+      {
+        path: 'milestones/:milestone',
         name: 'milestoneView',
         component: () => import('../views/coursework/milestone/MilestoneView.vue'),
         children: [
           {
-            path: '/edit',
+            path: 'edit',
             name: 'milestoneEdit',
             component: () => import('../views/coursework/milestone/MilestoneEdit.vue'),
           },
         ],
       },
     ],
+  },
+  {
+    path: '*',
+    name: 'home',
+    component: Home,
   },
 ];
 

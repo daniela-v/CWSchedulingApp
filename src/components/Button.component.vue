@@ -1,5 +1,5 @@
 <template>
-  <div class="button-vue">
+  <div v-if="isCondition" class="button-vue">
     <router-link v-if="href" :to="href" class="button" :class="[ getName, getStyle, isActive ]">
       <Icon v-if="icon" :name="icon"></Icon>
       <span v-if="text || $slots.default" class="text"><slot>{{ this.text }}</slot></span>
@@ -33,9 +33,13 @@ export default {
     isPending() {
       return (this.pending ? 'spinner-quad' : this.icon);
     },
+    isCondition() {
+      if (typeof (this.condition) !== 'function') return true;
+      return this.condition();
+    },
   },
   methods: {
-    OnButtonClick() {
+    async OnButtonClick() {
       if (typeof (this.click) !== 'function' || this.disabled) return false;
       return this.click();
     },
@@ -52,10 +56,14 @@ export default {
     position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     color: $color-cyan;
     word-wrap: nowrap;
     cursor: pointer;
-    .text { font-weight: 600; }
+    .text {
+      font-weight: 600;
+      text-align: center;
+    }
     .icon-wrapper {
       position: relative;
       margin: 0 8px 0 0; // Add spacing between icon and text on the right side of the icon [ICON  TEXT]
@@ -95,16 +103,24 @@ export default {
     background: linear-gradient(to bottom, darken($color-cyan, 10%), darken($color-cyan, 20%));
     background-blend-mode: screen;
     color: lighten($color-cyan, 40%);
+    font-weight: 600;
     box-shadow: 0 1px 2px rgba(black, .8), 0 0 1px 1px rgba(white, .15) inset;
     @include transition('background-color, border', .2s, ease);
     &:not(.disabled) {
       &.is-active, &:hover {
-        background-color: darken($color-cyan, 40%);
+        background-color: darken($color-cyan, 35%);
         border-color: $color-cyan;
       }
     }
-    &.google {
-      font-weight: 600;
+    &.notice {
+      background: linear-gradient(to bottom, darken($color-mustard, 30%), darken($color-mustard, 40%));
+      color: lighten($color-mustard, 40%);
+      &:hover:not(.disabled) {
+        background-color: darken($color-mustard, 60%);
+        border-color: $color-mustard;
+      }
+    }
+    &.google, &.alert {
       background: linear-gradient(to bottom, #dd4a36, darken(#dd4a36, 10%));
       color: lighten(#dd4a36, 40%);
       &:hover:not(.disabled) {
@@ -113,7 +129,6 @@ export default {
       }
     }
     &.facebook {
-      font-weight: 600;
       background: linear-gradient(to bottom, #7289da, darken(#7289da, 10%));
       color: lighten(#7289da, 40%);
       &:hover:not(.disabled) {

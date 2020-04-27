@@ -12,21 +12,20 @@
           </div>
         </div>
         <Button name="switch-account" icon="repeat" type="dialog" :click="switchAccount">Switch account</Button>
-        <template v-if="isLoading">
-          <div class="sidebar-loading">
-            <div id="loading-nest"></div>
-            <span class="loading-text">Loading</span>
-          </div>
-        </template>
+        <div v-if="loading.status !== 'success'" class="sidebar-loading">
+          <Loading v-bind="loading" />
+        </div>
         <template v-else>
           <template v-if="courseworks.length">
-            <SidebarPanel name="coursework" title="IN PROGRESS" :component="SidebarCoursework" :data="courseworkInProgress" :expanded="true" />
-            <SidebarPanel name="coursework" title="COMPLETED" :component="SidebarCoursework" :data="courseworkCompleted" />
+            <SidebarPanel name="coursework" title="IN PROGRESS" :component="Coursework" :data="courseworkInProgress" :expanded="true" />
+            <SidebarPanel name="coursework" title="COMPLETED" :component="Coursework" :data="courseworkCompleted" />
           </template>
-          <div v-else>
-            No courseworks
+          <template v-else>
+            <div class="not-found">
+              <Icon name="notice" />No courseworks found
+            </div>
             <Button name="create-coursework" icon="repeat" type="dialog" :click="switchAccount">Create a coursework</Button>
-          </div>
+          </template>
         </template>
       </div>
     </div>
@@ -37,17 +36,19 @@
 import _ from 'lodash';
 
 import Auth from '../components/windows/Auth.window.vue';
-import Button from '../components/Button.component.vue';
+import Loading from '../components/Loading.component.vue';
 import SidebarPanel from '../components/sidebar/SidebarPanel.sidebar.vue';
-import SidebarCoursework from '../components/sidebar/SidebarCoursework.sidebarpanel.vue';
+import Coursework from '../components/Coursework.component.vue';
+import Button from '../components/Button.component.vue';
+import Icon from '../components/Icon.component.vue';
 
 export default {
-  components: { Button, SidebarPanel },
+  components: { Loading, SidebarPanel, Button, Icon },
   data() {
     return {
-      SidebarCoursework,
+      Coursework,
       courseworks: [],
-      isLoading: false,
+      loading: { status: 'success' },
     };
   },
   computed: {
@@ -61,12 +62,20 @@ export default {
       return _.chain(this.courseworks)
         .reject((c) => c.completedDate)
         .orderBy('expectedDate', 'asc')
+        .map((cw) => ({
+          data: cw,
+          compact: true,
+        }))
         .value();
     },
     courseworkCompleted() {
       return _.chain(this.courseworks)
         .filter((c) => c.completedDate)
         .orderBy('completedDate', 'desc')
+        .map((cw) => ({
+          data: cw,
+          compact: true,
+        }))
         .value();
     },
   },
@@ -77,12 +86,12 @@ export default {
       this.$store.commit('openWindow', { name: 'Login', component: Auth, type: 'fullscreen' });
     },
     async loadCourseworks() {
-      this.isLoading = true;
+      this.loading = { status: 'pending', message: 'Loading courseworks' };
       setTimeout(async () => {
         const courseworks = await this.$store.dispatch('getAllCourseworks', { section: 'my', brief: true });
         this.courseworks = courseworks.data.result;
-        this.isLoading = false;
-      }, 4000);
+        this.loading = { status: 'success' };
+      }, 2000);
     },
   },
   watch: {
@@ -109,14 +118,18 @@ export default {
   .sidebar-loading {
     align-self: flex-start;
     min-width: 350px;
-    display: grid;
-    grid-row-gap: 10px;
-    align-content: center;
-    justify-content: center;
     margin: 40px 0;
-    .loading-text {
-      font-weight: 600;
-      animation: fadeInOut 2s ease infinite;
+  }
+
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px 0;
+    font-weight: 600;
+    .icon-wrapper {
+      font-size: 50px;
+      margin-bottom: 10px;
     }
   }
 

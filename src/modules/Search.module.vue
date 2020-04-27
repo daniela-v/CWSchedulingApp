@@ -67,7 +67,7 @@ export default {
       transition: height .2s ease;
       > * {
         opacity: 1;
-        transition: opacity .2s ease .2s;
+        transition: opacity .2s ease .1s;
       }
     }
   }
@@ -77,7 +77,7 @@ export default {
     transition: background-color .2s ease .2s, opacity .2s ease;
     .search-box {
       height: 0;
-      transition: height .2s ease .2s;
+      transition: height .2s ease .1s;
       > * {
         opacity: 0;
         transition: opacity .2s ease;

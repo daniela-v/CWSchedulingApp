@@ -53,12 +53,17 @@ export default {
     &.alert {
       color: $color-error;
       border-color: $color-error;
-      background-color: darken($color-error, 55%);
+      background-color: rgba(darken($color-error, 50%), .8);
     }
     &.warning {
       color: $color-error-soft;
       border-color: $color-error-soft;
-      background-color: darken($color-error-soft, 55%);
+      background-color: rgba(darken($color-error-soft, 55%), .8);
+    }
+    &.notice {
+      color: $color-mustard;
+      border-color: $color-mustard;
+      background-color: rgba(darken($color-mustard, 55%), .8);
     }
     i {
       margin-right: 10px;

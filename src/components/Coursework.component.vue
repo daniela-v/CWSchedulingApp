@@ -8,7 +8,7 @@
       <div class="coursework-status">
         <Icon v-if="coursework.privacy" name="eye-blocked" class="is-private" v-tooltip="{ text: 'Private' }"/>
         <Icon v-if="coursework.shared" name="share" class="is-shared" v-tooltip="{ text: 'Share' }" @click.native.prevent="getSharedLink"/>
-        <Icon v-if="coursework.owner === getUser.id" name="person" class="is-owner" />
+        <Icon v-if="coursework.owner === getUser.id" name="crown" class="is-owner" />
       </div>
       <div class="coursework-time">
         <div class="deadline" :class="[ getStatusColor ]">
@@ -26,7 +26,7 @@
         <div class="name"><Icon name="document" />{{ coursework.title }}</div>
         <div class="module"><Icon name="spacer" />{{ coursework.module }}</div>
         <div class="owner">
-          <Icon name="person" />{{ coursework.ownerName }}
+          <Icon name="crown" />{{ coursework.ownerName }}
         </div>
       </div>
       <div class="coursework-status">
@@ -37,16 +37,19 @@
       </div>
       <div class="tab coursework-deadline" :class="[ getStatusColor ]">
         <div class="label"><Icon :name="getStatusIcon" class="status" />{{ getDeadlineText }}</div>
+        <div class="h-separator"></div>
         <div class="value">{{ getCompletedDate || this.getCountdown(timers.expectedDate, true) }}</div>
       </div>
       <div class="tab coursework-participants">
         <div class="label"><Icon name="person" />PARTICIPANTS</div>
+        <div class="h-separator"></div>
         <div class="value">
           <Icon v-for="i in coursework.participantsNumber" :key="i" name="person" :class="[ highlightSelfParticipant(i) ]" v-tooltip="{ text: getParticipantsTooltip(i) }" />
         </div>
       </div>
       <div class="tab coursework-milestones">
         <div class="label"><Icon name="progress" />PROGRESS</div>
+        <div class="h-separator"></div>
         <div class="value">
           <div v-if="getMilestonesTotal" class="milestones-completed">{{ getMilestonesComplete }}</div>
           <div v-if="getMilestonesTotal" class="milestones-separator">/</div>
@@ -56,6 +59,7 @@
       </div>
       <div v-if="timers.deleted" class="tab coursework-deleted">
         <div class="label"><Icon name="trash" />DELETED</div>
+        <div class="h-separator"></div>
         <div class="value">{{ this.getCountdown(timers.deleted) }}</div>
       </div>
     </template>
@@ -250,27 +254,21 @@ export default {
       &.coursework-deleted {
         grid-area: deleted;
         color: $color-error-soft;
-        .label { border-color: $color-error-soft; }
+        .h-separator { border-color: $color-error-soft; }
       }
-      .label {
+      .h-separator {
+        align-self: stretch;
+        margin: 5px 0;
+        border-bottom: 2px solid $color-cyan;
+        box-shadow: 0 2px 0 rgba($color-cyan-d2, .8);
+      }
+      .label, .value {
+        padding: 0 14px;
+        font-weight: 600;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 0 8px 4px 8px;
-        margin-bottom: 4px;
-        border-bottom: 1px solid $color-cyan;
-        font-weight: 600;
         .icon-wrapper { margin-right: 5px; }
-      }
-      .value {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-weight: 600;
-        .icon-wrapper {
-          margin-right: 5px;
-          &.highlight { color: lime; }
-        }
       }
     }
   }
@@ -280,11 +278,11 @@ export default {
   }
   .soon {
     color: $color-mustard !important;
-    .label { border-color: $color-mustard !important; }
+    .h-separator { border-color: $color-mustard !important; }
   }
   .late {
     color: $color-error-soft !important;
-    .label { border-color: $color-error-soft !important; }
+    .h-separator { border-color: $color-error-soft !important; }
   }
 }
 
@@ -303,7 +301,6 @@ export default {
 .coursework-status {
   align-self: start;
   display: flex;
-  font-size: 18px;
   align-items: center;
   > * { margin: 0 4px; }
 }

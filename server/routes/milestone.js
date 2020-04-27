@@ -5,7 +5,7 @@ const permissions = require('../lib/permissions.js');
 const router = express.Router();
 
 /**
- * GET /milestones/list
+ * GET /milestone/list
  */
 router.get('/list', async (req, res) => {
   let error;
@@ -20,7 +20,7 @@ router.get('/list', async (req, res) => {
 });
 
 /**
- * GET /milestones/get
+ * GET /milestone/get
  */
 router.get('/get', async (req, res) => {
   let error;
@@ -35,7 +35,7 @@ router.get('/get', async (req, res) => {
 });
 
 /**
- * POST /milestones/create
+ * POST /milestone/create
  */
 router.post('/create', async (req, res) => {
   let error;
@@ -50,7 +50,7 @@ router.post('/create', async (req, res) => {
 });
 
 /**
- * POST /milestones/edit
+ * POST /milestone/edit
  */
 router.post('/edit', async (req, res) => {
   let error;
@@ -65,7 +65,7 @@ router.post('/edit', async (req, res) => {
 });
 
 /**
- * POST /milestones/delete
+ * POST /milestone/delete
  */
 router.post('/delete', async (req, res) => {
   let error;
@@ -80,7 +80,7 @@ router.post('/delete', async (req, res) => {
 });
 
 /**
- * POST /milestones/setProgress
+ * POST /milestone/setProgress
  */
 router.post('/setProgress', async (req, res) => {
   let error;

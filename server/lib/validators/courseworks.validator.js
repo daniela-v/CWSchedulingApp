@@ -1,6 +1,20 @@
 const validate = require('validate.js');
 
 const validator = {
+  addParticipant: {
+    member: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+  },
+  editParticipant: {
+    team: {
+      presence: {
+        allowEmpty: false,
+      },
+    },
+  },
   delete: {
     title: {
       presence: {

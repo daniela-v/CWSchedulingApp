@@ -31,12 +31,11 @@ module.exports = {
   async hasCourseworkReadOnlyPermission(userId = 0, courseworkId = 0, sharedToken = null) {
     const coursework = await Courseworks.findOne({ where: { id: courseworkId } });
     if (!coursework) {
-      throw { _system: 'System called hasCourseworkReadOnlyPermission with an invalid coursework' };
+      throw { _notification: 'The coursework could not be found' };
     }
 
     // Checking access token from shared link
     if (sharedToken) {
-      // Trying to use an access token on a coursework that does not have sharing enabled should throw an explanatory notification error
       if (!coursework.shared) {
         throw { _notification: 'This coursework does not have sharing enabled' };
       }

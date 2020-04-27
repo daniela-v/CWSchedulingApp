@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     async trySession() {
-      const response = await axios.get('/users/session');
+      const response = await axios.get('/user/session');
       this.$store.commit('authenticate', response.data.result || null);
     },
   },
@@ -46,7 +46,6 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap");
 @import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700,900&display=swap');
 @import './scss/_animations';
-@import './scss/_loading';
 @import './scss/_normalize';
 @import './scss/_mixins';
 

@@ -1,17 +1,17 @@
 module.exports = {
   devServer: {
     proxy: {
-      '/users': {
+      '/user/': {
         target: 'http://localhost:5000',
         ws: true,
         changeOrigin: true,
       },
-      '/milestones': {
+      '/milestone/': {
         target: 'http://localhost:5000',
         ws: true,
         changeOrigin: true,
       },
-      '/courseworks': {
+      '/coursework/': {
         target: 'http://localhost:5000',
         ws: true,
         changeOrigin: true,

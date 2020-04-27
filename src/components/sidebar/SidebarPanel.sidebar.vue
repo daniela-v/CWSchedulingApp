@@ -3,7 +3,7 @@
     <Button name="sidepanel-title" :icon="getArrowDirection" type="inversed expand" :click="expand">{{ title }}</Button>
     <transition @enter="expandEnter" @afterEnter="expandAfterEnter" @leave="expandLeave" appear>
       <div v-if="isExpanded" class="sidepanel-content">
-        <component :is="component" v-for="(item, id) in data" :key="id" :data="item" />
+        <component :is="component" v-for="(item, id) in data" :key="id" v-bind="item" />
       </div>
     </transition>
   </div>
