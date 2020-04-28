@@ -5,7 +5,8 @@
     </div>
     <!-- In progress -->
     <transition name="fade" mode="out-in" appear>
-      <div v-if="isTabActive('progress') && getUser" :key="tabRKey" class="panel coursework-progress">
+      <component v-if="isTabActive('create') && getUser" :is="CourseworkCreate" :key="tabRKey" class="panel coursework-create" />
+      <div v-else-if="isTabActive('progress') && getUser" :key="tabRKey" class="panel coursework-progress">
         <div class="panel-title">
           <div class="title">
             <Tag>IN PROGRESS</Tag>
@@ -21,7 +22,7 @@
             </template>
             <div v-else class="not-found">
               <span class="message">You don't have any courseworks in progress</span>
-              <Button name="start-a-new-course" type="dialog">Start a new coursework</Button>
+              <Button v-bind="control.startCoursework" type="dialog">Start a new coursework</Button>
             </div>
           </div>
         </transition>
@@ -41,11 +42,9 @@
             <template v-if="courseworkCompleted.length > 0">
               <Coursework v-for="(coursework) in courseworkCompleted" :key="coursework.id" :data="coursework" />
             </template>
-            <template v-else>
-              <div class="not-found">
-                <span class="message">You don't have any completed courseworks</span>
-              </div>
-            </template>
+            <div v-else class="not-found">
+              <span class="message">You don't have any completed courseworks</span>
+            </div>
           </div>
         </transition>
       </div>
@@ -69,23 +68,26 @@
             <template v-if="getSearchResults.length > 0">
               <Coursework v-for="(coursework, id) in getSearchResults" :key="id" :data="coursework" />
             </template>
-            <template v-else>
-              <div class="not-found">
-                <span class="message">No results found</span>
-              </div>
-            </template>
+            <div v-else class="not-found">
+              <span class="message">No results found</span>
+            </div>
           </div>
         </transition>
       </div>
       <!-- Recent -->
-      <div v-else-if="isTabActive('recent')" :key="tabRKey" class="panel coursework-recent">
+      <div v-else :key="tabRKey" class="panel coursework-recent">
         <div class="panel-title">
           <div class="title">
             <Tag>MOST RECENT</Tag>
           </div>
         </div>
         <div class="panel-content">
-          <Coursework v-for="(coursework, id) in getRecentResults" :key="id" :data="coursework" />
+          <template v-if="getRecentResults.length > 0">
+            <Coursework v-for="(coursework, id) in getRecentResults" :key="id" :data="coursework" />
+          </template>
+          <div v-else class="not-found">
+            <span class="message">No public courseworks found</span>
+          </div>
         </div>
       </div>
     </transition>
@@ -96,6 +98,7 @@
 import _ from 'lodash';
 
 import Coursework from '@/components/Coursework.component.vue';
+import CourseworkCreate from '@/views/coursework/CourseworkCreate.vue';
 import Button from '@/components/Button.component.vue';
 import Tag from '@/components/Tag.component.vue';
 
@@ -103,15 +106,18 @@ export default {
   components: { Coursework, Button, Tag },
   data() {
     return {
+      CourseworkCreate,
       tabRKey: 0,
       contentRKey: 0,
       tabs: {
+        create: { href: { name: 'coursework', query: { tab: 'create' } }, name: 'tab-create', icon: 'clipboard', text: 'Create coursework', condition: (() => this.getUser) },
         progress: { href: { name: 'coursework', query: { tab: 'progress' } }, name: 'tab-in-progress', icon: 'access_time', text: 'In progress', condition: (() => this.getUser) },
         completed: { href: { name: 'coursework', query: { tab: 'completed' } }, name: 'tab-completed', icon: 'check', text: 'Completed', condition: (() => this.getUser) },
         search: { href: { name: 'coursework', query: { tab: 'search' } }, name: 'tab-search-result', icon: 'search', text: 'Search result', condition: (() => this.searchTags) },
         recent: { href: { name: 'coursework', query: { tab: 'recent' } }, name: 'tab-recent', icon: 'menu', text: 'Most recent' },
       },
       control: {
+        startCoursework: { name: 'start-coursework', type: 'dialog', icon: 'clipboard', text: 'Start a new coursework', href: { query: { tab: 'create' } } },
         refreshSearch: { name: 'refresh-search', type: 'dialog', icon: 'repeat', text: 'Refresh', click: this.refreshSearch },
         refreshCoursework: { name: 'refresh-coursework', type: 'dialog', icon: 'repeat', text: 'Refresh', click: this.refreshCoursework },
         clearSearch: { name: 'clear-search', type: 'dialog', icon: 'close', text: 'Clear', click: this.clearSearch },

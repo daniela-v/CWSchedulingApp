@@ -147,7 +147,7 @@
                     </div>
                   </section>
                 </section>
-                <router-view v-else class="coursework-view" />
+                <router-view v-else class="coursework-view" :coursework.sync="coursework" />
               </transition>
             </div>
           </transition>
@@ -428,6 +428,9 @@ export default {
     async getUser() {
       const { coursework } = this.$route.params;
       await this.loadCoursework(coursework);
+    },
+    'coursework.deleted': function deletedChange() {
+      this.updateCountdown();
     },
   },
 };

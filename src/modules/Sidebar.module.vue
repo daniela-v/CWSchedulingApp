@@ -24,7 +24,7 @@
             <div class="not-found">
               <Icon name="notice" />No courseworks found
             </div>
-            <Button name="create-coursework" icon="repeat" type="dialog" :click="switchAccount">Create a coursework</Button>
+            <Button name="start-coursework" icon="clipboard" type="dialog" :href="{ name: 'coursework', query: { tab: 'create' } }">Start a new coursework</Button>
           </template>
         </template>
       </div>

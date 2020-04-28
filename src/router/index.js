@@ -22,13 +22,6 @@ const routes = [
     path: '/courseworks',
     name: 'coursework',
     component: () => import('../views/coursework/Coursework.vue'),
-    children: [
-      {
-        path: 'create',
-        name: 'courseworkCreate',
-        component: () => import('../views/coursework/CourseworkCreate.vue'),
-      },
-    ],
   },
   {
     path: '/courseworks/:coursework?',

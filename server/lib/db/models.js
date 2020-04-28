@@ -22,19 +22,15 @@ const sequelize = {
         this.models[this.capitalize(name)] = model(sql, Sequelize, this.snake(name));
         this.seeds[this.capitalize(name)] = seed;
       });
-      // // Map the table name of each model
-      // const tables = _.map(this.models, (model) => model.tableName);
-      // // Synchronize the models with the database
-      // await sql.sync({
-      //   force,
-      //   searchPath: new RegExp(tables.join('|')),
-      // });
       if (force) {
         console.log('\u001b[36m    Synchronizing database\u001b[0m');
         // eslint-disable-next-line
         for (const seed in this.seeds) {
           await this.models[seed].sync({ force: true }); // eslint-disable-line
-          await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
+          // Only populate the development database with seeds
+          if (process.env.SQL === 'develop') {
+            await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
+          }
         }
       }
     } catch (e) {

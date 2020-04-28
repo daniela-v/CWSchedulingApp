@@ -24,6 +24,7 @@ const validator = {
   },
   create: {
     title: {
+      presence: true,
       length: {
         minimum: 3,
         maximum: 32,
@@ -35,6 +36,7 @@ const validator = {
       },
     },
     module: {
+      presence: true,
       length: {
         minimum: 3,
         maximum: 32,
@@ -51,9 +53,7 @@ const validator = {
       },
     },
     expectedDate: {
-      presence: {
-        allowEmpty: false,
-      },
+      presence: true,
       type: {
         type: (value) => {
           const isDate = new Date(value);

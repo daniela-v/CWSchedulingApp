@@ -212,6 +212,7 @@ export default {
     grid-template-areas: "title title status status"
                          "deadline participants milestones deleted";
     grid-column-gap: 10px;
+    height: 160px;
     border-radius: 4px;
     .coursework-title {
       grid-area: title;

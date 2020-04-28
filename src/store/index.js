@@ -77,8 +77,11 @@ export default new Vuex.Store({
     clearAllCourseworks(state, section) {
       Vue.set(state.coursework, section, []);
     },
-    setAllCourseworks(state, { section, results }) {
-      Vue.set(state.coursework, section, results);
+    addCoursework(state, { section, coursework }) {
+      state.coursework[section].push(coursework);
+    },
+    setAllCourseworks(state, { section, courseworks }) {
+      Vue.set(state.coursework, section, courseworks);
     },
   },
   actions: {
@@ -136,7 +139,7 @@ export default new Vuex.Store({
       if (results.data.error) {
         commit('pushNotification', { icon: 'warning', text: results.data.error._system });
       }
-      commit('setAllCourseworks', { section, results: results.data.result });
+      commit('setAllCourseworks', { section, courseworks: results.data.result });
       return results;
     },
   },
