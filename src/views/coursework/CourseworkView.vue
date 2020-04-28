@@ -368,7 +368,6 @@ export default {
       this.$set(this, 'loading', { status: 'pending', message: 'Loading coursework' });
       const shared = this.$route.query.share;
       const response = await this.$store.dispatch('get', { url: '/coursework/get', params: { coursework, shared } });
-      console.log(response);
       if (response.error) {
         this.$set(this, 'loading', { status: 'failed', message: response.error._system || response.error._notification });
       } else {
@@ -410,7 +409,6 @@ export default {
     },
     isTabActive(tab) {
       const query = this.$route.query.tab || 'overview';
-      console.log(query);
       return (query === tab) ? 'active' : null;
     },
     getFullDate(timestamp) {
