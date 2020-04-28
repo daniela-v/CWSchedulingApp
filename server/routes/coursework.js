@@ -43,7 +43,6 @@ router.post('/create', async (req, res) => {
     await permissions.hasPrivileges(req.session.user);
     result = await courseworks.createCoursework(req.session.user, req.body);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });

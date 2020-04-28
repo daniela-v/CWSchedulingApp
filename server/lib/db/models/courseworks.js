@@ -18,15 +18,15 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
     allowNull: false,
   },
   description: type.STRING(1024),
-  deleted: type.DATE,
+  deleted: type.DATE(3),
   privacy: {
     type: type.BOOLEAN,
     allowNull: false,
   },
   expectedDate: {
-    type: type.DATE,
+    type: type.DATE(3),
     allowNull: false,
   },
-  completedDate: type.DATE,
-  shared: type.DATE,
+  completedDate: type.DATE(3),
+  shared: type.DATE(3),
 });

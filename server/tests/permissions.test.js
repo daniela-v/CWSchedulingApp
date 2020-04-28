@@ -34,21 +34,11 @@ describe('Get read only permission for courseworks', () => {
     const res = await permissions.hasCourseworkReadOnlyPermission(5, 1);
     expect(res).toEqual(true);
   });
-  
-  it('returns a system error if coursework is invalid', async () => {
-    let error;
-    try {
-      await permissions.hasCourseworkReadOnlyPermission(1, 1512);
-    } catch (e) {
-      error = e;
-    }
-    expect(error._system).toEqual('System called hasCourseworkReadOnlyPermission with an invalid coursework');
-  });
 
   it('returns a notification error if user not a participant and coursework is private', async () => {
     let error;
     try {
-      await permissions.hasCourseworkReadOnlyPermission(5, 2);
+      await permissions.hasCourseworkReadOnlyPermission(6, 1);
     } catch (e) {
       error = e;
     }

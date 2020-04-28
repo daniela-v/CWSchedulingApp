@@ -93,7 +93,7 @@ const courseworks = {
     const queryResult = await sql.query(query, {
       replacements: { owner, title: `%${title}%`, module: `%${module}%`, description: `%${description}%` },
       type: QueryTypes.SELECT,
-      logging: (log) => console.log(`\n    getAllCourseworks::\n${log.replace(/[ ]+/g, ' ')} \\G`),
+      // logging: (log) => console.log(`\n    getAllCourseworks::\n${log.replace(/[ ]+/g, ' ')} \\G`),
     });
     const courseworkReturnPromise = queryResult.map((cw) => this.formatCourseworkReturn(cw, brief));
     return Promise.all(courseworkReturnPromise);

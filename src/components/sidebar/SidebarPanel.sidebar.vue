@@ -72,5 +72,8 @@ export default {
     border-top: 1px solid $color-cyan;
     overflow-y: auto;
   }
+  .btn-sidepanel-title .text {
+    text-align: left;
+  }
 }
 </style>

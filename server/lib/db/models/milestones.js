@@ -15,12 +15,12 @@ module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
   },
   description: type.STRING(1024),
   startedDate: {
-    type: type.DATE,
+    type: type.DATE(3),
     allowNull: false,
   },
   expectedDate: {
-    type: type.DATE,
+    type: type.DATE(3),
     allowNull: false,
   },
-  completedDate: type.DATE,
+  completedDate: type.DATE(3),
 });
