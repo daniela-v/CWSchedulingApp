@@ -182,6 +182,7 @@
                   </div>
                   <div class="milestones-list">
                     <div class="list">
+                      <Tag class="title">MILESTONES</Tag>
                       <SidebarPanel name="milestone" title="IN PROGRESS" :component="Milestone" :data="getMilestonesInProgress" :expanded="true" />
                       <SidebarPanel name="milestone" title="COMPLETED" :component="Milestone" :data="getMilestonesCompleted" :expanded="false" />
                     </div>
@@ -662,9 +663,13 @@ export default {
               display: flex;
               flex-direction: column;
               box-sizing: border-box;
-              border-left: 1px solid $color-cyan;
-              border-right: 1px solid $color-cyan;
-              padding: 10px;
+              border: 1px solid $color-cyan;
+              border-radius: 4px;
+              padding-bottom: 10px;
+              .title {
+                align-self: center;
+                margin: 10px 0;
+              }
               .list {
                 flex: 1;
                 display: flex;
