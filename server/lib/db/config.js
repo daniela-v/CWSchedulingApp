@@ -6,8 +6,8 @@ const Sequelize = require('sequelize');
  */
 process.env.SQL = process.env.SQL || 'develop';
 const sql = new Sequelize({
-  host: 'localhost',
-  // host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
+  // host: 'localhost',
+  host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
   username: `cwscheduleapp_${process.env.SQL}`,
   password: 'cwscheduleapp',
   database: `cwscheduleapp_${process.env.SQL}`,
