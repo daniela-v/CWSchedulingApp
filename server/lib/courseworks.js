@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const { QueryTypes } = require('sequelize');
 const { sql } = require('./db/config');

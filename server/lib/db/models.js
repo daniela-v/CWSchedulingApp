@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-const _ = require('lodash');
 
 const { promisify } = require('util');
 const fs = require('fs');
