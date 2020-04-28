@@ -11,13 +11,13 @@
         <Icon v-if="coursework.owner === getUser.id" name="crown" class="is-owner" />
       </div>
       <div class="coursework-time">
-        <div class="deadline" :class="[ getStatusColor ]">
-          <Icon :name="getStatusIcon" class="status" />
-          <span class="time">{{ getCompletedDate || this.getCountdown(timers.expectedDate, true) }}</span>
-        </div>
         <div v-if="coursework.deleted" class="delete">
           <Icon name="trash" />
           <span class="time">{{ this.getCountdown(timers.deleted) }}</span>
+        </div>
+        <div class="deadline" :class="[ getStatusColor ]">
+          <Icon :name="getStatusIcon" class="status" />
+          <span class="time">{{ getCompletedDate || this.getCountdown(timers.expectedDate, true) }}</span>
         </div>
       </div>
     </template>
@@ -104,9 +104,9 @@ export default {
     getStatus() {
       if (this.coursework.completedDate) {
         if (this.coursework.completedDate > this.coursework.expectedDate) {
-          return { icon: 'check', status: 'late' };
+          return { icon: 'flag', status: 'late' };
         }
-        return { icon: 'check', status: 'completed' };
+        return { icon: 'flag', status: 'completed' };
       }
       if (this.timers.expectedDate < 0) {
         return { icon: 'warning', status: 'late' };
@@ -131,7 +131,7 @@ export default {
       }
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const date = new Date(this.coursework.completedDate);
-      return (this.coursework.completedDate) ? `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}` : false;
+      return `${date.getDate().toString().padStart(2, '0')} ${months[date.getMonth()]} ${date.getFullYear()}`;
     },
     getMilestonesTotal() {
       return (this.coursework.milestoneIncomplete || 0) + this.getMilestonesComplete;
@@ -316,10 +316,10 @@ export default {
     align-items: center;
     font-weight: 600;
     .icon-wrapper { margin-right: 5px; }
-    &.deadline { justify-self: left; }
+    &.deadline { justify-self: right; }
     &.delete {
       color: $color-error-soft;
-      justify-self: right;
+      justify-self: left;
     }
   }
 }

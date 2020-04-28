@@ -38,7 +38,7 @@ export default {
         title: { id: 'cwe-title', label: 'Title', type: 'text', placeholder: 'coursework title' },
         module: { id: 'cwe-module', label: 'Module', type: 'text', placeholder: 'coursework module' },
         description: { id: 'cwe-description', label: 'Description', type: 'textarea', placeholder: 'coursework description' },
-        expectedDate: { id: 'cwe-expected', label: 'Expected Date', type: 'datetime', minDate: Date.now() + (86400 * 1000), model: Date.now() + (86400 * 1000) },
+        expectedDate: { id: 'cwe-expected', label: 'Expected Date', type: 'datetime', minDate: Date.now() + (60 * 1000), model: Date.now() + (60 * 1000) },
       },
     };
   },

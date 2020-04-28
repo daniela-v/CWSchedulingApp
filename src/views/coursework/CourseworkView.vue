@@ -7,7 +7,7 @@
         </div>
         <div class="coursework-content">
           <transition name="fade" mode="out-in" appear>
-            <div v-if="isTabActive('overview') && getUser" class="panel coursework-overview">
+            <div v-if="isTabActive('overview') && getUser" :key="tabRKey" class="panel coursework-overview">
               <section class="subpanel coursework-information">
                 <header class="subpanel-header">
                   <div class="title">{{ coursework.title }}</div>
@@ -20,10 +20,10 @@
                       <Icon v-for="i in coursework.participantsNumber" :key="i" name="person" />
                     </VLine>
                     <VLine icon="progress" label="MILESTONES" class="progress">
-                      <div v-if="getMilestonesTotal" class="milestones-completed">{{ getMilestonesComplete }}</div>
-                      <div v-if="getMilestonesTotal" class="milestones-separator">/</div>
-                      <div class="milestones-total">{{ getMilestonesTotal || 'No milestones' }}</div>
-                      <div v-if="getMilestonesTotal" class="milestones-ratio">({{ getMilestonesRatio }}%)</div>
+                      <div v-if="getTotalMilestones" class="milestones-completed">{{ getMilestonesCompleted.length }}</div>
+                      <div v-if="getTotalMilestones" class="milestones-separator">/</div>
+                      <div class="milestones-total">{{ getTotalMilestones || 'No milestones' }}</div>
+                      <div v-if="getTotalMilestones" class="milestones-ratio">({{ getTotalMilestonesRatio(getMilestonesCompleted.length) * 100 }}%)</div>
                     </VLine>
                   </div>
                   <div class="group">
@@ -89,7 +89,7 @@
                     <div v-if="getCompletedStatus" class="complete" :class="[ getCompletedStatus.css ]">
                       <div class="title">
                         <span>COMPLETED<Tag :type="getCompletedStatus.css">{{ getCompletedStatus.status }}</TAG></span>
-                        <Icon name="check" />
+                        <Icon name="flag" />
                       </div>
                       <div class="status-info">
                         <span class="message">This coursework is marked as completed. No changes can be made while marked as complete.</span>
@@ -150,29 +150,51 @@
                 <router-view v-else class="coursework-view" :coursework.sync="coursework" />
               </transition>
             </div>
+            <div v-else-if="isTabActive('milestones') && getUser" :key="tabRKey" class="panel milestones-overview">
+              <transition name="fade" mode="out-in" appear>
+                <section v-if="$route.name === 'courseworkView'" class="subpanel milestones-view">
+                  <div class="milestones-breakdown">
+                    <div class="breakdown-panel completed">
+                      <div class="stats-wrapper">
+                        <div class="title">Overall</div>
+                        <div class="pie-group">
+                          <PieProgress :total="getTotalMilestones" :num="getMilestonesCompleted.length" label="Completed" />
+                        </div>
+                      </div>
+                      <div class="stats-wrapper">
+                        <div class="title">Completed Status</div>
+                        <div class="pie-group">
+                          <PieProgress :total="getMilestonesCompleted.length" :num="getCompletedOnTimeMilestones" label="On Track" />
+                          <PieProgress :total="getMilestonesCompleted.length" :num="getCompletedMissedMilestones" type="alert" label="Missed" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="breakdown-panel upcoming">
+                      <div class="stats-wrapper">
+                        <div class="title">Upcoming</div>
+                        <div class="pie-group">
+                          <PieProgress :total="getMilestonesInProgress.length" :num="getUpcomingOnTimeMilestones" label="On Track" />
+                          <PieProgress :total="getMilestonesInProgress.length" :num="getUpcomingDueMilestones" type="notice" label="Due" />
+                          <PieProgress :total="getMilestonesInProgress.length" :num="getUpcomingLateMilestones" type="alert" label="Late" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="milestones-list">
+                    <div class="list">
+                      <SidebarPanel name="milestone" title="IN PROGRESS" :component="Milestone" :data="getMilestonesInProgress" :expanded="true" />
+                      <SidebarPanel name="milestone" title="COMPLETED" :component="Milestone" :data="getMilestonesCompleted" :expanded="false" />
+                    </div>
+                    <div class="milestones-control">
+                      <Button v-if="isOwner" v-bind="control.createMilestone" type="dialog" />
+                    </div>
+                  </div>
+                </section>
+                <router-view v-else class="milestones-view" :coursework.sync="coursework" />
+              </transition>
+            </div>
           </transition>
         </div>
-        <!--
-          <div class="panel coursework-milestones">
-            <Tag>MILESTONES</Tag>
-            <div class="panel-content">
-              <div class="pie-progress">
-                <svg width="100%" height="100%" viewBox="0 0 42 42" class="donut">
-                  <circle class="background" cx="21" cy="21" r="15.91549430918954"></circle>
-                  <circle class="rail" cx="21" cy="21" r="15.91549430918954" stroke-width="4"></circle>
-                  <circle class="segment complete" cx="21" cy="21" r="15.91549430918954" :stroke-dasharray="getCompleteOffset.dashArray" :stroke-dashoffset="getCompleteOffset.dashOffset"></circle>
-                </svg>
-                <span class="percentage">{{ getMilestonesRatio }}%</span>
-              </div>
-              <div class="group">
-                <VLine label="ON TIME" class="on-time">{{ getOnTimeMilestones }}</VLine>
-                <VLine label="CLOSE CALL" class="close-call">{{ getCloseCallMilestones }}</VLine>
-                <VLine label="MISSED" class="missed">{{ getMissedMilestones }}</VLine>
-              </div>
-            </div>
-            <Button v-bind="control.viewMilestones" type="dialog" />
-          </div>
-        -->
       </div>
       <div v-else class="loading-wrapper">
         <Loading v-bind="loading" />
@@ -182,11 +204,13 @@
 </template>
 
 <script>
-/* eslint-disable vue/no-unused-components */
 import _ from 'lodash';
 
 import util from '@/lib/general';
 
+import SidebarPanel from '@/components/sidebar/SidebarPanel.sidebar.vue';
+import Milestone from '@/components/Milestone.component.vue';
+import PieProgress from '@/components/PieProgress.component.vue';
 import Loading from '@/components/Loading.component.vue';
 import Button from '@/components/Button.component.vue';
 import Tag from '@/components/Tag.component.vue';
@@ -199,9 +223,11 @@ import EditParticipant from '@/components/windows/EditParticipant.window.vue';
 import DeleteParticipant from '@/components/windows/DeleteParticipant.window.vue';
 
 export default {
-  components: { Loading, Button, Tag, VLine, Icon },
+  components: { SidebarPanel, PieProgress, Loading, Button, Tag, VLine, Icon },
   data() {
     return {
+      Milestone,
+      tabRKey: 0,
       timers: {
         deleted: null,
       },
@@ -215,10 +241,11 @@ export default {
         disableSharing: { name: 'disable-sharing', text: 'Disable', icon: 'close', click: () => this.changeSharing(false) },
         makePrivate: { name: 'make-private', text: 'Make private', icon: 'eye-blocked', click: () => this.changePrivacy(true) },
         makePublic: { name: 'make-public', text: 'Make public', icon: 'eye', click: () => this.changePrivacy(false) },
+        createMilestone: { name: 'create-milestone', text: 'Add milestone', icon: 'add', href: { name: 'milestoneCreate', params: { coursework: this.$route.params.coursework }, query: this.$route.query } },
         editCoursework: { name: 'edit-coursework', text: 'Edit coursework', icon: 'edit', href: { name: 'courseworkEdit', params: { coursework: this.$route.params.coursework }, query: this.$route.query } },
         restoreCoursework: { name: 'restore-coursework', text: 'Restore', icon: 'restore', click: () => this.restoreCoursework() },
         deleteCoursework: { name: 'delete-coursework', text: 'Delete coursework', icon: 'trash', click: () => this.deleteCoursework() },
-        setComplete: { name: 'set-incomplete', text: 'Finish coursework', icon: 'check', click: () => this.changeProgress(true) },
+        setComplete: { name: 'set-incomplete', text: 'Finish coursework', icon: 'flag', click: () => this.changeProgress(true) },
         setIncomplete: { name: 'set-complete', text: 'Mark as incomplete', icon: 'close', click: () => this.changeProgress(false) },
         inviteMember: { name: 'invite-member', text: 'Invite member', icon: 'person', click: () => this.inviteMember() },
         editMember: { name: 'edit-member', text: 'Edit', icon: 'edit' },
@@ -242,24 +269,6 @@ export default {
     isOwner() {
       return (this.getUser && this.getUser.id === this.coursework.owner);
     },
-    getMilestonesTotal() {
-      return (this.coursework.milestoneIncomplete || 0) + this.getMilestonesComplete;
-    },
-    getMilestonesComplete() {
-      return (this.coursework.milestoneComplete || 0);
-    },
-    getMilestonesRatio() {
-      const division = (this.getMilestonesTotal) ? this.getMilestonesComplete / this.getMilestonesTotal : 0;
-      const r = Math.floor(division * 100);
-      return r;
-    },
-    getCompleteOffset() {
-      const r = this.getMilestonesRatio;
-      return {
-        dashArray: `${r} ${100 - r}`,
-        dashOffset: 25,
-      };
-    },
     getCompletedStatus() {
       const { completedDate, expectedDate } = this.coursework;
       if (!completedDate) return null;
@@ -272,27 +281,62 @@ export default {
       }
       return { status: 'ON TIME' };
     },
-    getMissedMilestones() {
+    // Milestones
+    getTotalMilestones() {
+      return this.getMilestonesInProgress.length + this.getMilestonesCompleted.length;
+    },
+    getMilestonesInProgress() {
+      return _.chain(this.coursework.milestones)
+        .reject((m) => m.completedDate)
+        .orderBy('expectedDate', 'asc')
+        .map((m) => ({
+          data: m,
+        }))
+        .value();
+    },
+    getMilestonesCompleted() {
+      return _.chain(this.coursework.milestones)
+        .filter((m) => m.completedDate)
+        .orderBy('expectedDate', 'asc')
+        .map((m) => ({
+          data: m,
+        }))
+        .value();
+    },
+    getCompletedMissedMilestones() {
       const sum = _.chain(this.coursework.milestones)
         .filter((c) => c.completedDate && c.completedDate > c.expectedDate)
-        .sum()
         .value();
-      return sum;
+      return sum.length;
     },
-    getCloseCallMilestones() {
+    getCompletedOnTimeMilestones() {
       const sum = _.chain(this.coursework.milestones)
-        .filter((c) => c.completedDate && c.completedDate < c.expectedDate && c.completedDate > c.expectedDate - (86400 * 1000))
-        .sum()
+        .filter((c) => c.completedDate && c.completedDate <= c.expectedDate - (86400 * 1000))
         .value();
-      return sum;
+      return sum.length;
     },
-    getOnTimeMilestones() {
+    getUpcomingLateMilestones() {
+      const now = Date.now();
       const sum = _.chain(this.coursework.milestones)
-        .filter((c) => c.completedDate && c.completedDate < c.expectedDate - (86400 * 1000))
-        .sum()
+        .filter((c) => !c.completedDate && now > c.expectedDate)
         .value();
-      return sum;
+      return sum.length;
     },
+    getUpcomingDueMilestones() {
+      const now = Date.now();
+      const sum = _.chain(this.coursework.milestones)
+        .filter((c) => !c.completedDate && now > c.expectedDate - (86400 * 1000) && now <= c.expectedDate)
+        .value();
+      return sum.length;
+    },
+    getUpcomingOnTimeMilestones() {
+      const now = Date.now();
+      const sum = _.chain(this.coursework.milestones)
+        .filter((c) => !c.completedDate && now <= c.expectedDate - (86400 * 1000))
+        .value();
+      return sum.length;
+    },
+    //
     getGroupedMembers() {
       const group = _.reduce(this.coursework.participants, (acc, val) => {
         acc[val.team] = acc[val.team] || [];
@@ -337,6 +381,13 @@ export default {
         cw.shared = util.datetime.fromUTC(cw.shared);
         cw.createdAt = util.datetime.fromUTC(cw.createdAt);
         cw.updatedAt = util.datetime.fromUTC(cw.updatedAt);
+        cw.milestones.forEach((m) => {
+          m.startedDate = util.datetime.fromUTC(m.startedDate);
+          m.expectedDate = util.datetime.fromUTC(m.expectedDate);
+          m.completedDate = util.datetime.fromUTC(m.completedDate);
+          m.createdAt = util.datetime.fromUTC(m.createdAt);
+          m.updatedAt = util.datetime.fromUTC(m.updatedAt);
+        });
         this.$set(this, 'coursework', cw);
         this.updateCountdown();
       }
@@ -349,10 +400,10 @@ export default {
             path: this.$route.path,
             params: { ...this.$route.params },
             query: { ...this.$route.query, tab: key },
-          }),
+          }, () => { }),
           name: `tab-${key}`,
         };
-        this.$set(this.tabs, key, { ...this.tabs[key], ...tab });
+        this.$set(this.tabs, key, { ...tab, ...this.tabs[key] });
       });
     },
     isTabActive(tab) {
@@ -373,6 +424,10 @@ export default {
     },
     getCountdown(diff, full) {
       return util.datetime.getCountdown(diff, full);
+    },
+    getTotalMilestonesRatio(num) {
+      if (!this.getTotalMilestones) return 0;
+      return num / this.getTotalMilestones;
     },
     inviteMember() {
       this.$store.commit('openWindow', { name: 'invite-member', title: 'Invite Member', type: 'dialog', component: AddParticipant, props: { coursework: this.coursework } });
@@ -417,6 +472,9 @@ export default {
     },
   },
   watch: {
+    '$route.query.tab': function tabChange() {
+      this.tabRKey += 1;
+    },
     '$route.params.coursework': async function courseworkChange(to, from) {
       // eslint-disable-next-line eqeqeq
       if (to != from) {
@@ -562,13 +620,69 @@ export default {
               .group { margin: 8px 0; }
             }
           }
+          &.milestones-view {
+            flex-flow: row wrap;
+            transition: opacity .2s ease;
+            .milestones-breakdown {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              margin-right: 10px;
+              .breakdown-panel {
+                display: flex;
+                flex-flow: row wrap;
+                .stats-wrapper {
+                  flex: 1;
+                  display: flex;
+                  flex-direction: column;
+                  box-sizing: border-box;
+                  margin: 10px;
+                  padding: 10px;
+                  border-radius: 5px;
+                  background-color: rgba(#000, .4);
+                  .title {
+                    font-size: 20px;
+                    font-weight: 600;
+                    text-align: center;
+                    margin-bottom: 10px;
+                  }
+                  .pie-group {
+                    flex: 1;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, 280px);
+                    justify-content: space-around;
+                    align-items: center;
+                  }
+                }
+              }
+            }
+            .milestones-list {
+              flex: 0 0 350px;
+              display: flex;
+              flex-direction: column;
+              box-sizing: border-box;
+              border-left: 1px solid $color-cyan;
+              border-right: 1px solid $color-cyan;
+              padding: 10px;
+              .list {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+              }
+              .milestones-control {
+                align-self: center;
+                display: flex;
+                flex-direction: column;
+                .button-vue {
+                  width: 180px;
+                  margin: 4px 0;
+                }
+              }
+            }
+          }
           &.coursework-view {
             align-self: stretch;
-            box-sizing: border-box;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
             min-width: 300px;
             transition: opacity .2s ease;
             .status-wrapper {
@@ -760,143 +874,6 @@ export default {
         }
       }
     }
-    // .coursework-breakdown {
-    //   flex: 1;
-    //   display: flex;
-    //   flex-direction: column;
-    //   align-items: center;
-    //   .h-separator {
-    //     align-self: stretch;
-    //     margin: 5px 0;
-    //     border-bottom: 2px solid $color-cyan;
-    //     box-shadow: 0 2px 0 rgba($color-cyan-d2, .8);
-    //   }
-    //   .coursework-title {
-    //     font-size: 40px;
-    //     font-weight: 600;
-    //     .value { color: darken($color-cyan, 15%); }
-    //   }
-    //   .coursework-data {
-    //     flex: 1;
-    //     align-self: stretch;
-    //     display: flex;
-    //     flex-flow: row wrap;
-    //     margin: 20px 0;
-    //     .group-by-2 {
-    //       margin: 10px;
-    //       flex: 1;
-    //       display: grid;
-    //       grid-template-columns: repeat(auto-fit, 350px);
-    //       grid-auto-rows: minmax(600px, 1fr);
-    //       grid-gap: 20px;
-    //       justify-content: space-around;
-    //     }
-    //     .panel {
-    //       align-self: stretch;
-    //       display: flex;
-    //       flex-direction: column;
-    //       align-items: center;
-    //       border-radius: 5px;
-    //       &:not(.multiple) {
-    //         background-color: rgba(darken($color-cyan-bg, 4%), .8);
-    //         padding: 20px 10px;
-    //       }
-    //       &.multiple .panel {
-    //         flex: 1;
-    //         margin: 10px 0;
-    //         &:first-child { margin-top: 0; }
-    //         &:last-child { margin-bottom: 0; }
-    //       }
-    //       .panel-content {
-    //         align-self: stretch;
-    //         flex: 1;
-    //         margin: 20px 0;
-    //         display: flex;
-    //         flex-direction: column;
-    //         align-items: center;
-    //         justify-content: space-around;
-
-    //         .group {
-    //           align-self: stretch;
-    //           display: flex;
-    //           flex-direction: column;
-    //           align-items: center;
-    //         }
-    //       }
-
-    //       &.coursework-participants .panel-content {
-    //         justify-content: flex-start;
-    //         .group {
-    //           align-items: stretch;
-    //           .team {
-    //             align-items: flex-start;
-    //             .label { padding: 0 2px; }
-    //             .value {
-    //               display: flex;
-    //               flex-direction: column;
-    //               padding: 0 2px;
-    //               .member .tag {
-    //                 margin: 2px 0;
-    //               }
-    //             }
-    //           }
-    //         }
-    //       }
-
-    //       &.coursework-share {
-    //         .share-token {
-    //           max-width: 200px;
-    //           padding: 8px;
-    //           border-radius: 5px;
-    //           background-color: rgba(#000, .3);
-    //           white-space: nowrap;
-    //           overflow: hidden;
-    //           text-overflow: ellipsis;
-    //         }
-    //         .share-control {
-    //           display: flex;
-    //           .button-vue {
-    //             margin: 0 4px;
-    //           }
-    //         }
-    //       }
-
-    //       &.coursework-control {
-    //         .button-vue {
-    //           margin: 4px 0;
-    //         }
-    //       }
-
-    //       &.coursework-milestones {
-    //         .pie-progress {
-    //           position: relative;
-    //           .percentage {
-    //             font-size: 32px;
-    //             font-weight: 700;
-    //             position: absolute;
-    //             left: 50%;
-    //             top: 50%;
-    //             transform: translate(-50%, -50%);
-    //           }
-    //         }
-    //       }
-    //       svg.donut {
-    //         .background { fill: transparent; }
-    //         .rail, .segment {
-    //           stroke-width: 3px;
-    //         }
-    //         .rail {
-    //           fill: transparent;
-    //           stroke: darken($color-cyan, 20%);
-    //         }
-    //         .segment {
-    //           fill: transparent;
-    //           &.complete { stroke: $color-cyan; }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
   }
   .loading-wrapper {
     display: flex;

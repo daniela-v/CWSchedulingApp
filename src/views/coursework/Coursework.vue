@@ -112,7 +112,7 @@ export default {
       tabs: {
         create: { href: { name: 'coursework', query: { tab: 'create' } }, name: 'tab-create', icon: 'clipboard', text: 'Create coursework', condition: (() => this.getUser) },
         progress: { href: { name: 'coursework', query: { tab: 'progress' } }, name: 'tab-in-progress', icon: 'access_time', text: 'In progress', condition: (() => this.getUser) },
-        completed: { href: { name: 'coursework', query: { tab: 'completed' } }, name: 'tab-completed', icon: 'check', text: 'Completed', condition: (() => this.getUser) },
+        completed: { href: { name: 'coursework', query: { tab: 'completed' } }, name: 'tab-completed', icon: 'flag', text: 'Completed', condition: (() => this.getUser) },
         search: { href: { name: 'coursework', query: { tab: 'search' } }, name: 'tab-search-result', icon: 'search', text: 'Search result', condition: (() => this.searchTags) },
         recent: { href: { name: 'coursework', query: { tab: 'recent' } }, name: 'tab-recent', icon: 'menu', text: 'Most recent' },
       },
