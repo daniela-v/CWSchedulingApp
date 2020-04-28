@@ -7,7 +7,7 @@
         </div>
         <div class="coursework-content">
           <transition name="fade" mode="out-in" appear>
-            <div v-if="isTabActive('overview') && getUser" :key="tabRKey" class="panel coursework-overview">
+            <div v-if="isTabActive('overview')" :key="tabRKey" class="panel coursework-overview">
               <section class="subpanel coursework-information">
                 <header class="subpanel-header">
                   <div class="title">{{ coursework.title }}</div>
@@ -150,7 +150,7 @@
                 <router-view v-else class="coursework-view" :coursework.sync="coursework" />
               </transition>
             </div>
-            <div v-else-if="isTabActive('milestones') && getUser" :key="tabRKey" class="panel milestones-overview">
+            <div v-else-if="isTabActive('milestones')" :key="tabRKey" class="panel milestones-overview">
               <transition name="fade" mode="out-in" appear>
                 <section v-if="$route.name === 'courseworkView'" class="subpanel milestones-view">
                   <div class="milestones-breakdown">
@@ -368,6 +368,7 @@ export default {
       this.$set(this, 'loading', { status: 'pending', message: 'Loading coursework' });
       const shared = this.$route.query.share;
       const response = await this.$store.dispatch('get', { url: '/coursework/get', params: { coursework, shared } });
+      console.log(response);
       if (response.error) {
         this.$set(this, 'loading', { status: 'failed', message: response.error._system || response.error._notification });
       } else {
@@ -409,6 +410,7 @@ export default {
     },
     isTabActive(tab) {
       const query = this.$route.query.tab || 'overview';
+      console.log(query);
       return (query === tab) ? 'active' : null;
     },
     getFullDate(timestamp) {
