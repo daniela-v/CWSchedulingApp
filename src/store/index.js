@@ -135,7 +135,6 @@ export default new Vuex.Store({
         }
         results = await axios.get('/coursework/list', { params: { ...search, search: true } });
       }
-      console.log(results);
       if (results.data.error) {
         commit('pushNotification', { icon: 'warning', text: results.data.error._system });
       }
