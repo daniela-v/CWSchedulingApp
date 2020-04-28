@@ -64,7 +64,7 @@ export default {
         });
       } else {
         const id = _.findIndex(this.coursework.participants, (p) => p.id === this.member.id);
-        this.$set(this.coursework.participants[id], 'team', response.result);
+        this.$set(this.coursework.participants[id], 'team', response.result.team);
         this.$store.commit('closeWindow');
       }
       this.$set(this.buttons.confirm, 'pending', false);

@@ -53,7 +53,7 @@ html, body, #app {
   min-height: 100vh;
 }
 
-input {
+input, textarea {
   border: none;
   background: none;
   outline: none;

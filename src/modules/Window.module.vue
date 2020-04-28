@@ -84,7 +84,7 @@ export default {
       font-size: 30px;
     }
   }
-  &:not(.dialog).btn-close {
+  &:not(.dialog) .btn-close {
     position: absolute;
     right: 5px;
     top: 5px;

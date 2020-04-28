@@ -43,6 +43,7 @@ router.post('/create', async (req, res) => {
     await permissions.hasPrivileges(req.session.user);
     result = await courseworks.createCoursework(req.session.user, req.body);
   } catch (e) {
+    console.log(e);
     error = e;
   }
   res.json({ result, error });
@@ -133,7 +134,6 @@ router.post('/addParticipant', async (req, res) => {
     await permissions.hasCourseworkWritePermission(req.session.user, req.body.coursework);
     result = await courseworks.addParticipant(req.body);
   } catch (e) {
-    console.log(e);
     error = e;
   }
   res.json({ result, error });

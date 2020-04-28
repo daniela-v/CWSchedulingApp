@@ -4,6 +4,7 @@ const { QueryTypes } = require('sequelize');
 const { sql } = require('./db/config');
 
 const validator = require('./validators/courseworks.validator.js');
+const { isEqual } = require('./general');
 const users = require('./users');
 const milestones = require('./milestones');
 
@@ -113,7 +114,7 @@ const courseworks = {
     const currentDate = new Date(Date.now()).toISOString();
     data.expectedDate = new Date(data.expectedDate).toISOString();
 
-    const { title, module, description = null, privacy = false, expectedDate } = data;
+    const { title, module, description = null, privacy = true, expectedDate } = data;
 
     if (expectedDate < currentDate) {
       throw { expectedDate: ['The expected date of the coursework cannot be earlier than the current date'] };
@@ -128,7 +129,7 @@ const courseworks = {
     const toInsertMember = { coursework: created.id, member: owner, team: 'Manager' };
     await CourseworkMembers.create(toInsertMember);
 
-    return this.formatCourseworkReturn(created.dataValues);
+    return this.getCoursework({ coursework: created.id });
   },
 
   async editCoursework(data) {
@@ -156,19 +157,17 @@ const courseworks = {
       throw { _notification: 'You cannot edit a completed coursework' };
     }
 
-    const copy = { ...courseworkData.dataValues, title, module, description, expectedDate };
-    if (_.isEqual(copy, courseworkData.dataValues)) {
+    const toUpdate = { title, module, description, expectedDate };
+    if (isEqual(toUpdate, courseworkData.dataValues)) {
       throw { _notification: 'No changes have been made to the coursework' };
     }
 
-    if (expectedDate < currentDate) {
-      throw { _notification: ['The expected date of the coursework cannot be earlier than the current date'] };
+    if (expectedDate !== coursework.expectedDate && expectedDate < currentDate) {
+      throw { expectedDate: ['The expected date of the coursework cannot be earlier than the current date'] };
     }
 
-    const toUpdate = { title, module, description, expectedDate };
     await Courseworks.update(toUpdate, { where: { id: coursework } });
-
-    return copy;
+    return toUpdate;
   },
 
   async deleteCoursework(data) {
@@ -348,15 +347,14 @@ const courseworks = {
       throw { _system: 'System called editParticipant on an invalid coursework member' };
     }
 
-    const copy = { ...courseworkMember.dataValues, team };
-    if (_.isEqual(copy, courseworkMember.dataValues)) {
+    const toUpdate = { team };
+    if (isEqual(toUpdate, courseworkMember.dataValues)) {
       throw { _notification: 'No changes have been made to this member' };
     }
 
-    const toUpdate = { team };
     await CourseworkMembers.update(toUpdate, { where: { coursework, member } });
 
-    return team;
+    return toUpdate;
   },
 
   async deleteParticipant(data) {
