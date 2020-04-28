@@ -51,6 +51,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-flag:before {
+  content: "\e92d";
+}
 .icon-group:before {
   content: "\e92c";
 }

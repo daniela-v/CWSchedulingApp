@@ -67,7 +67,7 @@ a {
   transition: color .15s linear, text-shadow .15s linear, background-color .15s linear;
   cursor: pointer;
 
-  &:hover:not(.icon):not(.button):not(.logo-wrapper):not(.coursework):not(.coursework-component-vue) {
+  &:hover:not(.icon):not(.button):not(.logo-wrapper):not(.coursework):not(.coursework-component-vue):not(.milestone-component-vue) {
     color: lighten($color-cyan, 20%);
     text-shadow: 0 0 1px $color-cyan !important;
   }
