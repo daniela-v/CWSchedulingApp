@@ -264,6 +264,7 @@ export default {
       const { coursework } = this.$route.params;
       await this.loadCoursework(coursework);
     }
+    this.formatDocumentTitle();
   },
   computed: {
     getUser() {
@@ -371,6 +372,20 @@ export default {
     },
   },
   methods: {
+    formatDocumentTitle(route) {
+      const { name, query = {} } = route || this.$route;
+      let title = `Milestone Manager - Coursework: ${(this.coursework) ? this.coursework.title : 'Invalid coursework'}`;
+      if (query.tab === 'milestones') {
+        title = `${title} - View Milestones`;
+      } else if (name === 'courseworkEdit') {
+        title = `${title} - Edit Coursework`;
+      } else if (name === 'milestoneCreate') {
+        title = `${title} - Create Milestone`;
+      } else if (name === 'milestoneEdit') {
+        title = `${title} - Edit Milestone`;
+      }
+      document.title = title;
+    },
     async loadCoursework(coursework) {
       this.$set(this, 'coursework', null);
       this.$set(this, 'loading', { status: 'pending', message: 'Loading coursework' });
@@ -398,6 +413,7 @@ export default {
           m.updatedAt = util.datetime.fromUTC(m.updatedAt);
         });
         this.$set(this, 'coursework', cw);
+        this.formatDocumentTitle();
         this.updateCountdown();
       }
     },
@@ -481,6 +497,9 @@ export default {
     },
   },
   watch: {
+    $route(to) {
+      this.formatDocumentTitle(to);
+    },
     '$route.query.tab': function tabChange() {
       this.tabRKey += 1;
     },

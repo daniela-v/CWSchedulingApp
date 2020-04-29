@@ -48,13 +48,18 @@ export default {
   },
   mounted() {
     const found = _.find(this.coursework.milestones, (m) => m.id.toString() === this.$route.params.milestoneId.toString());
+    let title = `Milestone Manager - Coursework: ${this.coursework.title} - Edit Milestone:`;
     if (found) {
+      title = `${title} ${found.title}`;
       this.$set(this, 'milestone', found);
       // Update model fields
       _.forEach(this.fields, (f, key) => {
         this.$set(this.fields[key], 'model', found[key]);
       });
+    } else {
+      title = `${title} Invalid milestone`;
     }
+    document.title = title;
   },
   computed: {
     returnHref() {

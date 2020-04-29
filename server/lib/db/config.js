@@ -4,13 +4,17 @@ const Sequelize = require('sequelize');
  * This file is used to create the connection to the database using the sequelize module
  * https://sequelize.org/v5/manual/
  */
+// SQL environment vars defaulting to localhost settings
 process.env.SQL = process.env.SQL || 'develop';
+process.env.DBHOST = process.env.DBHOST || 'localhost';
+process.env.DBUSER = process.env.DBUSER || 'cwscheduleapp';
+process.env.DBPASS = process.env.DBPASS || 'cwscheduleapp';
+process.env.DBNAME = process.env.DBNAME || 'cwscheduleapp';
 const sql = new Sequelize({
-  // host: 'localhost',
-  host: 'database-1.cxsa8qxfqxs5.eu-west-2.rds.amazonaws.com',
-  username: `cwscheduleapp_${process.env.SQL}`,
-  password: 'cwscheduleapp',
-  database: `cwscheduleapp_${process.env.SQL}`,
+  host: process.env.DBHOST,
+  username: `${process.env.DBUSER}_${process.env.SQL}`,
+  password: process.env.DBPASS,
+  database: `${process.env.DBNAME}_${process.env.SQL}`,
   dialect: 'mysql',
   pool: {
     max: 10,
