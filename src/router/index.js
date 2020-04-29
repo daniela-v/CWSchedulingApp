@@ -43,16 +43,9 @@ const routes = [
         component: () => import('../views/coursework/milestone/MilestoneCreate.vue'),
       },
       {
-        path: 'milestones/:milestone',
-        name: 'milestoneView',
-        component: () => import('../views/coursework/milestone/MilestoneView.vue'),
-        children: [
-          {
-            path: 'edit',
-            name: 'milestoneEdit',
-            component: () => import('../views/coursework/milestone/MilestoneEdit.vue'),
-          },
-        ],
+        path: 'milestones/:milestoneId?/edit',
+        name: 'milestoneEdit',
+        component: () => import('../views/coursework/milestone/MilestoneEdit.vue'),
       },
     ],
   },

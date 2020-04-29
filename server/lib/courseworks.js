@@ -148,7 +148,7 @@ const courseworks = {
     }
 
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called deleteCoursework on a deleted coursework' };
     }
 
@@ -161,7 +161,7 @@ const courseworks = {
       throw { _notification: 'No changes have been made to the coursework' };
     }
 
-    if (expectedDate !== coursework.expectedDate && expectedDate < currentDate) {
+    if (expectedDate < currentDate) {
       throw { expectedDate: ['The expected date of the coursework cannot be earlier than the current date'] };
     }
 
@@ -179,7 +179,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called deleteCoursework on a deleted coursework' };
     }
 
@@ -206,7 +206,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called changePrivacy on a deleted coursework' };
     }
 
@@ -231,7 +231,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called changeProgress on a deleted coursework' };
     }
 
@@ -265,7 +265,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called changeShared on a deleted coursework' };
     }
 
@@ -307,7 +307,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called addParticipant on a deleted coursework' };
     }
 
@@ -337,7 +337,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called editParticipant on a deleted coursework' };
     }
 
@@ -366,7 +366,7 @@ const courseworks = {
 
     const currentDate = new Date(Date.now()).toISOString();
     const isDeleted = courseworkData.deleted;
-    if (isDeleted && currentDate > isDeleted) {
+    if (isDeleted && currentDate > isDeleted.toISOString()) {
       throw { _system: 'System called deleteParticipant on a deleted coursework' };
     }
 

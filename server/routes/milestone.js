@@ -80,9 +80,9 @@ router.post('/delete', async (req, res) => {
 });
 
 /**
- * POST /milestone/setProgress
+ * POST /milestone/changeProgress
  */
-router.post('/setProgress', async (req, res) => {
+router.post('/changeProgress', async (req, res) => {
   let error;
   let result;
   try {

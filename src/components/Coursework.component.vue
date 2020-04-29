@@ -189,6 +189,11 @@ export default {
   display: grid;
   box-sizing: border-box;
   margin: 4px 0;
+  &:first-child {
+    margin-top: 0;
+    border-top: none;
+  }
+  &:last-child { margin-bottom: 0; }
   padding: 10px;
   border: 1px solid;
   border-color: transparent;

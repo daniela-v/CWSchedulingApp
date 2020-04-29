@@ -23,7 +23,7 @@
                       <div v-if="getTotalMilestones" class="milestones-completed">{{ getMilestonesCompleted.length }}</div>
                       <div v-if="getTotalMilestones" class="milestones-separator">/</div>
                       <div class="milestones-total">{{ getTotalMilestones || 'No milestones' }}</div>
-                      <div v-if="getTotalMilestones" class="milestones-ratio">({{ getTotalMilestonesRatio(getMilestonesCompleted.length) * 100 }}%)</div>
+                      <div v-if="getTotalMilestones" class="milestones-ratio">({{ (getTotalMilestonesRatio(getMilestonesCompleted.length) * 100).toFixed(1) }}%)</div>
                     </VLine>
                   </div>
                   <div class="group">
@@ -33,10 +33,11 @@
                   </div>
                 </section>
                 <section v-if="isOwner" class="subpanel-footer">
-                  <Button v-if="!coursework.completedDate" v-bind="control.setComplete" type="dialog">Finish coursework</Button>
+                  <Button v-if="$route.name !== 'courseworkView'" v-bind="control.showCoursework" type="dialog" />
+                  <Button v-if="!coursework.completedDate" v-bind="control.setComplete" type="dialog" />
                   <div class="group">
-                    <Button v-bind="control.editCoursework" type="dialog" />
-                    <Button v-if="!coursework.deleted" v-bind="control.deleteCoursework" icon="trash" type="google dialog">Delete Coursework</Button>
+                    <Button v-if="!coursework.completedDate" v-bind="control.editCoursework" type="dialog" />
+                    <Button v-if="!coursework.deleted" v-bind="control.deleteCoursework" icon="trash" type="google dialog" />
                   </div>
                 </section>
               </section>
@@ -152,17 +153,17 @@
             </div>
             <div v-else-if="isTabActive('milestones')" :key="tabRKey" class="panel milestones-overview">
               <transition name="fade" mode="out-in" appear>
-                <section v-if="$route.name === 'courseworkView'" class="subpanel milestones-view">
-                  <div class="milestones-breakdown">
+                <section class="subpanel milestones-view">
+                  <div class="milestones-breakdown" :key="milestonesRKey">
                     <div class="breakdown-panel completed">
                       <div class="stats-wrapper">
-                        <div class="title">Overall</div>
+                        <div class="title">Progress</div>
                         <div class="pie-group">
                           <PieProgress :total="getTotalMilestones" :num="getMilestonesCompleted.length" label="Completed" />
                         </div>
                       </div>
                       <div class="stats-wrapper">
-                        <div class="title">Completed Status</div>
+                        <div class="title">Performance</div>
                         <div class="pie-group">
                           <PieProgress :total="getMilestonesCompleted.length" :num="getCompletedOnTimeMilestones" label="On Track" />
                           <PieProgress :total="getMilestonesCompleted.length" :num="getCompletedMissedMilestones" type="alert" label="Missed" />
@@ -187,11 +188,10 @@
                       <SidebarPanel name="milestone" title="COMPLETED" :component="Milestone" :data="getMilestonesCompleted" :expanded="false" />
                     </div>
                     <div class="milestones-control">
-                      <Button v-if="isOwner" v-bind="control.createMilestone" type="dialog" />
+                      <Button v-if="isOwner && !coursework.completedDate" v-bind="control.createMilestone" type="dialog" />
                     </div>
                   </div>
                 </section>
-                <router-view v-else class="milestones-view" :coursework.sync="coursework" />
               </transition>
             </div>
           </transition>
@@ -229,6 +229,7 @@ export default {
     return {
       Milestone,
       tabRKey: 0,
+      milestonesRKey: 0,
       timers: {
         deleted: null,
       },
@@ -242,10 +243,11 @@ export default {
         disableSharing: { name: 'disable-sharing', text: 'Disable', icon: 'close', click: () => this.changeSharing(false) },
         makePrivate: { name: 'make-private', text: 'Make private', icon: 'eye-blocked', click: () => this.changePrivacy(true) },
         makePublic: { name: 'make-public', text: 'Make public', icon: 'eye', click: () => this.changePrivacy(false) },
-        createMilestone: { name: 'create-milestone', text: 'Add milestone', icon: 'add', href: { name: 'milestoneCreate', params: { coursework: this.$route.params.coursework }, query: this.$route.query } },
-        editCoursework: { name: 'edit-coursework', text: 'Edit coursework', icon: 'edit', href: { name: 'courseworkEdit', params: { coursework: this.$route.params.coursework }, query: this.$route.query } },
+        createMilestone: { name: 'create-milestone', text: 'Add milestone', icon: 'add', href: { name: 'milestoneCreate', params: { coursework: this.$route.params.coursework }, query: { ...this.$route.query, tab: 'overview' } } },
+        editCoursework: { name: 'edit-coursework', text: 'Edit coursework', icon: 'edit', href: { name: 'courseworkEdit', params: { coursework: this.$route.params.coursework }, query: { ...this.$route.query, tab: 'overview' } } },
         restoreCoursework: { name: 'restore-coursework', text: 'Restore', icon: 'restore', click: () => this.restoreCoursework() },
         deleteCoursework: { name: 'delete-coursework', text: 'Delete coursework', icon: 'trash', click: () => this.deleteCoursework() },
+        showCoursework: { name: 'show-coursework', text: 'Show coursework', icon: 'clipboard', href: { name: 'courseworkView', params: { coursework: this.$route.params.coursework }, query: this.$route.query } },
         setComplete: { name: 'set-incomplete', text: 'Finish coursework', icon: 'flag', click: () => this.changeProgress(true) },
         setIncomplete: { name: 'set-complete', text: 'Mark as incomplete', icon: 'close', click: () => this.changeProgress(false) },
         inviteMember: { name: 'invite-member', text: 'Invite member', icon: 'person', click: () => this.inviteMember() },
@@ -291,7 +293,10 @@ export default {
         .reject((m) => m.completedDate)
         .orderBy('expectedDate', 'asc')
         .map((m) => ({
-          data: m,
+          data: {
+            coursework: this.coursework,
+            milestone: m,
+          },
         }))
         .value();
     },
@@ -300,7 +305,10 @@ export default {
         .filter((m) => m.completedDate)
         .orderBy('expectedDate', 'asc')
         .map((m) => ({
-          data: m,
+          data: {
+            coursework: this.coursework,
+            milestone: m,
+          },
         }))
         .value();
     },
@@ -312,7 +320,7 @@ export default {
     },
     getCompletedOnTimeMilestones() {
       const sum = _.chain(this.coursework.milestones)
-        .filter((c) => c.completedDate && c.completedDate <= c.expectedDate - (86400 * 1000))
+        .filter((c) => c.completedDate && c.completedDate <= c.expectedDate)
         .value();
       return sum.length;
     },
@@ -491,6 +499,9 @@ export default {
     'coursework.deleted': function deletedChange() {
       this.updateCountdown();
     },
+    'coursework.milestones': function milestonesChanged() {
+      this.milestonesRKey += 1;
+    },
   },
 };
 </script>
@@ -663,12 +674,10 @@ export default {
               display: flex;
               flex-direction: column;
               box-sizing: border-box;
-              border: 1px solid $color-cyan;
-              border-radius: 4px;
               padding-bottom: 10px;
               .title {
                 align-self: center;
-                margin: 10px 0;
+                margin: 20px 0;
               }
               .list {
                 flex: 1;
@@ -690,6 +699,23 @@ export default {
             align-self: stretch;
             min-width: 300px;
             transition: opacity .2s ease;
+            .not-found {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              border-radius: 5px;
+              padding: 50px;
+              background-color: rgba(darken($color-cyan-d2, 4%), .6);
+              .message {
+                font-size: 20px;
+                font-weight: 600;
+              }
+              .button-vue {
+                margin-top: 40px;
+              }
+            }
             .status-wrapper {
               flex: 1 0 250px;
               display: grid;

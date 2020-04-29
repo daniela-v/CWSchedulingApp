@@ -21,9 +21,7 @@
     <section class="navigation">
       <Button name="go-to-coursework" type="header" :href="{ name: 'coursework', query: { tab: 'recent' } }">Courseworks</Button>
     </section>
-    <section class="alerts">
-      <Icon name="warning"></Icon>
-    </section>
+    <section class="alerts"></section>
     <section v-if="getUser !== undefined" class="account">
       <template v-if="!getUser">
         <Button name="show-login" type="header" :click="showAuthOverlay.bind(null, 'Login')">Sign In</Button>
@@ -37,10 +35,9 @@
 <script>
 import Auth from '../components/windows/Auth.window.vue';
 import Button from '../components/Button.component.vue';
-import Icon from '../components/Icon.component.vue';
 
 export default {
-  components: { Button, Icon },
+  components: { Button },
   computed: {
     getUsername() {
       return 'My Account';
