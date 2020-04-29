@@ -4,7 +4,7 @@
       <div class="name">{{ milestone.title }}</div>
     </div>
     <div class="milestone-status">
-      <template v-if="!coursework.completedDate">
+      <template v-if="isOwner && !coursework.completedDate">
         <Button v-for="(button, id) in control" :key="id" v-bind="button" />
       </template>
     </div>
@@ -55,6 +55,12 @@ export default {
     this.updateCountdown();
   },
   computed: {
+    getUser() {
+      return this.$store.getters.getUser;
+    },
+    isOwner() {
+      return (this.getUser && this.getUser.id === this.coursework.owner);
+    },
     isCourseworkCompleted() {
       return this.coursework.completedDate;
     },
