@@ -55,7 +55,7 @@
             <Tag>SEARCH RESULT</Tag>
             <Tag v-if="!searchTags">NO TAGS</Tag>
             <template v-else>
-              <Tag v-for="(tag, k) in searchTags" :key="k">{{ k }}: {{ tag }}</Tag>
+              <Tag v-for="(tag, k) in searchTags" :key="k">{{ k.toUpperCase() }}: {{ tag }}</Tag>
             </template>
           </div>
           <div class="control">
@@ -129,6 +129,7 @@ export default {
       await this.$store.dispatch('getAllCourseworks', { section: 'recent' });
       await this.$store.dispatch('getAllCourseworks', { section: 'my' });
     }
+    this.formatDocumentTitle();
   },
   computed: {
     getUser() {
@@ -137,7 +138,7 @@ export default {
     searchTags() {
       const search = this.$store.getters.getSearchFilter;
       const filters = _.reduce(search, (acc, val, k) => {
-        if (val !== undefined) acc[k.toUpperCase()] = val;
+        if (val !== undefined) acc[k] = val;
         return acc;
       }, {});
       return _.isEmpty(filters) ? null : filters;
@@ -167,6 +168,22 @@ export default {
     },
   },
   methods: {
+    formatDocumentTitle(route) {
+      const { query = {} } = route || this.$route;
+      let title = 'Milestone Manager';
+      if (query.tab === 'completed') {
+        title = `${title} - My Complete Courseworks`;
+      } else if (query.tab === 'progress') {
+        title = `${title} - My Incomplete Courseworks`;
+      } else if (query.tab === 'create') {
+        title = `${title} - Create Coursework`;
+      } else if (query.tab === 'search') {
+        title = `${title} - Search: ${(this.searchTags) ? this.searchTags.title : 'No filters'} - ${this.getSearchResults.length} results`;
+      } else {
+        title = `${title} - Most Recent Courseworks`;
+      }
+      document.title = title;
+    },
     isTabActive(tab) {
       const query = this.$route.query.tab || 'recent';
       return (query === tab) ? 'active' : null;
@@ -192,6 +209,9 @@ export default {
     },
   },
   watch: {
+    $route(to) {
+      this.formatDocumentTitle(to);
+    },
     '$route.query.tab': function tabChange() {
       this.tabRKey += 1;
     },

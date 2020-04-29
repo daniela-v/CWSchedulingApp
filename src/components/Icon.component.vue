@@ -51,6 +51,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-calendar:before {
+  content: "\e92e";
+}
 .icon-flag:before {
   content: "\e92d";
 }

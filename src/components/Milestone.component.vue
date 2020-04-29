@@ -1,35 +1,51 @@
 <template>
-  <router-link :to="{ name: 'milestoneView', params: { ...$route.params, milestone: milestone.id }, query: $route.query }" class="milestone-component-vue">
+  <div class="milestone-component-vue">
     <div class="milestone-title">
       <div class="name">{{ milestone.title }}</div>
+    </div>
+    <div class="milestone-status">
+      <template v-if="!coursework.completedDate">
+        <Button v-for="(button, id) in control" :key="id" v-bind="button" />
+      </template>
     </div>
     <div class="milestone-time">
       <div class="started" :class="[ getStartedStatus.status ]">
         <Icon :name="getStartedStatus.icon" class="status" />
         <span class="time">{{ getStartedDate || this.getCountdown(timers.startedDate) }}</span>
       </div>
-      <div v-if="!timers.startedDate" class="deadline" :class="[ getDeadlineStatus.status ]">
+      <div v-if="!timers.startedDate || milestone.completedDate" class="deadline" :class="[ getDeadlineStatus.status ]">
         <Icon :name="getDeadlineStatus.icon" class="status" />
         <span class="time">{{ getCompletedDate || this.getCountdown(timers.expectedDate, true) }}</span>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
+import _ from 'lodash';
 import util from '@/lib/general';
 
+import Button from '@/components/Button.component.vue';
 import Icon from '@/components/Icon.component.vue';
 
+import DeleteMilestone from '@/components/windows/DeleteMilestone.window.vue';
+
 export default {
-  components: { Icon },
+  components: { Button, Icon },
   props: ['data'],
   data() {
     return {
-      milestone: this.data,
+      coursework: this.data.coursework,
+      milestone: this.data.milestone,
       timers: {
         startedDate: null,
         expectedDate: null,
+      },
+      control: {
+        continueMilestone: { name: 'continue-milestone', type: 'notice dialog', text: 'Continue', icon: 'restore', click: () => this.changeProgress(false), condition: () => this.milestone.completedDate },
+        finishMilestone: { name: 'finish-milestone', type: 'dialog', text: 'Finish', icon: 'flag', click: () => this.changeProgress(true), condition: () => !this.milestone.completedDate },
+        editMilestone: { name: 'edit-milestone', type: 'dialog', icon: 'edit', href: { name: 'milestoneEdit', params: { coursework: this.$route.params.coursework, milestoneId: this.data.milestone.id }, query: { ...this.$route.query, tab: 'overview' } }, condition: () => !this.milestone.completedDate },
+        deleteMilestone: { name: 'delete-milestone', type: 'alert dialog', icon: 'trash', click: () => this.deleteMilestone(), condition: () => !this.milestone.completedDate },
       },
     };
   },
@@ -39,6 +55,9 @@ export default {
     this.updateCountdown();
   },
   computed: {
+    isCourseworkCompleted() {
+      return this.coursework.completedDate;
+    },
     getDeadlineStatus() {
       if (this.milestone.completedDate) {
         if (this.milestone.completedDate > this.milestone.expectedDate) {
@@ -56,12 +75,12 @@ export default {
     },
     getStartedStatus() {
       if (this.timers.startedDate > 86400) {
-        return { icon: 'access_time', status: 'on-time' };
+        return { icon: 'calendar', status: 'on-time' };
       }
       if (this.timers.startedDate > 0) {
-        return { icon: 'notice', status: 'soon' };
+        return { icon: 'calendar', status: 'soon' };
       }
-      return { icon: 'progress', status: 'on-time' };
+      return { icon: 'calendar', status: 'on-time' };
     },
     getCompletedDate() {
       if (!this.milestone.completedDate) {
@@ -96,6 +115,17 @@ export default {
       const days = Math.floor(absoluteDiff / 86400).toString();
       return `${days.padStart(2, '0')}:${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`;
     },
+    deleteMilestone() {
+      this.$store.commit('openWindow', { name: 'delete-milestone', title: 'Delete Milestone', type: 'dialog', component: DeleteMilestone, props: { coursework: this.data.coursework, milestone: this.data.milestone } });
+    },
+    async changeProgress(completed) {
+      const response = await this.$store.dispatch('post', { url: '/milestone/changeProgress', data: { coursework: this.coursework.id, milestone: this.milestone.id, completed } });
+      if (response.result) {
+        if (response.result.completedDate) response.result.completedDate = util.datetime.fromUTC(response.result.completedDate);
+        const id = _.findIndex(this.coursework.milestones, (m) => m.id === this.milestone.id);
+        this.coursework.milestones.splice(id, 1, { ...this.coursework.milestones[id], ...response.result });
+      }
+    },
   },
 };
 </script>
@@ -108,6 +138,11 @@ export default {
   display: grid;
   box-sizing: border-box;
   margin: 4px 0;
+  &:first-child {
+    margin-top: 0;
+    border-top: none;
+  }
+  &:last-child { margin-bottom: 0; }
   padding: 10px;
   border: 1px solid;
   border-color: transparent;
@@ -117,51 +152,62 @@ export default {
 
   grid-template-columns: 1fr auto;
   grid-template-rows: 1fr auto;
-  grid-template-areas: "title title"
+  grid-template-areas: "title status"
                         "time time";
   grid-column-gap: 10px;
-  height: 80px;
-  .milestone-title { grid-area: title };
-  .milestone-time { grid-area: time };
+  min-height: 80px;
+  .milestone-title { grid-area: title; }
+  .milestone-status { grid-area: status; }
+  .milestone-time { grid-area: time; }
   &:hover {
     background-color: rgba($color-cyan-bg, .9);
     border-color: darken($color-cyan, 20%);
   }
   .soon { color: $color-mustard !important; }
   .late { color: $color-error-soft !important; }
-}
 
-.milestone-title {
-  overflow: hidden;
-  .name {
-    display: flex;
-    align-items: center;
-    font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .dialog-style {
+    padding: 2px 6px;
   }
-}
+  .btn-edit-milestone, .btn-delete-milestone {
+    margin: 0 4px;
+    .icon-wrapper { margin: 0; }
+  }
 
-.milestone-status {
-  align-self: start;
-  display: flex;
-  align-items: center;
-  > * { margin: 0 4px; }
-}
+  .milestone-title {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .name {
+      display: flex;
+      align-items: center;
+      font-weight: 700;
+      word-break: break-all;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
 
-.milestone-time {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  margin-top: 10px;
-  > div {
+  .milestone-status {
+    align-self: start;
     display: flex;
     align-items: center;
-    font-weight: 600;
-    .icon-wrapper { margin-right: 5px; }
-    &.deadline { justify-self: right; }
-    &.started { justify-self: left; }
+  }
+
+  .milestone-time {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    margin-top: 10px;
+    > div {
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      .icon-wrapper { margin-right: 5px; }
+      &.deadline { justify-self: right; }
+      &.started { justify-self: left; }
+    }
   }
 }
 </style>

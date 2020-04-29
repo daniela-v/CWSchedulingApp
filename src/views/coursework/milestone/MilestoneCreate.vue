@@ -1,5 +1,5 @@
 <template>
-  <div class="subpanel milestones-view milestone-create">
+  <div class="subpanel milestone-create">
     <div class="title">Add milestone</div>
     <div class="body">
       <form @submit.prevent="confirm" @keydown.enter="lastPassFix">
@@ -34,8 +34,8 @@ export default {
       fields: {
         title: { id: 'm-title', label: 'Title', type: 'text', placeholder: 'milestone title' },
         description: { id: 'm-description', label: 'Description', type: 'textarea', placeholder: 'milestone description' },
-        startedDate: { id: 'm-start', label: 'Started Date', type: 'datetime', minDate: Date.now() + (60 * 1000), maxDate: this.coursework.expectedDate, model: Date.now() + (60 * 1000) },
-        expectedDate: { id: 'm-expected', label: 'Expected Date', type: 'datetime', minDate: Date.now() + (60 * 1000), maxDate: this.coursework.expectedDate, model: Date.now() + (60 * 1000) },
+        startedDate: { id: 'm-start', label: 'Started Date', type: 'datetime', minDate: this.coursework.startedDate, maxDate: this.coursework.expectedDate, model: Date.now() },
+        expectedDate: { id: 'm-expected', label: 'Expected Date', type: 'datetime', minDate: this.coursework.startedDate, maxDate: this.coursework.expectedDate, model: Date.now() },
       },
     };
   },
