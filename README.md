@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-        <img width="46%" src="https://i.postimg.cc/MHHmnCfX/AppLogo.png" alt="App logo">
+        <img width="40%" src="https://i.postimg.cc/MHHmnCfX/AppLogo.png" alt="App logo">
 </p>
 <br/>
 
@@ -27,7 +27,6 @@ The application is built using Node.js, Node Express and Vue.js.
 
 Use the app online at https://milestone-manager-production.herokuapp.com/
 
-Include demo gifs here.
 # Get Started
 Assumes local installation of [Node.js](https://nodejs.org/).
 
