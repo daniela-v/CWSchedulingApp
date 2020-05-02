@@ -11,18 +11,26 @@ This is a web-based coursework scheduling application designed to help students 
 
 The application is built using Node.js, Node Express and Vue.js.
 
-[Knex.js](http://knexjs.org/) is used for the database. Knex.js is a SQL query builder and makes it easier to create and handle queries. 
+[Sequelize](https://sequelize.org/v5/index.html) is used for the database. Sequelize is an ORM that makes it easier to create and handle queries by using virtual models mapped to the real database.
 
 ## Features
-- Sign up feature.
-- Login feature.
-- Coursework projects can be added.
-- Coursework projects can be removed.
-- Coursework projects can be modified.
-- Users can define their own milestones for each coursework project.
-- A listing of all incomplete courseworks and their milestones.
-- Users can share a project with other users by sending a link. 
-
+* User registration and authentication
+* Secure account recovery based on JSON Web Tokens
+* Coursework managing:
+  * Create, soft delete or modify the coursework
+  * List all the completed or in progress courseworks
+  * Set a specific deadline
+  * Enable or disable sharing
+  * Share the coursework using a specific token which can be renewed
+  * Make the coursework public or private
+  * Add participants to the coursework
+  * Change the progress of the coursework to complete or incomplete
+  * Manage milestones:
+    * Create, delete or modify a milestone
+    * Set a specific deadline for each milestone
+    * Keep an eye on your performance using the various implemented animated graphs
+    * Change the progress of the milestone to complete or incomplete
+  
 ## Demo
 
 Use the app online at https://milestone-manager-production.herokuapp.com/
@@ -42,21 +50,6 @@ npm install
 To serve the front-end on http://localhost:8080/ during development use:
 ```
 npm run serve
-```
-
-#### Compiles and minifies for production
-```
-npm run build
-```
-
-#### Run your end-to-end tests
-```
-npm run test:e2e
-```
-
-#### Lints and fixes files
-```
-npm run lint
 ```
 
 ### Web service start
