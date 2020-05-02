@@ -52,6 +52,10 @@ To serve the front-end on http://localhost:8080/ during development use:
 npm run serve
 ```
 
+This requires the **web server** (see below) to be running in order for the development server to communicate with the back-end, the reason being that the HTTP requests are proxied through http://localhost:5000/.
+
+If you instead prefer to simulate the production server on your local machine, you should run `npm run build` then proceed with starting the web server. The application will be located at http://localhost:5000/
+
 ### Web service start
 To start the web server on http://localhost:5000/ use:
 ```
