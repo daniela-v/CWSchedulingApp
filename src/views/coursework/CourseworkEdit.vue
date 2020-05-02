@@ -97,6 +97,7 @@ export default {
 @import '~@/scss/_mixins';
 
 .coursework-edit {
+  overflow: unset;
   .title {
     position: relative;
     padding-bottom: 10px;

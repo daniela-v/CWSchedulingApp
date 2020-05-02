@@ -27,9 +27,7 @@ const sequelize = {
         for (const seed in this.seeds) {
           await this.models[seed].sync({ force: true }); // eslint-disable-line
           // Only populate the development database with seeds
-          if (process.env.SQL === 'develop') {
-            await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
-          }
+          await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
         }
       }
     } catch (e) {

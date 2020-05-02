@@ -532,7 +532,6 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 15px;
-  overflow: auto;
   .coursework-wrapper {
     flex: 1;
     display: flex;

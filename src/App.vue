@@ -93,6 +93,7 @@ a {
   .page {
     grid-area: view;
     transition: opacity .2s ease;
+    overflow: unset;
   }
   &:before {
     content: "";

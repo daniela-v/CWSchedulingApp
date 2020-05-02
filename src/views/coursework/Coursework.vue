@@ -283,7 +283,6 @@ export default {
       flex-direction: column;
       align-items: stretch;
       height: 739px;
-      overflow: auto;
       transition: opacity .2s ease;
 
       .not-found {
