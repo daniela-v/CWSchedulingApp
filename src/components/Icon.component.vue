@@ -1,23 +1,16 @@
 <template>
-  <router-link v-if="name && href && !disabled" :to="href" class="icon-wrapper">
+  <div class="icon-wrapper" :class="[ isDisabled ]">
     <img v-if="img" :src="getImage" :class="[ getIcon ]" />
-    <i v-else class="icon" :class="[ getIcon, isPointer ]"></i>
-  </router-link>
-  <div v-else-if="name" class="icon-wrapper" :class="[ isDisabled ]" @click.stop="OnIconClick">
-    <img v-if="img" :src="getImage" :class="[ getIcon ]" />
-    <i v-else class="icon" :class="[ getIcon, isPointer ]"></i>
+    <i v-else class="icon" :class="[ getIcon ]"></i>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['name', 'disabled', 'click', 'href', 'img'],
+  props: ['name', 'disabled', 'click', 'img'],
   computed: {
     isDisabled() {
       return this.disabled ? 'disabled' : false;
-    },
-    isPointer() {
-      return this.click || this.href ? 'pointer' : false;
     },
     getImage() {
       return require(`@/assets/images/${this.img}.png`); // eslint-disable-line
@@ -26,17 +19,10 @@ export default {
       return `icon-${this.name}`;
     },
   },
-  methods: {
-    OnIconClick() {
-      if (this.disabled || typeof (this.click) !== 'function') return false;
-      return this.click();
-    },
-  },
 };
 </script>
 
 <style lang="scss">
-@import '@/scss/_colors';
 @import '@/scss/_mixins';
 
 @font-face {
@@ -51,6 +37,9 @@ export default {
 }
 
 .icon {
+  position: relative;
+  display: flex;
+  align-items: center;
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'cwscheduleappicon' !important;
   font-style: normal;
@@ -60,13 +49,99 @@ export default {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  @include transition(color, .2s, ease);
-  &.pointer:hover {
-    color: lighten($color-cyan, 20%);
-    cursor: pointer;
-  }
 }
 
+.icon-calendar:before {
+  content: "\e92e";
+}
+.icon-flag:before {
+  content: "\e92d";
+}
+.icon-group:before {
+  content: "\e92c";
+}
+.icon-edit:before {
+  content: "\e92b";
+}
+.icon-sync:before {
+  content: "\e92a";
+}
+.icon-delete:before {
+  content: "\e929";
+}
+.icon-restore:before {
+  content: "\e928";
+}
+.icon-crown:before {
+  content: "\e927";
+}
+.icon-box:before {
+  content: "\e926";
+}
+.icon-clipboard:before {
+  content: "\e925";
+}
+.icon-copy:before {
+  content: "\e924";
+}
+.icon-document:before {
+  content: "\e923";
+}
+.icon-module:before {
+  content: "\e922";
+}
+.icon-progress:before {
+  content: "\e921";
+}
+.icon-spinner-duo:before {
+  content: "\e920";
+  animation: nestSpin 1s linear infinite;
+  text-shadow: 0 0 2px #000;
+}
+.icon-spinner-quad:before {
+  content: "\e91f";
+  animation: nestSpin 1s linear infinite;
+  text-shadow: 0 0 2px #000;
+}
+.icon-search:before {
+  content: "\e91e";
+}
+.icon-eye:before {
+  content: "\e91d";
+}
+.icon-eye-blocked:before {
+  content: "\e91c";
+}
+.icon-warning:before {
+  content: "\e91b";
+}
+.icon-notice:before {
+  content: "\e91a";
+}
+.icon-shield2:before {
+  content: "\e919";
+}
+.icon-shield:before {
+  content: "\e918";
+}
+.icon-trash:before {
+  content: "\e917";
+}
+.icon-keyboard_arrow_down:before {
+  content: "\e916";
+}
+.icon-keyboard_arrow_up:before {
+  content: "\e915";
+}
+.icon-access_time:before {
+  content: "\e914";
+}
+.icon-share:before {
+  content: "\e913";
+}
+.icon-repeat:before {
+  content: "\e912";
+}
 .icon-google:before {
   content: "\e911";
 }
@@ -102,9 +177,6 @@ export default {
 }
 .icon-previous:before {
   content: "\e906";
-}
-.icon-warning:before {
-  content: "\e905";
 }
 .icon-arrow-right:before {
   content: "\e904";

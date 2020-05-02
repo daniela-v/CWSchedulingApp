@@ -4,6 +4,9 @@ const rows = [
   { username: 'admin_1', password: '%test%', email: 'admin_1@abc.com' },
   { username: 'admin_2', password: '?test?', email: 'admin_2@abc.com' },
   { username: 'admin_3', password: '.test`', email: 'admin_3@abc.com' },
+  { username: 'user_1', password: '.test`', email: 'user_1@abc.com' },
+  { username: 'user_2', password: '.test`', email: 'user_2@abc.com' },
+  { username: 'user_3', password: '.test`', email: 'user_3@abc.com' },
 ];
 
 async function cryptPasswords() {
@@ -15,11 +18,11 @@ async function cryptPasswords() {
   result.forEach((value, id) => { rows[id].password = value; });
 }
 
-async function insert(sql, tableName) {
-  await sql.table(tableName).del();
+async function insert(model) {
+  await model.destroy({ where: {} });
   await cryptPasswords();
-  await sql.table(tableName).insert(rows);
-  console.log(`✓   "${tableName}" has been populated\n`);
+  await model.bulkCreate(rows);
+  console.log(`\u001b[32m✓   "${model.tableName}" has been populated\u001b[0m`);
 }
 
 module.exports = { insert };

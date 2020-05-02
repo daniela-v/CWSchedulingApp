@@ -1,8 +1,12 @@
 <template>
   <transition name="windowfx" mode="out-in" appear>
     <div class="window" :class="[ slugifiedName, window.type ]">
-      <Icon class="close" v-if="window.dismissable" name="close" :click="close.bind()"></Icon>
-      <component :is="window.component" :name="slugifiedName" v-bind="window.props"></component>
+      <div v-if="window.type === 'dialog'" class="window-title">
+        <span class="title">{{ window.title }}</span>
+        <Button name="close" type="icon" icon="close" v-if="window.dismissable" :click="() => close()" />
+      </div>
+      <Button v-else-if="window.dismissable" name="close" type="icon" icon="close" :click="() => close()" />
+      <component :is="window.component" :name="slugifiedName" v-bind="window.props" class="content" />
     </div>
   </transition>
 </template>
@@ -10,13 +14,11 @@
 <script>
 import _ from 'lodash';
 
-import Icon from '../components/Icon.component.vue';
+import Button from '../components/Button.component.vue';
 
 export default {
   props: ['id', 'window'],
-  components: {
-    Icon,
-  },
+  components: { Button },
   created() {
     window.addEventListener('resize', this.alignCenter);
     window.addEventListener('keydown', this.escape);
@@ -55,7 +57,6 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/scss/_colors.scss';
 @import '@/scss/_mixins.scss';
 
 .window {
@@ -65,7 +66,7 @@ export default {
   border: 1px solid $color-cyan-border;
   border-radius: 4px;
   background: $color-cyan-bg;
-  background: linear-gradient(to bottom, rgba($color-cyan-bg, .8) 50%, rgba($color-cyan-bg, .4));
+  background: linear-gradient(to bottom, $color-cyan-bg 50%, lighten($color-cyan-bg, 2%));
   box-shadow: 0 0 30px rgba(#000, .5);
   overflow: hidden;
   @include transition('opacity, transform', .4s, ease);
@@ -76,18 +77,40 @@ export default {
     bottom: 0;
     background: none;
     border: none;
-    .close {
+    // Big X in the corner when window is full screen
+    > .button-vue .button {
       right: 10px;
       top: 10px;
       font-size: 30px;
     }
   }
-  .close {
+  &:not(.dialog) .btn-close {
     position: absolute;
     right: 5px;
     top: 5px;
     font-size: 16px;
     z-index: 1;
+  }
+  &.dialog {
+    width: 450px;
+    .window-title {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 5px;
+      background: linear-gradient(to bottom, darken($color-cyan, 15%), darken($color-cyan, 20%));
+      color: lighten($color-cyan, 40%);
+      font-weight: 600;
+      .title {
+        flex: 1;
+        padding: 2px 6px;
+        text-align: center;
+      }
+      .button {
+        color: lighten($color-cyan, 40%);
+      }
+      @include disableSelect();
+    }
   }
   .content {
     padding: 30px;

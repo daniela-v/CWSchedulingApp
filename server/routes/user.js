@@ -4,7 +4,7 @@ const users = require('../lib/users.js');
 const router = express.Router();
 
 /**
- * POST /users/register
+ * POST /user/register
  */
 router.post('/register', async (req, res) => {
   let error;
@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
 });
 
 /**
- * POST /users/authenticate
+ * POST /user/authenticate
  */
 router.post('/authenticate', async (req, res) => {
   let error;
@@ -32,7 +32,7 @@ router.post('/authenticate', async (req, res) => {
 });
 
 /**
- * GET /users/deauthenticate
+ * GET /user/deauthenticate
  */
 router.get('/deauthenticate', async (req, res) => {
   let error;
@@ -46,14 +46,14 @@ router.get('/deauthenticate', async (req, res) => {
 });
 
 /**
- * GET /users/session
+ * GET /user/session
  */
 router.get('/session', async (req, res) => {
   let error;
   let result;
   req.session.touch();
   try {
-    result = await users.session(req.session.key);
+    result = await users.session(req.session.user);
   } catch (e) {
     error = e;
   }
@@ -61,13 +61,13 @@ router.get('/session', async (req, res) => {
 });
 
 /**
- * POST /users/recover
+ * POST /user/recover
  */
 router.post('/recover', async (req, res) => {
   let error;
   let result;
   try {
-    result = true;
+    result = await users.recover(req.body);
   } catch (e) {
     error = e;
   }

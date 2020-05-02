@@ -1,6 +1,6 @@
 <template>
   <transition name="overlayfx" appear>
-    <div v-if="$store.getters.getWindowsNum" class="overlay" @click="close">
+    <div v-if="$store.getters.getWindowsNum" class="overlay" @click.self="close">
       <Window v-for="(window, id) in $store.getters.getWindows" :key="window.window.name" :id="id" v-bind="window"></Window>
     </div>
   </transition>
@@ -14,10 +14,8 @@ export default {
     Window,
   },
   methods: {
-    close(evt) {
-      if (this.$el === evt.target) {
-        this.$store.commit('closeWindow');
-      }
+    close() {
+      this.$store.commit('closeWindow');
     },
   },
 };

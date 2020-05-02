@@ -1,10 +1,27 @@
 module.exports = {
   devServer: {
     proxy: {
-      '/users': {
+      '/user/': {
         target: 'http://localhost:5000',
         ws: true,
         changeOrigin: true,
+      },
+      '/milestone/': {
+        target: 'http://localhost:5000',
+        ws: true,
+        changeOrigin: true,
+      },
+      '/coursework/': {
+        target: 'http://localhost:5000',
+        ws: true,
+        changeOrigin: true,
+      },
+    },
+  },
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: '@import "~@/scss/_colors.scss";',
       },
     },
   },

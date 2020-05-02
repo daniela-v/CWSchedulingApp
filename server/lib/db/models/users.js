@@ -1,39 +1,21 @@
-// http://knexjs.org/#Schema-Building
-const tableName = 'tbl_users';
-const seeds = require('../seeds/users.js');
-
-async function create(sql, forced = false) {
-  try {
-    // If the table already exists and we don't force replace stop the execution else drop the table and create a new one
-    if (await sql.schema.hasTable(tableName)) {
-      if (!forced) {
-        console.log(`✓   "${tableName}" table is already created!`);
-        return;
-      }
-      console.log(`... Deleting "${tableName}"`);
-      await sql.schema.dropTable(tableName);
-    }
-    console.log(`... Creating "${tableName}"`);
-    // Create table
-    await sql.schema.createTable(tableName, (table) => {
-      table.charset('utf8');
-      table.collate('utf8_bin');
-      table.increments('id');
-      table.string('username', 32).notNullable();
-      table.string('password', 128).notNullable();
-      table.string('email', 128).notNullable();
-      table.timestamps(true, true);
-    });
-    console.log(`✓   "${tableName}" has been created`);
-    console.log(`... Populating "${tableName}"`);
-    // Insert seed data if table is empty
-    const rows = await sql.table(tableName).select();
-    if (!rows.length) {
-      await seeds.insert(sql, tableName);
-    }
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-module.exports = { create };
+// https://sequelize.org/v5/manual/models-definition.html
+module.exports = (sequelize, type, table) => sequelize.define(`tbl_${table}`, {
+  id: {
+    type: type.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  username: {
+    type: type.STRING(32),
+    allowNull: false,
+  },
+  password: {
+    type: type.STRING(128),
+    allowNull: false,
+  },
+  email: {
+    type: type.STRING(128),
+    allowNull: false,
+  },
+  privacy: type.BOOLEAN,
+});
