@@ -21,12 +21,12 @@ const sequelize = {
         this.models[this.capitalize(name)] = model(sql, Sequelize, this.snake(name));
         this.seeds[this.capitalize(name)] = seed;
       });
-      if (force) {
-        console.log('\u001b[36m    Synchronizing database\u001b[0m');
-        // eslint-disable-next-line
-        for (const seed in this.seeds) {
-          await this.models[seed].sync({ force: true }); // eslint-disable-line
-          // Only populate the development database with seeds
+      console.log('\u001b[36m    Synchronizing database\u001b[0m');
+      // eslint-disable-next-line
+      for (const seed in this.seeds) {
+        await this.models[seed].sync({ force: force }); // eslint-disable-line
+        const hasItems = await this.models[seed].findAll({ limit: 1 }); // eslint-disable-line
+        if (!hasItems.length) {
           await this.seeds[seed].insert(this.models[seed]); // eslint-disable-line
         }
       }
