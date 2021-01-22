@@ -5,7 +5,6 @@
 <br/>
 
 # Coursework Scheduling Application
-Project for the Web Platform Development 2 module at GCU. 
 
 This is a web-based coursework scheduling application designed to help students cope with multiple coursework assignments. 
 
